@@ -11,10 +11,9 @@ def enforce_csrf(request):
     check = CSRFCheck()
     # populates request.META['CSRF_COOKIE'], which is used in process_view()
     check.process_request(request)
-    reason = check.process_view(request, None, (), {})
-    if reason:
+    if reason := check.process_view(request, None, (), {}):
         # CSRF failed, bail with explicit error message
-        raise exceptions.PermissionDenied('CSRF Failed: %s' % reason)
+        raise exceptions.PermissionDenied(f'CSRF Failed: {reason}')
 
 
 class CustomAuthentication(JWTAuthentication):

@@ -261,7 +261,6 @@ class Company(models.Model):
 
     industry = models.IntegerField(choices=Industries.choices)
 
-
     def __str__(self):
         return self.name
 

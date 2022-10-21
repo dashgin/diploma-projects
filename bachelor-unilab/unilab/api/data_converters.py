@@ -17,5 +17,4 @@ def skills_categorize(skill_list):
 
 def without_nones(_dict):
     """removes keys that have none values from a dict"""
-    result = {k: v for k, v in _dict.items() if v is not None}
-    return result
+    return {k: v for k, v in _dict.items() if v is not None}

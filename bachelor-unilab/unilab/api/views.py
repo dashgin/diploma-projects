@@ -1,5 +1,3 @@
-import json
-
 import django_filters.rest_framework
 import requests
 from django.http import JsonResponse
@@ -20,35 +18,38 @@ from .serializers import *
 User = get_user_model()
 
 api_url = conf_settings.API_URL
+
+
 @csrf_exempt
 def get_user(request):
-    if request.method == 'POST':
-        # data = json.loads(request.body)
-        token = request.POST.get('token')
-        if not token:
-            return JsonResponse({'response': None, 'error': "no token given"})
+    if request.method != 'POST':
+        return
+    # data = json.loads(request.body)
+    token = request.POST.get('token')
+    if not token:
+        return JsonResponse({'response': None, 'error': "no token given"})
 
-        """Returns: the user object serialized from a token"""
-        try:
-            validated_token = JWTAuthentication().get_validated_token(token)
-            user_object = JWTAuthentication().get_user(validated_token)
-            print(user_object, flush=True)
-            print(f"{api_url}/api/users/{user_object.id}", flush=True)
-            response = requests.get(
-                f"{api_url}/api/users/{user_object.id}",
-                headers={"Authorization": f"Bearer {token}"},
-            )
-            print(response.content, flush=True)
-            user_json = response.json()
-        except InvalidToken as ex:
-            print(ex)
-            return JsonResponse({'response': None, "error": ex.detail["detail"]})
+    """Returns: the user object serialized from a token"""
+    try:
+        validated_token = JWTAuthentication().get_validated_token(token)
+        user_object = JWTAuthentication().get_user(validated_token)
+        print(user_object, flush=True)
+        print(f"{api_url}/api/users/{user_object.id}", flush=True)
+        response = requests.get(
+            f"{api_url}/api/users/{user_object.id}",
+            headers={"Authorization": f"Bearer {token}"},
+        )
+        print(response.content, flush=True)
+        user_json = response.json()
+    except InvalidToken as ex:
+        print(ex)
+        return JsonResponse({'response': None, "error": ex.detail["detail"]})
 
-        except Exception as ex:
-            print(ex)
-            return JsonResponse({'response': None, "error": "unknown error"})
+    except Exception as ex:
+        print(ex)
+        return JsonResponse({'response': None, "error": "unknown error"})
 
-        return JsonResponse({'response': user_json})
+    return JsonResponse({'response': user_json})
 
 
 class AccessTokenView(TokenObtainPairView):
@@ -58,7 +59,7 @@ class AccessTokenView(TokenObtainPairView):
         try:
             serializer.is_valid(raise_exception=True)
         except TokenError as e:
-            raise InvalidToken(e.args[0])
+            raise InvalidToken(e.args[0]) from e
         serializer.validated_data.pop('refresh', None)
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
@@ -91,10 +92,7 @@ class ApplicationList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.query_params.get("user")
-        if not user:
-            return Application.objects.all()
-        else:
-            return Application.objects.filter(user=url_to_pk(user))
+        return Application.objects.filter(user=url_to_pk(user)) if user else Application.objects.all()
 
 
 class FeedbackFormDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -115,8 +113,7 @@ class CompanyAdminList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, *args, **kwargs):
-        user_url = self.request.query_params.get('user')
-        if user_url:
+        if user_url := self.request.query_params.get('user'):
             user_pk = url_to_pk(user_url)
             admin = CompanyAdmin.objects.filter(user=user_pk).first()
             admin.delete()
@@ -166,8 +163,7 @@ class UniversityAdminList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, *args, **kwargs):
-        user_url = self.request.query_params.get('user')
-        if user_url:
+        if user_url := self.request.query_params.get('user'):
             user_pk = url_to_pk(user_url)
             admin = UniversityAdmin.objects.filter(user=user_pk).first()
             admin.delete()
@@ -207,8 +203,7 @@ class CommentList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         user = self.request.user
-        company_url = self.request.query_params.get('company')
-        if company_url:
+        if company_url := self.request.query_params.get('company'):
             company = Company.objects.filter(pk=url_to_pk(company_url)).first()
             serializer.save(company=company, owner=user)
 
@@ -410,8 +405,7 @@ class PostList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         user = self.request.user
-        company_url = self.request.query_params.get('company')
-        if company_url:
+        if company_url := self.request.query_params.get('company'):
             company = Company.objects.filter(pk=url_to_pk(company_url)).first()
             serializer.save(company=company, owner=user)
 
@@ -476,11 +470,10 @@ class UserDataList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.query_params.get("user")
-        if user is not None:
-            pk = re.search(r"users/(\d+)", user)[1]
-            return UserData.objects.filter(user=pk)
-        else:
+        if user is None:
             return UserData.objects.filter(user=self.request.user.id)
+        pk = re.search(r"users/(\d+)", user)[1]
+        return UserData.objects.filter(user=pk)
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -498,8 +491,7 @@ class UserList(generics.ListCreateAPIView):
     search_fields = ['first_name', "last_name", "email"]
 
     def get_queryset(self):
-        not_admin_of = self.request.query_params.get("not_admin_of")
-        if not_admin_of:
+        if not_admin_of := self.request.query_params.get("not_admin_of"):
             if "companies" in not_admin_of:
                 pk = re.search(r"companies/(\d+)", not_admin_of)[1]
                 admin_list = Company.objects.filter(pk=pk).first().admins.all()
@@ -512,8 +504,7 @@ class UserList(generics.ListCreateAPIView):
                 admins_pks = [user.id for user in admin_list]
                 return User.objects.exclude(pk__in=admins_pks)
 
-        not_student_of = self.request.query_params.get("not_student_of")
-        if not_student_of:
+        if not_student_of := self.request.query_params.get("not_student_of"):
             pk = re.search(r"universities/(\d+)", not_student_of)[1]
             student_list = University.objects.filter(pk=pk).first().students.all()
             student_pks = [user.id for user in student_list]
@@ -536,8 +527,7 @@ class VoteList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         user = self.request.user
-        company_url = self.request.query_params.get('company')
-        if company_url:
+        if company_url := self.request.query_params.get('company'):
             company = Company.objects.filter(pk=url_to_pk(company_url)).first()
             serializer.save(company=company, user=user)
 
@@ -633,5 +623,3 @@ class CertificationDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Certification.objects.all()
     serializer_class = CertificationSerializer
     permission_classes = [IsAuthenticated]
-
-

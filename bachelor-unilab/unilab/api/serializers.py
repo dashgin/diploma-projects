@@ -122,8 +122,7 @@ class CompanyAdminSerializer(serializers.HyperlinkedModelSerializer):
         user = data["user"]
         company = data["company"]
 
-        existing = CompanyAdmin.objects.filter(user=user, company=company).first()
-        if existing:
+        if existing := CompanyAdmin.objects.filter(user=user, company=company).first():
             return serializers.ValidationError("User already an admin")
 
         return data
@@ -163,10 +162,7 @@ class UniversityAdminSerializer(serializers.HyperlinkedModelSerializer):
         user = data["user"]
         university = data["university"]
 
-        existing = UniversityAdmin.objects.filter(
-            user=user, university=university
-        ).first()
-        if existing:
+        if existing := UniversityAdmin.objects.filter(user=user, university=university).first():
             return serializers.ValidationError("User already an admin")
 
         return data
@@ -207,10 +203,10 @@ class JobSerializer(serializers.HyperlinkedModelSerializer):
         fields = "__all__"
 
     def get_company(self, job):
-        result = CompanySerializer(
+        # sourcery skip: inline-immediately-returned-variable
+        return CompanySerializer(
             job.owner, context={"request": self.context["request"]}
         ).data
-        return result
 
     # def validate_owner(self, value):
     #     """
@@ -266,11 +262,10 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     # hide empty companies attribute for students
     def to_representation(self, instance):
-        ret = super().to_representation(instance)
         # if instance.user_type == UserModel.UserType.STUDENT:
         #     del ret['companies']
 
-        return ret
+        return super().to_representation(instance)
 
     def create(self, validated_data):
         user = UserModel.objects.create_user(
@@ -339,8 +334,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
     def create_user_vote(self, post):
         # show what the user requesting the api voted
         user = self.context["request"].user
-        company_url = self.context["request"].query_params.get("company")
-        if company_url:
+        if company_url := self.context["request"].query_params.get("company"):
             company_url = self.context["request"].query_params.get("company")
             assert (
                 company_url is not None
@@ -398,11 +392,9 @@ class VoteSerializer(serializers.HyperlinkedModelSerializer):
                 user.user_type == user.UserType.EMPLOYER
             ), "Only employer users can give a company as vote owner (custom code)"
             previous_vote = Vote.objects.filter(company=company, post=post)
-            previous_vote.delete()
-
         else:
             previous_vote = Vote.objects.filter(user=user, post=post)
-            previous_vote.delete()
+        previous_vote.delete()
 
         return super().create(validated_data)
 
@@ -420,6 +412,7 @@ class PostReportSerializer(serializers.HyperlinkedModelSerializer):
 class ApplicationSerializer(serializers.HyperlinkedModelSerializer):
     user = UserSerializer(read_only=True, many=False)
     job = JobSerializer(read_only=True, many=False)
+
     # job = serializers.HyperlinkedRelatedField(view_name='job-detail', queryset=Job.objects.all())
 
     class Meta:

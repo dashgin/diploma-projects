@@ -72,7 +72,6 @@ def test_permissions(client, users, status_codes, request, create_posts, django_
         assert response.status_code == status_codes[4]
 
 
-
 @pytest.mark.parametrize('field, value', [
     ('url', 'http://testserver/api/posts/{id}/'),
     ('title', ''),

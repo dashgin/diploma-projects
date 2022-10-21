@@ -1,6 +1,5 @@
 import random
 from string import ascii_letters, digits
-from time import strftime
 
 from .custom_fixtures import *
 
@@ -66,12 +65,14 @@ def test_permissions(client, users, status_codes, request, create_companies, dja
         assert response.status_code == status_codes[5]
 
         # Check the PATCH on company-detail without being owner
-        response = client.patch('/api/companies/1/', {'description': 'a changed description'}, HTTP_AUTHORIZATION=f'Bearer {access_token}',
+        response = client.patch('/api/companies/1/', {'description': 'a changed description'},
+                                HTTP_AUTHORIZATION=f'Bearer {access_token}',
                                 content_type='application/json')
         assert response.status_code == status_codes[6]
 
         # Check with incorrect credentials
-        response = client.patch('/api/companies/1/', {'description': 'a changed description'}, HTTP_AUTHORIZATION=f'Bearer {wrong_token}',
+        response = client.patch('/api/companies/1/', {'description': 'a changed description'},
+                                HTTP_AUTHORIZATION=f'Bearer {wrong_token}',
                                 content_type='application/json')
         assert response.status_code == status_codes[7]
 

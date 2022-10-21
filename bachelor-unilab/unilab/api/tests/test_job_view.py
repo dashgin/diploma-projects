@@ -75,7 +75,8 @@ def test_permissions(client, users, status_codes, request, django_user_model, cr
         assert response.status_code == status_codes[3]
 
         # Check the PATCH on job-detail without being owner
-        response = client.patch(f'/api/jobs/{jobs[0].id}/', {'city': 'a changed city'}, HTTP_AUTHORIZATION=f'Bearer {access_token}',
+        response = client.patch(f'/api/jobs/{jobs[0].id}/', {'city': 'a changed city'},
+                                HTTP_AUTHORIZATION=f'Bearer {access_token}',
                                 content_type='application/json')
         assert response.status_code == status_codes[4]
 

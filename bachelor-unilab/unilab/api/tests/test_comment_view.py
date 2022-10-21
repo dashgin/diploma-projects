@@ -1,6 +1,7 @@
 import random
-from string import ascii_letters, digits
 from itertools import chain
+from string import ascii_letters, digits
+
 from .custom_fixtures import *
 
 
@@ -19,8 +20,8 @@ from .custom_fixtures import *
 @pytest.mark.db
 def test_permissions(client, users, status_codes, request, create_comments, django_user_model):
     users = request.getfixturevalue(users)
-    posts = [x for x in chain.from_iterable(create_comments['posts'].values())]
-    comments = [x for x in chain.from_iterable(create_comments['comments'].values())]
+    posts = list(chain.from_iterable(create_comments['posts'].values()))
+    comments = list(chain.from_iterable(create_comments['comments'].values()))
 
     for user in users:
         # get the access tokens for the 3 user types, give a wrong token to the anon user
@@ -48,10 +49,12 @@ def test_permissions(client, users, status_codes, request, create_comments, djan
         assert response.status_code == status_codes[1]
 
         # used later for checking PATCH
-        comment_url = response.json()['url'] if user.user_type is not None else f'/api/comments/{random.choice(comments).id}/'
+        comment_url = response.json()[
+            'url'] if user.user_type is not None else f'/api/comments/{random.choice(comments).id}/'
 
         # Check the GET on comment-detail
-        response = client.get(f'/api/comments/{random.choice(comments).id}/', HTTP_AUTHORIZATION=f'Bearer {access_token}')
+        response = client.get(f'/api/comments/{random.choice(comments).id}/',
+                              HTTP_AUTHORIZATION=f'Bearer {access_token}')
         assert response.status_code == status_codes[2]
 
         # Check the PATCH on comment-detail without being owner
@@ -70,7 +73,7 @@ def test_permissions(client, users, status_codes, request, create_comments, djan
 @pytest.mark.django_db
 def test_fields(client, request, users, create_comments):
     users = request.getfixturevalue(users)
-    comments = [x for x in chain.from_iterable(create_comments['comments'].values())]
+    comments = list(chain.from_iterable(create_comments['comments'].values()))
     fields = ['url', 'content', 'owner', 'post', 'publish_date']
     for user in users:
         response = client.post('/api/token/', {'email': user.email, 'password': '1234'},
@@ -85,13 +88,13 @@ def test_fields(client, request, users, create_comments):
             response = client.get(f'/api/comments/{comment.id}/', HTTP_AUTHORIZATION=f'Bearer {access_token}')
             assert response.status_code == 200
             for field in fields:
-                if field == 'url':
-                    assert response.json()['url'] == f'http://testserver/api/comments/{comment.id}/'
-                elif field == 'owner':
+                if field == 'owner':
                     assert response.json()['owner'] == f'http://testserver/api/users/{comment.owner.id}/'
-                elif field == 'publish_date':
-                    assert response.json()['publish_date'] == comment.publish_date.strftime("%Y-%m-%d")
                 elif field == 'post':
                     assert response.json()['post'] == f'http://testserver/api/posts/{comment.post.id}/'
+                elif field == 'publish_date':
+                    assert response.json()['publish_date'] == comment.publish_date.strftime("%Y-%m-%d")
+                elif field == 'url':
+                    assert response.json()['url'] == f'http://testserver/api/comments/{comment.id}/'
                 else:
                     assert response.json()[field] == getattr(comment, field)

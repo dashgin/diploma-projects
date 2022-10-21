@@ -1,7 +1,6 @@
-from django.urls import include, path
+from django.urls import path
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
-from rest_framework.urlpatterns import format_suffix_patterns
-from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView, TokenObtainPairView
+from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
 from . import views
 

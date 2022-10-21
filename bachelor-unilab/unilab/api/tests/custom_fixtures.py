@@ -127,8 +127,9 @@ def create_companies(db, create_users_admins, create_users_companies):
                                               website_url='https://www.django-rest-framework.org/api-guide/relations/',
                                               owner=create_users_companies[2])
 
-    return {'companies': {'admins': [admin_company1, admin_company2, admin_company3], 'companies': [company_company1, company_company2,
-                                                                                                    company_company3]},
+    return {'companies': {'admins': [admin_company1, admin_company2, admin_company3],
+                          'companies': [company_company1, company_company2,
+                                        company_company3]},
             'users': {'admins': create_users_admins, 'companies': create_users_companies}}
 
 
@@ -182,7 +183,8 @@ def create_jobs(db, create_companies):
                                       salary_per_month=800,
                                       description='Looking for an experienced leader')
 
-    return {'jobs': {'admins': [admin_job1, admin_job2, admin_job3], 'companies': [company_job1, company_job2, company_job3]},
+    return {'jobs': {'admins': [admin_job1, admin_job2, admin_job3],
+                     'companies': [company_job1, company_job2, company_job3]},
             'companies': create_companies['companies'],
             'users': create_companies['users']}
 
@@ -241,7 +243,8 @@ def create_posts(db, django_user_model, create_users_admins, create_users_compan
                       'companies': [company_post1, company_post2, company_post3],
                       'students': [student_post1, student_post2, student_post3]},
 
-            'users': {'admins': create_users_admins, 'companies': create_users_companies, 'students': create_users_students}}
+            'users': {'admins': create_users_admins, 'companies': create_users_companies,
+                      'students': create_users_students}}
 
 
 @pytest.fixture
@@ -325,7 +328,8 @@ def create_comments(db, django_user_model, create_posts):
         post=posts['students'][2])
 
     return {'comments': {
-        'admin_post': [admin1_on_admin1_comment, admin2_on_admin1_comment, company1_on_admin2_comment, student1_on_admin3_comment],
+        'admin_post': [admin1_on_admin1_comment, admin2_on_admin1_comment, company1_on_admin2_comment,
+                       student1_on_admin3_comment],
         'company_post': [company1_on_company1_comment, company2_on_company1_comment, admin1_on_company2_comment,
                          student1_on_company3_comment],
         'student_post': [student1_on_student1_comment, student2_on_student1_comment, admin1_on_student2_comment,
