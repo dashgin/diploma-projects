@@ -1,9 +1,6 @@
 from django.contrib.auth.models import AnonymousUser
 from rest_framework import permissions
 
-from .data_converters import *
-from .models import Job, Company, Post, User, Comment, UserData, EducationData, ExperienceData, University
-
 
 class IsOwner(permissions.BasePermission):
     """

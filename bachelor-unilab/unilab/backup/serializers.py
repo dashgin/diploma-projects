@@ -2,7 +2,7 @@ from django.conf import settings as conf_settings
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from .data_converters import *
+from ..utils.data_converters import url_to_pk
 from .models import *
 
 api_url = conf_settings.API_URL
@@ -162,7 +162,9 @@ class UniversityAdminSerializer(serializers.HyperlinkedModelSerializer):
         user = data["user"]
         university = data["university"]
 
-        if existing := UniversityAdmin.objects.filter(user=user, university=university).first():
+        if existing := UniversityAdmin.objects.filter(
+            user=user, university=university
+        ).first():
             return serializers.ValidationError("User already an admin")
 
         return data
@@ -349,7 +351,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         if vote:
             # go through all types of labels and get the one matching the attribute type of vote (int).
             for label_tup in vote.TYPE_CHOICES:
-                if label_tup[0] == vote.type:
+                if label_tup[0] == vote.type_:
                     vote_label = label_tup[1]
                     break
 
