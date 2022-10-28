@@ -1,15 +1,245 @@
-from django.conf import settings
-from rest_framework.routers import DefaultRouter, SimpleRouter
-
-from unilab.users.api.views import UserViewSet
-
-if settings.DEBUG:
-    router = DefaultRouter()
-else:
-    router = SimpleRouter()
-
-router.register("users", UserViewSet)
-
+from django.urls import path
 
 app_name = "api"
-urlpatterns = router.urls
+
+
+users_urls = [
+    path(
+        "users",
+        UserList.as_view(),
+        name="user-list",
+    ),
+    path(
+        "users/<int:pk>",
+        UserDetail.as_view(),
+        name="user-detail",
+    ),
+    path(
+        "user-data",
+        UserDataList.as_view(),
+        name="userdata-list",
+    ),
+    path(
+        "user-data/<int:pk>",
+        UserDataDetail.as_view(),
+        name="userdata-detail",
+    ),
+    path(
+        "change-password",
+        UpdatePassword.as_view(),
+        name="updatepassword",
+    ),
+    path(
+        "education-data",
+        EducationDataList.as_view(),
+        name="educationdata-list",
+    ),
+    path(
+        "education-data/<int:pk>",
+        EducationDataDetail.as_view(),
+        name="educationdata-detail",
+    ),
+    path(
+        "experience-data",
+        ExperienceDataList.as_view(),
+        name="experiencedata-list",
+    ),
+    path(
+        "experience-data/<int:pk>",
+        ExperienceDataDetail.as_view(),
+        name="experiencedata-detail",
+    ),
+    path(
+        "skill-data",
+        SkillDataList.as_view(),
+        name="skilldata-list",
+    ),
+    path(
+        "skill-data/<int:pk>",
+        SkillDataDetail.as_view(),
+        name="skilldata-detail",
+    ),
+    path(
+        "external-profiles",
+        ExternalProfileList.as_view(),
+        name="externalprofile-list",
+    ),
+    path(
+        "external-profiles/<int:pk>",
+        ExternalProfileDetail.as_view(),
+        name="externalprofile-detail",
+    ),
+    path(
+        "certifications",
+        CertificationList.as_view(),
+        name="certification-list",
+    ),
+    path(
+        "certifications/<int:pk>",
+        CertificationDetail.as_view(),
+        name="certification-detail",
+    ),
+]
+
+company_and_university_urls = [
+    path(
+        "companies",
+        CompanyList.as_view(),
+        name="company-list",
+    ),
+    path(
+        "companies/<int:pk>",
+        CompanyDetail.as_view(),
+        name="company-detail",
+    ),
+    path(
+        "companies/choices",
+        CompanyChoices.as_view(),
+        name="job-choices",
+    ),
+    path(
+        "company-pictures",
+        CompanyPicturesList.as_view(),
+        name="companypictures-list",
+    ),
+    path(
+        "company-pictures/<int:pk>",
+        CompanyPicturesDetail.as_view(),
+        name="companypictures-detail",
+    ),
+    path(
+        "company-admins",
+        CompanyAdminList.as_view(),
+        name="companyadmin-list",
+    ),
+    path(
+        "company-admins/<int:pk>",
+        CompanyAdminDetail.as_view(),
+        name="companyadmin-detail",
+    ),
+    path(
+        "university-admins",
+        UniversityAdminList.as_view(),
+        name="universityadmin-list",
+    ),
+    path(
+        "university-admins/<int:pk>",
+        UniversityAdminDetail.as_view(),
+        name="universityadmin-detail",
+    ),
+    path(
+        "universities",
+        UniversityList.as_view(),
+        name="university-list",
+    ),
+    path(
+        "universities/<int:pk>",
+        UniversityDetail.as_view(),
+        name="university-detail",
+    ),
+    path(
+        "university-courses",
+        UniversityCourseList.as_view(),
+        name="universitycourse-list",
+    ),
+    path(
+        "university-courses/<int:pk>",
+        UniversityCourseDetail.as_view(),
+        name="universitycourse-detail",
+    ),
+    path(
+        "certifications",
+        CertificationList.as_view(),
+        name="certification-list",
+    ),
+    path(
+        "certifications/<int:pk>",
+        CertificationDetail.as_view(),
+        name="certification-detail",
+    ),
+]
+
+posts_and_feedback_urls = [
+    path(
+        "vote",
+        VoteList.as_view(),
+        name="vote-list",
+    ),
+    path(
+        "vote/<int:pk>",
+        VoteDetail.as_view(),
+        name="vote-detail",
+    ),
+    path(
+        "posts",
+        PostList.as_view(),
+        name="post-list",
+    ),
+    path(
+        "posts/<int:pk>",
+        PostDetail.as_view(),
+        name="post-detail",
+    ),
+    path(
+        "comments",
+        CommentList.as_view(),
+        name="comment-list",
+    ),
+    path(
+        "comments/<int:pk>",
+        CommentDetail.as_view(),
+        name="comment-detail",
+    ),
+    path(
+        "post-report",
+        PostReportList.as_view(),
+        name="postreport-list",
+    ),
+    path(
+        "post-report/<int:pk>",
+        PostReportDetail.as_view(),
+        name="postreport-detail",
+    ),
+    path(
+        "feedback-form",
+        FeedbackFormList.as_view(),
+        name="feedbackform-list",
+    ),
+    path(
+        "feedback-form/<int:pk>",
+        FeedbackFormDetail.as_view(),
+        name="feedbackform-detail",
+    ),
+]
+
+jobs_urls = [
+    path(
+        "jobs",
+        JobList.as_view(),
+        name="job-list",
+    ),
+    path(
+        "jobs/<int:pk>",
+        JobDetail.as_view(),
+        name="job-detail",
+    ),
+    path(
+        "jobs/choices",
+        JobChoices.as_view(),
+        name="job-choices",
+    ),
+    path(
+        "applications",
+        ApplicationList.as_view(),
+        name="application-list",
+    ),
+    path(
+        "applications/<int:pk>",
+        ApplicationDetail.as_view(),
+        name="application-detail",
+    ),
+]
+
+urlpatterns = (
+    users_urls + company_and_university_urls + jobs_urls + posts_and_feedback_urls
+)

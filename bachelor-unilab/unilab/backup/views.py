@@ -1,76 +1,16 @@
 import django_filters.rest_framework
-import requests
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework import filters
-from rest_framework import generics, status
+from rest_framework import filters, generics, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
-from rest_framework_simplejwt.views import TokenObtainPairView
 
-from ..utils.permissions import *
-from .serializers import *
+from unilab.backup.serializers import *
+from unilab.utils.permissions import *
 
 User = get_user_model()
 
 api_url = conf_settings.API_URL
-
-
-@csrf_exempt
-def get_user(request):
-    if request.method != 'POST':
-        return
-    # data = json.loads(request.body)
-    token = request.POST.get('token')
-    if not token:
-        return JsonResponse({'response': None, 'error': "no token given"})
-
-    """Returns: the user object serialized from a token"""
-    try:
-        validated_token = JWTAuthentication().get_validated_token(token)
-        user_object = JWTAuthentication().get_user(validated_token)
-        print(user_object, flush=True)
-        print(f"{api_url}/api/users/{user_object.id}", flush=True)
-        response = requests.get(
-            f"{api_url}/api/users/{user_object.id}",
-            headers={"Authorization": f"Bearer {token}"},
-        )
-        print(response.content, flush=True)
-        user_json = response.json()
-    except InvalidToken as ex:
-        print(ex)
-        return JsonResponse({'response': None, "error": ex.detail["detail"]})
-
-    except Exception as ex:
-        print(ex)
-        return JsonResponse({'response': None, "error": "unknown error"})
-
-    return JsonResponse({'response': user_json})
-
-
-class AccessTokenView(TokenObtainPairView):
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-
-        try:
-            serializer.is_valid(raise_exception=True)
-        except TokenError as e:
-            raise InvalidToken(e.args[0]) from e
-        serializer.validated_data.pop('refresh', None)
-        return Response(serializer.validated_data, status=status.HTTP_200_OK)
-
-
-# @api_view(['GET'])
-# def api_root(request, format=None):
-#     return Response({
-#         'users': reverse('user-list', request=request, format=format),
-#         'companies': reverse('company-list', request=request, format=format),
-#         'jobs': reverse('job-list', request=request, format=format)
-#     })
 
 
 class ApplicationDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -92,7 +32,11 @@ class ApplicationList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.query_params.get("user")
-        return Application.objects.filter(user=url_to_pk(user)) if user else Application.objects.all()
+        return (
+            Application.objects.filter(user=url_to_pk(user))
+            if user
+            else Application.objects.all()
+        )
 
 
 class FeedbackFormDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -113,7 +57,7 @@ class CompanyAdminList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, *args, **kwargs):
-        if user_url := self.request.query_params.get('user'):
+        if user_url := self.request.query_params.get("user"):
             user_pk = url_to_pk(user_url)
             admin = CompanyAdmin.objects.filter(user=user_pk).first()
             admin.delete()
@@ -163,7 +107,7 @@ class UniversityAdminList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, *args, **kwargs):
-        if user_url := self.request.query_params.get('user'):
+        if user_url := self.request.query_params.get("user"):
             user_pk = url_to_pk(user_url)
             admin = UniversityAdmin.objects.filter(user=user_pk).first()
             admin.delete()
@@ -203,7 +147,7 @@ class CommentList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         user = self.request.user
-        if company_url := self.request.query_params.get('company'):
+        if company_url := self.request.query_params.get("company"):
             company = Company.objects.filter(pk=url_to_pk(company_url)).first()
             serializer.save(company=company, owner=user)
 
@@ -212,8 +156,8 @@ class CommentList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         queryset = Comment.objects.all()
-        email = self.request.query_params.get('email')
-        company_owner = self.request.query_params.get('company_owner')
+        email = self.request.query_params.get("email")
+        company_owner = self.request.query_params.get("company_owner")
 
         if email is not None:
             user = User.objects.filter(email=email).first()
@@ -237,21 +181,29 @@ class CompanyList(generics.ListCreateAPIView):
     serializer_class = CompanySerializer
     permission_classes = [IsCompanyOrReadOnly]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name']
-    ordering = ['-id']
+    search_fields = ["name"]
+    ordering = ["-id"]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-        admin = CompanyAdminSerializer(data={"user": serializer.data["owner"], "company": serializer.data["url"],
-                                             "post_permission": "True", "comment_permission": "True",
-                                             "create_jobs_permission": "True", "accept_applicants_permission": "True",
-                                             "view_applicants_permission": "True", "edit_profile_permission": "True"})
+        admin = CompanyAdminSerializer(
+            data={
+                "user": serializer.data["owner"],
+                "company": serializer.data["url"],
+                "post_permission": "True",
+                "comment_permission": "True",
+                "create_jobs_permission": "True",
+                "accept_applicants_permission": "True",
+                "view_applicants_permission": "True",
+                "edit_profile_permission": "True",
+            }
+        )
         admin.is_valid()
         admin.save()
 
     def get_queryset(self):
         queryset = Company.objects.all()
-        email = self.request.query_params.get('email')
+        email = self.request.query_params.get("email")
         if email is not None:
             user = User.objects.filter(email=email).first()
             queryset = queryset.filter(owner=user)
@@ -270,18 +222,23 @@ class UniversityList(generics.ListCreateAPIView):
     serializer_class = UniversitySerializer
     permission_classes = [UniversityViewPermissions]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name']
-    ordering = ['-id']
+    search_fields = ["name"]
+    ordering = ["-id"]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-        admin = UniversityAdminSerializer(data={"user": serializer.data["owner"], "university": serializer.data["url"]})
+        admin = UniversityAdminSerializer(
+            data={
+                "user": serializer.data["owner"],
+                "university": serializer.data["url"],
+            }
+        )
         admin.is_valid()
         admin.save()
 
     def get_queryset(self):
         queryset = University.objects.all()
-        email = self.request.query_params.get('email')
+        email = self.request.query_params.get("email")
         if email is not None:
             user = User.objects.filter(email=email).first()
             queryset = queryset.filter(owner=user)
@@ -294,8 +251,8 @@ class CompanyChoices(APIView):
 
     def get(self, request):
         data = {
-            'industry_choices': Company.Industries.choices,
-            'employee_choices': Company.EmployeeRange.choices
+            "industry_choices": Company.Industries.choices,
+            "employee_choices": Company.EmployeeRange.choices,
         }
         return Response(data)
 
@@ -317,7 +274,7 @@ class CompanyPicturesList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         queryset = CompanyPictures.objects.all()
-        owner = self.request.query_params.get('owner')
+        owner = self.request.query_params.get("owner")
         if owner is not None:
             pk = url_to_pk(owner)
             company = Company.objects.filter(pk=pk).first()
@@ -366,12 +323,12 @@ class JobList(generics.ListCreateAPIView):
     serializer_class = JobSerializer
     permission_classes = [IsAdmin]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['title']
-    ordering = ['-id']
+    search_fields = ["title"]
+    ordering = ["-id"]
 
     def get_queryset(self):
         queryset = Job.objects.all()
-        owner = self.request.query_params.get('owner')
+        owner = self.request.query_params.get("owner")
         if owner is not None:
             pk = url_to_pk(owner)
             company = Company.objects.filter(pk=pk).first()
@@ -384,8 +341,8 @@ class JobChoices(APIView):
 
     def get(self, request):
         data = {
-            'category_choices': Job.JobCategories.choices,
-            'type_choices': Job.JobType.choices
+            "category_choices": Job.JobCategories.choices,
+            "type_choices": Job.JobType.choices,
         }
         return Response(data)
 
@@ -400,12 +357,12 @@ class PostList(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [filters.OrderingFilter]
-    ordering_filters = ['id, publish_date, score']
-    ordering = ['-id']
+    ordering_filters = ["id, publish_date, score"]
+    ordering = ["-id"]
 
     def perform_create(self, serializer):
         user = self.request.user
-        if company_url := self.request.query_params.get('company'):
+        if company_url := self.request.query_params.get("company"):
             company = Company.objects.filter(pk=url_to_pk(company_url)).first()
             serializer.save(company=company, owner=user)
 
@@ -414,8 +371,8 @@ class PostList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         queryset = Post.objects.all()
-        email = self.request.query_params.get('email')
-        company_owner = self.request.query_params.get('company_owner')
+        email = self.request.query_params.get("email")
+        company_owner = self.request.query_params.get("company_owner")
         if email is not None:
             user = User.objects.filter(email=email).first()
             queryset = queryset.filter(owner=user)
@@ -486,9 +443,12 @@ class UserList(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [UserViewPermissions]
-    filter_backends = [filters.SearchFilter, django_filters.rest_framework.DjangoFilterBackend]
+    filter_backends = [
+        filters.SearchFilter,
+        django_filters.rest_framework.DjangoFilterBackend,
+    ]
     filterset_fields = ["allowed_company_creation", "allowed_university_creation"]
-    search_fields = ['first_name', "last_name", "email"]
+    search_fields = ["first_name", "last_name", "email"]
 
     def get_queryset(self):
         if not_admin_of := self.request.query_params.get("not_admin_of"):
@@ -527,7 +487,7 @@ class VoteList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         user = self.request.user
-        if company_url := self.request.query_params.get('company'):
+        if company_url := self.request.query_params.get("company"):
             company = Company.objects.filter(pk=url_to_pk(company_url)).first()
             serializer.save(company=company, user=user)
 
@@ -535,14 +495,16 @@ class VoteList(generics.ListCreateAPIView):
             serializer.save(user=user)
 
     def delete(self, request, *args, **kwargs):
-        company_url = self.request.query_params.get('company')
-        post_url = request.POST['post']
+        company_url = self.request.query_params.get("company")
+        post_url = request.POST["post"]
         post_pk = url_to_pk(post_url)
         post = Post.objects.filter(pk=post_pk).first()
         user = self.request.user
 
         if company_url is not None:  # if an employer user votes
-            assert user.user_type == user.UserType.EMPLOYER, "Only employer users can give a company as vote owner"
+            assert (
+                user.user_type == user.UserType.EMPLOYER
+            ), "Only employer users can give a company as vote owner"
             company = Company.objects.filter(pk=url_to_pk(company_url))
             Vote.objects.filter(company=company, post=post).delete()
 
@@ -557,6 +519,7 @@ class UpdatePassword(APIView):
     """
     An endpoint for changing password.
     """
+
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self, queryset=None):
@@ -570,8 +533,10 @@ class UpdatePassword(APIView):
             # Check old password
             old_password = serializer.data.get("old_password")
             if not self.object.check_password(old_password):
-                return Response({"old_password": ["Wrong password."]},
-                                status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"old_password": ["Wrong password."]},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             # set_password also hashes the password that the user will get
             self.object.set_password(serializer.data.get("new_password"))
             self.object.save()
