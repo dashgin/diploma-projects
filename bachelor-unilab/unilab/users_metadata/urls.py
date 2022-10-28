@@ -1,6 +1,24 @@
 from django.urls import path
 
+from unilab.users_metadata.views import (
+    CertificationDetail,
+    CertificationList,
+    EducationDataDetail,
+    EducationDataList,
+    ExperienceDataDetail,
+    ExperienceDataList,
+    ExternalProfileDetail,
+    ExternalProfileList,
+    SkillDataDetail,
+    SkillDataList,
+    UniversityCourseDetail,
+    UniversityCourseList,
+    UserDataDetail,
+    UserDataList,
+)
+
 app_name = "users_metadata"
+
 urlpatterns = [
     path(
         "user-data",
@@ -61,5 +79,15 @@ urlpatterns = [
         "certifications/<int:pk>",
         CertificationDetail.as_view(),
         name="certification-detail",
+    ),
+    path(
+        "university-courses",
+        UniversityCourseList.as_view(),
+        name="universitycourse-list",
+    ),
+    path(
+        "university-courses/<int:pk>",
+        UniversityCourseDetail.as_view(),
+        name="universitycourse-detail",
     ),
 ]
