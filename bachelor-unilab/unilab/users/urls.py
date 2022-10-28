@@ -1,14 +1,20 @@
 from django.urls import path
 
-from unilab.users.views import (
-    user_detail_view,
-    user_redirect_view,
-    user_update_view,
-)
-
 app_name = "users"
 urlpatterns = [
-    path("~redirect/", view=user_redirect_view, name="redirect"),
-    path("~update/", view=user_update_view, name="update"),
-    path("<str:username>/", view=user_detail_view, name="detail"),
+    path(
+        "users",
+        UserList.as_view(),
+        name="user-list",
+    ),
+    path(
+        "users/<int:pk>",
+        UserDetail.as_view(),
+        name="user-detail",
+    ),
+    path(
+        "change-password",
+        UpdatePassword.as_view(),
+        name="updatepassword",
+    ),
 ]

@@ -1,1 +1,54 @@
 from django.urls import path
+
+urlpatterns = [
+    path(
+        "vote",
+        VoteList.as_view(),
+        name="vote-list",
+    ),
+    path(
+        "vote/<int:pk>",
+        VoteDetail.as_view(),
+        name="vote-detail",
+    ),
+    path(
+        "posts",
+        PostList.as_view(),
+        name="post-list",
+    ),
+    path(
+        "posts/<int:pk>",
+        PostDetail.as_view(),
+        name="post-detail",
+    ),
+    path(
+        "comments",
+        CommentList.as_view(),
+        name="comment-list",
+    ),
+    path(
+        "comments/<int:pk>",
+        CommentDetail.as_view(),
+        name="comment-detail",
+    ),
+    path(
+        "post-report",
+        PostReportList.as_view(),
+        name="postreport-list",
+    ),
+    path(
+        "post-report/<int:pk>",
+        PostReportDetail.as_view(),
+        name="postreport-detail",
+    ),
+    path(
+        "feedback-form",
+        FeedbackFormList.as_view(),
+        name="feedbackform-list",
+    ),
+    path(
+        "feedback-form/<int:pk>",
+        FeedbackFormDetail.as_view(),
+        name="feedbackform-detail",
+    ),
+]
