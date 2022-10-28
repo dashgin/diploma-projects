@@ -6,16 +6,16 @@ from unilab.organizations.models import OrganizationPage
 
 
 class University(OrganizationPage):
-
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name="owner_universities",
+        related_name="universities",
         on_delete=models.CASCADE,
     )
     admins = models.ManyToManyField(
-        "User",
+        settings.AUTH_USER_MODEL,
         blank=True,
         through="UniversityAdmin",
+        related_name="university_admin_set",
     )
     image = models.ImageField(
         upload_to="company_image/%Y/%m/%D/",
@@ -51,7 +51,9 @@ class UniversityAdmin(models.Model):
         verbose_name_plural = _("university admins")
 
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="university_admins"
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="university_admin",
     )
     university = models.ForeignKey(University, on_delete=models.CASCADE)
 

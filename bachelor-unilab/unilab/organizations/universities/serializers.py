@@ -40,9 +40,7 @@ class UniversityAdminSerializer(serializers.HyperlinkedModelSerializer):
         user = data["user"]
         university = data["university"]
 
-        if existing := UniversityAdmin.objects.filter(
-            user=user, university=university
-        ).first():
+        if UniversityAdmin.objects.filter(user=user, university=university).first():
             return serializers.ValidationError("User already an admin")
 
         return data

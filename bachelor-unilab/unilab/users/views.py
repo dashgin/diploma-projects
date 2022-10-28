@@ -1,18 +1,56 @@
 import re
 
-import django_filters.rest_framework
+import requests
+from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.utils.translation import gettext_lazy as _
-from rest_framework import filters, generics, status
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import generics, status
+from rest_framework.decorators import api_view
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.views import TokenObtainPairView
 
+from unilab.organizations.companies.models import Company
 from unilab.organizations.universities.models import University
 from unilab.users.serializers import ChangePasswordSerializer, UserSerializer
 from unilab.utils.permissions import UserViewPermissions
 
 User = get_user_model()
+
+
+class AccessTokenView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0]) from e
+        serializer.validated_data.pop("refresh", None)
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+def get_user(request):
+    token = request.POST.get("token")
+    if not token:
+        return Response({"response": None, "error": "no token given"})
+    try:
+        validated_token = JWTAuthentication().get_validated_token(token)
+        user_object = JWTAuthentication().get_user(validated_token)
+        response = requests.get(
+            f"{settings.API_URL}/api/users/{user_object.id}",
+            headers={"Authorization": f"Bearer {token}"},
+        )
+        return Response({"response": response.json()})
+    except InvalidToken as ex:
+        return Response({"response": None, "error": ex.detail["detail"]})
+    except Exception as ex:
+        return Response({"response": None, "error": "unknown error", "detail": str(ex)})
 
 
 class UpdatePassword(APIView):
@@ -53,10 +91,7 @@ class UserList(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [UserViewPermissions]
-    filter_backends = [
-        filters.SearchFilter,
-        django_filters.rest_framework.DjangoFilterBackend,
-    ]
+    filter_backends = [SearchFilter, DjangoFilterBackend]
     filterset_fields = ["allowed_company_creation", "allowed_university_creation"]
     search_fields = ["first_name", "last_name", "email"]
 

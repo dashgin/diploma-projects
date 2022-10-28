@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.filters import OrderingFilter
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from unilab.organizations.companies.models import Company
@@ -11,6 +13,7 @@ from unilab.posts.serializers import (
     PostSerializer,
     VoteSerializer,
 )
+from unilab.utils.data_converters import url_to_pk
 from unilab.utils.permissions import IsOwner
 
 User = get_user_model()
@@ -107,7 +110,7 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class PostList(generics.ListCreateAPIView):
     serializer_class = PostSerializer
-    filter_backends = [filters.OrderingFilter]
+    filter_backends = [OrderingFilter]
     ordering_filters = ["id, publish_date, score"]
     ordering = ["-id"]
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from unilab.users.models import (
+from unilab.users_metadata.models import (
     Certification,
     EducationData,
     ExperienceData,

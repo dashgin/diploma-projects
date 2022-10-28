@@ -1,5 +1,13 @@
 from django.urls import path
 
+from unilab.jobs.views import (
+    ApplicationDetail,
+    ApplicationList,
+    JobChoices,
+    JobDetail,
+    JobList,
+)
+
 urlpatterns = [
     path(
         "jobs",

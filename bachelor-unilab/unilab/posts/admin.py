@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Post, Vote, Comment, PostReport, FeedbackForm
 
+from .models import Comment, FeedbackForm, Post, PostReport, Vote
 
 admin.site.register(Post)
 admin.site.register(Vote)

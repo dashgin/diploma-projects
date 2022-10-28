@@ -3,6 +3,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from unilab.organizations.companies.models import Company
+
 
 class Post(models.Model):
     content = models.TextField()
@@ -18,7 +20,7 @@ class Post(models.Model):
         on_delete=models.CASCADE,
     )
     company = models.ForeignKey(
-        "Company",
+        Company,
         blank=True,
         on_delete=models.CASCADE,
         null=True,
@@ -31,7 +33,7 @@ class Vote(models.Model):
         on_delete=models.CASCADE,
     )
     company = models.ForeignKey(
-        "Company",
+        Company,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
@@ -42,7 +44,7 @@ class Vote(models.Model):
         UPVOTE = 1, _("Upvote")
         DOWNVOTE = 2, _("Downvote")
 
-    type_ = models.PositiveSmallIntegerField(choices=VoteTypes.choices)
+    v_type = models.PositiveSmallIntegerField(choices=VoteTypes.choices)
 
 
 class Comment(models.Model):
@@ -54,7 +56,7 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
     )
     company = models.ForeignKey(
-        "Company",
+        Company,
         on_delete=models.CASCADE,
         null=True,
         blank=True,

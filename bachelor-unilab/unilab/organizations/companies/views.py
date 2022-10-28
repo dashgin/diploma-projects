@@ -1,18 +1,22 @@
 import re
 
+from django.contrib.auth import get_user_model
 from rest_framework import filters, generics, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from unilab.organizations.companies.models import Company, CompanyAdmin
+from unilab.organizations.companies.models import Company, CompanyAdmin, CompanyPictures
 from unilab.organizations.companies.serializers import (
     CompanyAdminSerializer,
     CompanyPicturesSerializer,
     CompanySerializer,
 )
+from unilab.utils.data_converters import url_to_pk
 from unilab.utils.permissions import IsCompanyOrReadOnly, IsOwner
+
+User = get_user_model()
 
 
 class CompanyAdminList(generics.ListCreateAPIView):
@@ -104,11 +108,12 @@ class CompanyChoices(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        data = {
-            "industry_choices": Company.Industries.choices,
-            "employee_choices": Company.EmployeeRange.choices,
-        }
-        return Response(data)
+        return Response(
+            {
+                "industry_choices": Company.Industries.choices,
+                "employee_choices": Company.EmployeeRange.choices,
+            }
+        )
 
 
 class CompanyPicturesDetail(generics.RetrieveUpdateDestroyAPIView):

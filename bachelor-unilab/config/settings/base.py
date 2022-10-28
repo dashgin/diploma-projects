@@ -88,7 +88,11 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "unilab.users",
-    # Your stuff: custom apps go here
+    "unilab.users_metadata",
+    "unilab.organizations.companies",
+    "unilab.organizations.universities",
+    "unilab.jobs",
+    "unilab.posts",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -192,7 +196,6 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                "unilab.users.context_processors.allauth_settings",
             ],
         },
     }
@@ -251,7 +254,7 @@ LOGGING = {
     "formatters": {
         "verbose": {
             "format": "%(levelname)s %(asctime)s %(module)s "
-                      "%(process)d %(thread)d %(message)s"
+            "%(process)d %(thread)d %(message)s"
         }
     },
     "handlers": {

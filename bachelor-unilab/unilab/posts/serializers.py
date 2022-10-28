@@ -4,6 +4,7 @@ from rest_framework import serializers
 from unilab.organizations.companies.models import Company
 from unilab.organizations.companies.serializers import CompanySerializer
 from unilab.posts.models import Comment, FeedbackForm, Post, PostReport, Vote
+from unilab.users.serializers import UserSerializer
 from unilab.utils.data_converters import url_to_pk
 
 User = get_user_model()
@@ -76,7 +77,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         if vote:
             # go through all types of labels and get the one matching the attribute type of vote (int).
             for label_tup in vote.TYPE_CHOICES:
-                if label_tup[0] == vote.type_:
+                if label_tup[0] == vote.v_type:
                     vote_label = label_tup[1]
                     break
 

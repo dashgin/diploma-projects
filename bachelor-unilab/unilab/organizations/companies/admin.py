@@ -1,9 +1,7 @@
 from django.contrib import admin
-from .models import Post, Vote, Comment, PostReport, FeedbackForm
 
+from .models import Company, CompanyAdmin, CompanyPictures
 
-admin.site.register(Post)
-admin.site.register(Vote)
-admin.site.register(Comment)
-admin.site.register(PostReport)
-admin.site.register(FeedbackForm)
+admin.site.register(Company)
+admin.site.register(CompanyAdmin)
+admin.site.register(CompanyPictures)

@@ -13,16 +13,15 @@ def enforce_csrf(request):
     check.process_request(request)
     if reason := check.process_view(request, None, (), {}):
         # CSRF failed, bail with explicit error message
-        raise exceptions.PermissionDenied(f'CSRF Failed: {reason}')
+        raise exceptions.PermissionDenied(f"CSRF Failed: {reason}")
 
 
 class HeaderOrCookieJWTAuthentication(JWTAuthentication):
-
     def authenticate(self, request):
         header = self.get_header(request)
 
         if header is None:
-            raw_token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE']) or None
+            raw_token = request.COOKIES.get(settings.SIMPLE_JWT["AUTH_COOKIE"]) or None
         else:
             raw_token = self.get_raw_token(header)
         if raw_token is None:

@@ -1,5 +1,18 @@
 from django.urls import path
 
+from unilab.posts.views import (
+    CommentDetail,
+    CommentList,
+    FeedbackFormDetail,
+    FeedbackFormList,
+    PostDetail,
+    PostList,
+    PostReportDetail,
+    PostReportList,
+    VoteDetail,
+    VoteList,
+)
+
 urlpatterns = [
     path(
         "vote",

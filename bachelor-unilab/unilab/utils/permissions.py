@@ -1,5 +1,15 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from rest_framework import permissions
+
+from unilab.jobs.models import Job
+from unilab.organizations.companies.models import Company
+from unilab.organizations.universities.models import University
+from unilab.posts.models import Comment, Post
+from unilab.users_metadata.models import EducationData, ExperienceData, UserData
+from unilab.utils.data_converters import url_to_pk
+
+User = get_user_model()
 
 
 class IsOwner(permissions.BasePermission):
@@ -54,7 +64,7 @@ class UserViewPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method != "PATCH" or list(request.POST) != ["university"]:
             return True
-        if uni_url := request.POST.get("university"):
+        if request.POST.get("university"):
             uni_pk = url_to_pk(request.POST.get("university"))
             uni = University.objects.filter(pk=uni_pk).first()
             return request.user in uni.admins.all()
@@ -72,13 +82,15 @@ class UserViewPermissions(permissions.BasePermission):
         if request.method == "PATCH" and list(request.POST) == ["university"]:
             # only university of student is allowed to delete him from their uni
             if request.POST["university"] == "":
-                return obj.university in request.user.university_admins.all()
+                return obj.university in request.user.university_admin.all()
 
             else:
                 return True
 
-        elif request.method == "PATCH" and ("allowed_company_creation" in list(request.POST) or
-                                            "allowed_university_creation" in list(request.POST)):
+        elif request.method == "PATCH" and (
+            "allowed_company_creation" in list(request.POST)
+            or "allowed_university_creation" in list(request.POST)
+        ):
             return request.user.is_superuser
 
         else:
@@ -102,7 +114,7 @@ class UniversityViewPermissions(permissions.BasePermission):
             return True
 
         else:
-            return obj in request.user.university_admins
+            return obj in request.user.university_admin
 
 
 class IsCompanyOrReadOnly(permissions.BasePermission):
@@ -115,7 +127,10 @@ class IsCompanyOrReadOnly(permissions.BasePermission):
             return True
 
         else:
-            return bool(not isinstance(request.user, AnonymousUser) and request.user.allowed_company_creation)
+            return bool(
+                not isinstance(request.user, AnonymousUser)
+                and request.user.allowed_company_creation
+            )
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
@@ -125,7 +140,7 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 
 
 class CompanyOwner(permissions.BasePermission):
-    """"Check that the company creating the job is owned by the user"""
+    """ "Check that the company creating the job is owned by the user"""
 
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
@@ -135,7 +150,7 @@ class CompanyOwner(permissions.BasePermission):
             return False
 
         else:
-            if owner_url := request.POST.get('owner'):
+            if owner_url := request.POST.get("owner"):
                 owner = Company.objects.filter(pk=url_to_pk(owner_url)).first()
             else:
                 self.message = "Please add the company owner url"

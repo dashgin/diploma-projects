@@ -1,4 +1,3 @@
-import requests
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -9,55 +8,15 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-from rest_framework import status
 from rest_framework.authtoken.views import obtain_auth_token
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
-)
+from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
+
+from unilab.users.views import AccessTokenView, get_user
 
 urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-# Auth
-class AccessTokenView(TokenObtainPairView):
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-
-        try:
-            serializer.is_valid(raise_exception=True)
-        except TokenError as e:
-            raise InvalidToken(e.args[0]) from e
-        serializer.validated_data.pop("refresh", None)
-        return Response(serializer.validated_data, status=status.HTTP_200_OK)
-
-
-@api_view(["POST"])
-def get_user(request):
-    token = request.POST.get("token")
-    if not token:
-        return Response({"response": None, "error": "no token given"})
-    try:
-        validated_token = JWTAuthentication().get_validated_token(token)
-        user_object = JWTAuthentication().get_user(validated_token)
-        response = requests.get(
-            f"{settings.API_URL}/api/users/{user_object.id}",
-            headers={"Authorization": f"Bearer {token}"},
-        )
-        return Response({"response": response.json()})
-    except InvalidToken as ex:
-        return Response({"response": None, "error": ex.detail["detail"]})
-    except Exception as ex:
-        return Response({"response": None, "error": "unknown error"})
-
 
 urlpatterns += [
     path("api/token", AccessTokenView.as_view(), name="token_obtain"),

@@ -2,15 +2,15 @@ import re
 
 
 def url_to_pk(url):
-    pk_match = re.search(r'/(\d+)( *|/|.json|.json/)$', url)
+    pk_match = re.search(r"/(\d+)( *|/|.json|.json/)$", url)
     return pk_match[1]
 
 
 def skills_categorize(skill_list):
     output = {}
     for item in skill_list:
-        category = item['category'].capitalize()
-        skill = item['skill'].lower()
+        category = item["category"].capitalize()
+        skill = item["skill"].lower()
         output.setdefault(category, []).append(skill)
     return output
 

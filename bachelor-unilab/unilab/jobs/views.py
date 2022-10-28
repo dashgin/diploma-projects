@@ -5,7 +5,8 @@ from rest_framework.views import APIView
 from unilab.jobs.models import Application, Job
 from unilab.jobs.serializers import ApplicationSerializer, JobSerializer
 from unilab.organizations.companies.models import Company
-from unilab.utils.permissions import IsAdmin, IsOwner, IsCompanyOrReadOnly
+from unilab.utils.data_converters import url_to_pk
+from unilab.utils.permissions import IsAdmin, IsCompanyOrReadOnly, IsOwner
 
 
 class ApplicationDetail(generics.RetrieveUpdateDestroyAPIView):

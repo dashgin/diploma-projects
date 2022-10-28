@@ -6,14 +6,13 @@ from unilab.organizations.models import OrganizationPage
 
 
 class Company(OrganizationPage):
-
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="companies",
         on_delete=models.CASCADE,
     )
     admins = models.ManyToManyField(
-        "User",
+        settings.AUTH_USER_MODEL,
         blank=True,
         through="CompanyAdmin",
     )
@@ -57,7 +56,7 @@ class CompanyPictures(models.Model):
         verbose_name_plural = _("company pictures")
 
     owner = models.ForeignKey(
-        "Company", related_name="pictures", on_delete=models.CASCADE
+        Company, related_name="pictures", on_delete=models.CASCADE
     )
     image = models.ImageField(upload_to="company_pictures/%Y/%m/%D/")
     description = models.TextField(blank=True, null=True)
@@ -72,7 +71,7 @@ class CompanyAdmin(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="company_admins",
+        related_name="company_admin",
     )
     company = models.ForeignKey(
         Company,

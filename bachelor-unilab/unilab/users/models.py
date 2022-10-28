@@ -1,10 +1,13 @@
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import UserManager as BaseUserManager
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from unilab.organizations.universities.models import University
 
-class UserManager(models.Manager):
+
+class UserManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
         if not email:
             raise ValueError(_("The Email must be set"))
@@ -29,7 +32,7 @@ class UserManager(models.Manager):
 class User(AbstractUser):
 
     university = models.ForeignKey(
-        "University",
+        University,
         related_name="students",
         on_delete=models.CASCADE,
         null=True,

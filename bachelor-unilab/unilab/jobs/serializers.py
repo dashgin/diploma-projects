@@ -3,6 +3,7 @@ from rest_framework import serializers
 from unilab.jobs.models import Application, Job
 from unilab.organizations.companies.models import Company
 from unilab.organizations.companies.serializers import CompanySerializer
+from unilab.users.serializers import UserSerializer
 
 
 class JobSerializer(serializers.HyperlinkedModelSerializer):

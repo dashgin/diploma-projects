@@ -1,5 +1,9 @@
+import re
+
+from django.contrib.auth import get_user_model
 from rest_framework import generics, status
 from rest_framework.exceptions import ValidationError
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -8,6 +12,10 @@ from unilab.organizations.universities.serializers import (
     UniversityAdminSerializer,
     UniversitySerializer,
 )
+from unilab.utils.data_converters import url_to_pk
+from unilab.utils.permissions import UniversityViewPermissions
+
+User = get_user_model()
 
 
 class UniversityDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -20,7 +28,7 @@ class UniversityList(generics.ListCreateAPIView):
     queryset = University.objects.all()
     serializer_class = UniversitySerializer
     permission_classes = [UniversityViewPermissions]
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [SearchFilter]
     search_fields = ["name"]
     ordering = ["-id"]
 
@@ -68,18 +76,18 @@ class UniversityAdminList(generics.ListCreateAPIView):
     def get_queryset(self):
         user = self.request.query_params.get("user")
         university = self.request.query_params.get("university")
-        if user is None and university is None:
-            return self.queryset
 
-        if user is not None and university is None:
+        if user and not university:
             user_pk = re.search(r"users/(\d+)", user)[1]
             return UniversityAdmin.objects.filter(user=user_pk)
 
-        if user is None and university is not None:
+        if not user and university:
             university_pk = re.search(r"companies/(\d+)", university)[1]
             return UniversityAdmin.objects.filter(company=university_pk)
 
-        if user is not None and university is not None:
+        if user and university:
             user_pk = re.search(r"users/(\d+)", user)[1]
             university_pk = re.search(r"companies/(\d+)", university)[1]
             return UniversityAdmin.objects.filter(company=university_pk, user=user_pk)
+
+        return self.queryset

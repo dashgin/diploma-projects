@@ -1,5 +1,7 @@
 from django.urls import path
 
+from unilab.users.views import UpdatePassword, UserDetail, UserList
+
 app_name = "users"
 urlpatterns = [
     path(

@@ -1,7 +1,11 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from unilab.users.models import UserData
+from unilab.jobs.models import Application
+from unilab.organizations.companies.models import Company, CompanyAdmin
+from unilab.organizations.universities.models import UniversityAdmin
+from unilab.posts.models import Post
+from unilab.users_metadata.models import UserData
 
 User = get_user_model()
 
@@ -26,7 +30,10 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     )
     # user_type_verbose = serializers.SerializerMethodField()
     voted_posts = serializers.HyperlinkedRelatedField(
-        many=True, view_name="post-detail", queryset=Post.objects.all(), required=False
+        many=True,
+        view_name="post-detail",
+        queryset=Post.objects.all(),
+        required=False,
     )
     occupation = serializers.SerializerMethodField()
     company_admins = serializers.HyperlinkedRelatedField(
