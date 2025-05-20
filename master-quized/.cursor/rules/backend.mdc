@@ -23,6 +23,8 @@ alwaysApply: false
 - Organize routes by resource in separate modules
 - Use the APIRouter with consistent prefixes and tags
 - Configure CORS middleware in the main FastAPI application
+- Use declarative route definitions with clear return type annotations.
+- Instead of @app.on_event("startup") and @app.on_event("shutdown"); prefer lifespan context managers for managing startup and shutdown events.
 
 ```python
 # Route organization pattern
@@ -142,6 +144,13 @@ class Settings(BaseSettings):
 - Use appropriate status codes and error messages
 - Implement consistent error handling across the application
 - Return detailed error messages where appropriate
+- Handle errors and edge cases at the beginning of functions with early returns.  
+- Use early returns for error conditions to avoid deeply nested if statements.  
+- Place the happy path last in the function for improved readability.  
+- Avoid unnecessary else statements; use the if-return pattern instead.  
+- Implement proper error logging and user-friendly error messages.  
+- Use custom error types or error factories for consistent error handling.  
+
 
 ```python
 # Error handling pattern
@@ -158,6 +167,10 @@ if not resource:
 - Follow PEP 8 style guide
 - Use type annotations throughout the codebase
 - Use docstrings for functions and classes
+- **RORO Pattern**: Use the "Receive an Object, Return an Object" pattern.
+- **Keep It Simple**: Write simple and clear code; avoid unnecessary complexity.
+- **Avoid Global Variables**: Limit the use of global variables to reduce side effects.
+- Try to minimize `typing.Any` usage
 
 ### Imports
 - Group imports in the following order:
@@ -177,14 +190,6 @@ from sqlmodel import select
 from app import crud
 from app.api.deps import CurrentUser, SessionDep
 ```
-
-## Testing
-
-### Testing Strategy
-- Implement comprehensive testing with pytest
-- Test HTTP endpoints with FastAPI's TestClient
-- Use test coverage tools to measure and maintain code coverage
-- Use fixtures for common test setup
 
 ## Documentation
 
@@ -213,11 +218,18 @@ def read_resources(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
 - Implement a consistent email sending interface
 - Test email rendering separately from sending
 
-## Background Tasks
-
-### Asynchronous Processing
+## Background Tasks and Asynchronous Processing
 - Use FastAPI background tasks for simple asynchronous operations
-- Consider using Celery or other task queues for more complex background processing
 - Ensure proper error handling in background tasks
 
+Key Conventions
+
+1. Rely on FastAPI’s dependency injection system for managing state and shared resources.
+2. Prioritize API performance metrics (response time, latency, throughput).
+3. Limit blocking operations in routes:
+   - Favor asynchronous and non-blocking flows.
+   - Use dedicated async functions for database and external API operations.
+   - Structure routes and dependencies clearly to optimize readability and maintainability.
+
+Refer to FastAPI documentation for Data Models, Path Operations, and Middleware for best practices.
 
