@@ -151,3 +151,6 @@ const onSubmit: SubmitHandler<FormType> = async (data) => {
 - Use React.memo for expensive components
 - Use useMemo and useCallback for expensive calculations and callbacks
 
+
+# toast and alert
+use this: frontend/src/hooks/useCustomToast.ts
