@@ -1,39 +1,27 @@
+import React from "react"
+
 import {
   Box,
   Flex,
   Heading,
-  Spinner,
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { QuizRead } from "../../client"
-import { useQuizzes } from "../../hooks/useQuizzes"
+import { QuizRead, QuizzesService } from "../../client"
+import { useQuery } from "@tanstack/react-query"
 
 interface QuizListProps {
   quizzes?: QuizRead[] | null
 }
 
 export function QuizList({ quizzes: filteredQuizzes }: QuizListProps) {
-  const { data: quizzes, isLoading, error } = useQuizzes()
+  const { data: quizzes } = useQuery({
+    queryKey: ["quizzes"],
+    queryFn: () => QuizzesService.readQuizzes(),
+  })
   
   // Use filtered quizzes if provided, otherwise use all quizzes
   const displayQuizzes = filteredQuizzes || quizzes || []
-
-  if (isLoading && !filteredQuizzes) {
-    return (
-      <Box textAlign="center" py={10}>
-        <Spinner size="xl" />
-      </Box>
-    )
-  }
-
-  if (error && !filteredQuizzes) {
-    return (
-      <Box textAlign="center" py={10}>
-        <Text color="red.500">Error loading quizzes</Text>
-      </Box>
-    )
-  }
 
   return (
     <Box>
@@ -43,7 +31,7 @@ export function QuizList({ quizzes: filteredQuizzes }: QuizListProps) {
       {displayQuizzes.length === 0 ? (
         <Text>No quizzes found.</Text>
       ) : (
-        <Stack spacing={4}>
+        <Stack gap={4}>
           {displayQuizzes.map((quiz) => (
             <Box 
               key={quiz.id} 
@@ -58,16 +46,11 @@ export function QuizList({ quizzes: filteredQuizzes }: QuizListProps) {
               <Flex justifyContent="space-between" alignItems="center">
                 <Box>
                   <Heading size="md">{quiz.title}</Heading>
-                  <Text mt={2}>{quiz.description}</Text>
+                  {quiz.instructions && <Text mt={2}>{quiz.instructions}</Text>}
                   <Flex mt={2} gap={4}>
                     <Text fontSize="sm">
-                      {quiz.questions?.length || 0} questions
+                      {/* Optional info about questions count */}
                     </Text>
-                    {quiz.time_limit && (
-                      <Text fontSize="sm">
-                        Time limit: {quiz.time_limit} minutes
-                      </Text>
-                    )}
                   </Flex>
                 </Box>
               </Flex>

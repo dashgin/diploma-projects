@@ -1,40 +1,53 @@
-import { Box } from "@chakra-ui/react"
+import { Box, Container, Spinner, Text } from "@chakra-ui/react"
 import { createFileRoute } from "@tanstack/react-router"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { KnowledgeAreaSearch } from "../../components/Common/KnowledgeAreaSearch"
 import { KnowledgeAreasList } from "../../components/Common/KnowledgeAreasList"
-import { useKnowledgeAreas } from "../../hooks/useKnowledgeAreas"
+import { useQuery } from "@tanstack/react-query"
+import { AreasService } from "../../client"
 
 export const Route = createFileRoute("/_layout/knowledge-areas")({
   component: KnowledgeAreasPage,
 })
 
 function KnowledgeAreasPage() {
-  const { data: areas } = useKnowledgeAreas()
-  const [filteredAreas, setFilteredAreas] = useState<typeof areas>([])
+  const { data: areas, isLoading, error } = useQuery({
+    queryKey: ["knowledgeAreas"],
+    queryFn: () => AreasService.readAreas(),
+  })
+  const [searchTerm, setSearchTerm] = useState("")
 
-  // Update filtered areas when data loads
-  useEffect(() => {
-    if (areas) {
-      setFilteredAreas(areas)
-    }
-  }, [areas])
+  const handleSearch = (term: string) => {
+    setSearchTerm(term)
+  }
 
-  const handleSearch = (searchTerm: string) => {
-    if (!areas) return
+  const filteredAreas = !areas ? [] : !searchTerm.trim() 
+    ? areas 
+    : areas.filter(
+        (area) =>
+          area.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (area.description &&
+            area.description.toLowerCase().includes(searchTerm.toLowerCase())),
+      )
 
-    if (!searchTerm.trim()) {
-      setFilteredAreas(areas)
-      return
-    }
-
-    const filtered = areas.filter(
-      (area) =>
-        area.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (area.description &&
-          area.description.toLowerCase().includes(searchTerm.toLowerCase())),
+  if (isLoading) {
+    return (
+      <Box p={4}>
+        <Box textAlign="center" py={10}>
+          <Spinner size="xl" />
+        </Box>
+      </Box>
     )
-    setFilteredAreas(filtered)
+  }
+
+  if (error) {
+    return (
+      <Box p={4}>
+        <Box textAlign="center" py={10}>
+          <Text color="red.500">Error loading knowledge areas</Text>
+        </Box>
+      </Box>
+    )
   }
 
   return (

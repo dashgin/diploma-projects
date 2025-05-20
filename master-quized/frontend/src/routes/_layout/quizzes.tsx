@@ -1,46 +1,148 @@
-import { Box, Container } from "@chakra-ui/react"
-import { createFileRoute } from "@tanstack/react-router"
-import { useEffect, useState } from "react"
-import { QuizList } from "../../components/Common/QuizList"
-import { QuizSearch } from "../../components/Common/QuizSearch"
-import { useQuizzes } from "../../hooks/useQuizzes"
+import {
+  Container,
+  EmptyState,
+  Flex,
+  Heading,
+  Table,
+  VStack,
+} from "@chakra-ui/react"
+import { useQuery } from "@tanstack/react-query"
+import { createFileRoute, useNavigate } from "@tanstack/react-router"
+import { FiSearch } from "react-icons/fi"
+import { z } from "zod"
 
-export const Route = createFileRoute("/_layout/quizzes")({
-  component: QuizzesPage,
+import { QuizzesService } from "@/client"
+import { QuizActionsMenu } from "@/components/Quizzes/QuizActionsMenu"
+import AddQuiz from "@/components/Quizzes/AddQuiz"
+import PendingQuizzes from "@/components/Pending/PendingQuizzes"
+import {
+  PaginationItems,
+  PaginationNextTrigger,
+  PaginationPrevTrigger,
+  PaginationRoot,
+} from "@/components/ui/pagination.tsx"
+
+const quizzesSearchSchema = z.object({
+  page: z.number().catch(1),
 })
 
-function QuizzesPage() {
-  const { data: quizzes } = useQuizzes()
-  const [filteredQuizzes, setFilteredQuizzes] = useState<typeof quizzes>([])
+const PER_PAGE = 5
 
-  // Update filtered quizzes when data loads
-  useEffect(() => {
-    if (quizzes) {
-      setFilteredQuizzes(quizzes)
-    }
-  }, [quizzes])
+function getQuizzesQueryOptions({ page }: { page: number }) {
+  return {
+    queryFn: () =>
+      QuizzesService.readQuizzes({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
+    queryKey: ["quizzes", { page }],
+  }
+}
 
-  const handleSearch = (searchTerm: string) => {
-    if (!quizzes) return
+export const Route = createFileRoute("/_layout/quizzes")({
+  component: Quizzes,
+  validateSearch: (search) => quizzesSearchSchema.parse(search),
+})
 
-    if (!searchTerm.trim()) {
-      setFilteredQuizzes(quizzes)
-      return
-    }
+function QuizzesTable() {
+  const navigate = useNavigate({ from: Route.fullPath })
+  const { page } = Route.useSearch()
 
-    const filtered = quizzes.filter(
-      (quiz) =>
-        quiz.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (quiz.description &&
-          quiz.description.toLowerCase().includes(searchTerm.toLowerCase())),
+  const { data, isLoading, isPlaceholderData } = useQuery({
+    ...getQuizzesQueryOptions({ page }),
+    placeholderData: (prevData) => prevData,
+  })
+
+  const setPage = (page: number) =>
+    navigate({
+      search: (prev: { [key: string]: string }) => ({ ...prev, page }),
+    })
+
+  const quizzes = data ?? []
+  const count = data?.length ?? 0
+
+  if (isLoading) {
+    return <PendingQuizzes />
+  }
+
+  if (quizzes.length === 0) {
+    return (
+      <EmptyState.Root>
+        <EmptyState.Content>
+          <EmptyState.Indicator>
+            <FiSearch />
+          </EmptyState.Indicator>
+          <VStack textAlign="center">
+            <EmptyState.Title>You don't have any quizzes yet</EmptyState.Title>
+            <EmptyState.Description>
+              Add a new quiz to get started
+            </EmptyState.Description>
+          </VStack>
+        </EmptyState.Content>
+      </EmptyState.Root>
     )
-    setFilteredQuizzes(filtered)
   }
 
   return (
-    <Container maxW="container.xl" py={8}>
-      <QuizSearch onSearch={handleSearch} />
-      <QuizList quizzes={filteredQuizzes} />
+    <>
+      <Table.Root size={{ base: "sm", md: "md" }}>
+        <Table.Header>
+          <Table.Row>
+            <Table.ColumnHeader w="sm">ID</Table.ColumnHeader>
+            <Table.ColumnHeader w="sm">Title</Table.ColumnHeader>
+            <Table.ColumnHeader w="sm">Instructions</Table.ColumnHeader>
+            <Table.ColumnHeader w="sm">Status</Table.ColumnHeader>
+            <Table.ColumnHeader w="sm">Actions</Table.ColumnHeader>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {quizzes?.map((quiz) => (
+            <Table.Row key={quiz.id} opacity={isPlaceholderData ? 0.5 : 1}>
+              <Table.Cell truncate maxW="sm">
+                {quiz.id}
+              </Table.Cell>
+              <Table.Cell truncate maxW="sm">
+                {quiz.title}
+              </Table.Cell>
+              <Table.Cell
+                color={!quiz.instructions ? "gray" : "inherit"}
+                truncate
+                maxW="30%"
+              >
+                {quiz.instructions || "N/A"}
+              </Table.Cell>
+              <Table.Cell truncate maxW="sm">
+                {quiz.is_active ? "Active" : "Inactive"}
+              </Table.Cell>
+              <Table.Cell>
+                <QuizActionsMenu quiz={quiz} />
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table.Root>
+      <Flex justifyContent="flex-end" mt={4}>
+        <PaginationRoot
+          count={count}
+          pageSize={PER_PAGE}
+          onPageChange={({ page }) => setPage(page)}
+        >
+          <Flex>
+            <PaginationPrevTrigger />
+            <PaginationItems />
+            <PaginationNextTrigger />
+          </Flex>
+        </PaginationRoot>
+      </Flex>
+    </>
+  )
+}
+
+function Quizzes() {
+  return (
+    <Container maxW="full">
+      <Heading size="lg" pt={12}>
+        Quizzes Management
+      </Heading>
+      <AddQuiz />
+      <QuizzesTable />
     </Container>
   )
 } 
