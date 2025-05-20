@@ -1,0 +1,201 @@
+---
+description: 
+globs: frontend/**
+alwaysApply: false
+---
+
+# Frontend Style Guide
+
+## Project Structure
+
+### Directory Organization
+- `/src/components`: UI components organized by domain/purpose
+  - `/ui`: Reusable UI components (buttons, inputs, etc.)
+  - `/Common`: Common components used across the app
+  - `/Items`, `/Admin`, etc.: Domain-specific components
+- `/src/routes`: Route components using TanStack Router
+- `/src/client`: API client and type definitions
+- `/src/hooks`: Custom React hooks
+- `/src/theme`: Theme definitions and styling
+
+## Component Style
+
+### Component Structure
+- Use function components with TypeScript interfaces for props
+- Follow React's naming conventions (PascalCase for components)
+- Use React.forwardRef for components that need to forward refs
+- Group related components in the same directory
+
+```tsx
+// Component definition pattern
+export interface ButtonProps extends ChakraButtonProps, ButtonLoadingProps {}
+
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  function Button(props, ref) {
+    const { loading, disabled, loadingText, children, ...rest } = props
+    return (
+      // Component implementation
+    )
+  }
+)
+```
+
+### UI Components
+- Build on top of Chakra UI components
+- Extend Chakra UI props when creating custom components
+- Provide appropriate TypeScript interfaces
+- Support accessibility features
+- Include loading states where appropriate
+
+## Routing Style
+
+### Route Definition
+- Use TanStack Router's file-based routing approach
+- Define routes using `createFileRoute`
+- Include route-specific components
+- Use beforeLoad for navigation guards
+
+```tsx
+export const Route = createFileRoute("/path")({
+  component: ComponentName,
+  beforeLoad: async () => {
+    // Navigation guards, data loading, etc.
+  },
+})
+```
+
+### Layout Structure
+- Organize layouts in `/routes/_layout` directory
+- Use nested layouts for consistent UI sections
+
+## Request and Data Management
+
+### API Client
+- Use generated API clients from OpenAPI specs
+- Keep all API-related code in the `/client` directory
+- Use type definitions from generated client
+
+### Data Fetching
+- Use TanStack Query (React Query) for data fetching
+- Define queries in custom hooks
+- Handle loading and error states consistently
+- Invalidate queries after mutations
+
+```tsx
+// Example query pattern
+const { data, isLoading, error } = useQuery({
+  queryKey: ["resourceName", id],
+  queryFn: () => ApiService.fetchResource(id),
+})
+```
+
+### Mutations
+- Use TanStack Query mutations for data changes
+- Handle success and error cases
+- Update the UI optimistically when appropriate
+
+```tsx
+// Example mutation pattern
+const mutation = useMutation({
+  mutationFn: (data) => ApiService.updateResource(data),
+  onSuccess: () => {
+    // Handle success
+    queryClient.invalidateQueries({ queryKey: ["resources"] })
+  },
+  onError: (error) => {
+    // Handle error
+  },
+})
+```
+
+## Form Handling
+
+### Form Structure
+- Use react-hook-form for form state management
+- Define validation rules in-line or in a utility file
+- Handle form submission with appropriate loading states
+
+```tsx
+const {
+  register,
+  handleSubmit,
+  formState: { errors, isSubmitting },
+} = useForm<FormType>({
+  mode: "onBlur",
+  criteriaMode: "all",
+  defaultValues: {
+    // Default values
+  },
+})
+
+const onSubmit: SubmitHandler<FormType> = async (data) => {
+  // Form submission logic
+}
+```
+
+## Authentication
+
+### Auth Management
+- Store auth tokens in localStorage
+- Create a custom useAuth hook for authentication logic
+- Include login, logout, and registration functionality
+- Protect routes using TanStack Router's beforeLoad
+
+## State Management
+
+### Local State
+- Use React hooks (useState, useReducer) for component-local state
+- Extract complex state logic to custom hooks
+
+### Global State
+- Use TanStack Query for server state
+- Use React Context for app-wide state when needed
+
+## Error Handling
+
+### Error Boundaries
+- Use React Error Boundary for catching component errors
+- Implement fallback UIs for error states
+
+### API Errors
+- Use a consistent approach to error handling
+- Display user-friendly error messages
+- Log detailed errors for debugging
+
+## Styling
+
+### Theme
+- Use Chakra UI for consistent styling
+- Define custom theme extensions in the theme directory
+- Use Chakra's component style recipes for custom styling
+- Maintain a consistent color scheme and spacing system
+
+## Code Quality
+
+### TypeScript
+- Use strict type checking
+- Define interfaces for all component props
+- Use type inference where appropriate
+- Avoid any type unless absolutely necessary
+
+### Formatting
+- Use Biome for code formatting and linting
+- Follow consistent naming conventions:
+  - PascalCase for components
+  - camelCase for functions and variables
+  - camelCase for files except for components (PascalCase)
+
+### Testing
+- Implement tests for critical components and functionality
+- Use Playwright for end-to-end testing
+
+## Performance Optimization
+
+### Code Splitting
+- Leverage TanStack Router's automatic code splitting
+- Split large components into smaller, focused ones
+
+### Memoization
+- Use React.memo for expensive components
+- Use useMemo and useCallback for expensive calculations and callbacks
+

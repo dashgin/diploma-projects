@@ -1,11 +1,4 @@
 QuizEd API Endpoints
-Authentication Endpoints
-POST /api/v1/login/access-token - Obtain JWT token pair for authentication
-POST /api/v1/login/refresh-token - Refresh JWT token
-Documentation Endpoints
-GET /schema/ - OpenAPI schema
-GET /docs/ - API documentation (Swagger UI)
-GET /api/schema/swagger-ui/ - Alternative Swagger UI
 User Endpoints
 GET /api/v1/users/{id}/ - Retrieve a specific user
 GET /api/v1/users/me/ - Get the currently logged-in user's profile

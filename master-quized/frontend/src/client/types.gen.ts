@@ -22,7 +22,7 @@ export type ItemPublic = {
   title: string
   description?: string | null
   id: string
-  owner_id: string
+  owner_id: number
 }
 
 export type ItemsPublic = {
@@ -65,7 +65,9 @@ export type UserCreate = {
   email: string
   is_active?: boolean
   is_superuser?: boolean
+  is_staff?: boolean
   full_name?: string | null
+  role?: string
   password: string
 }
 
@@ -73,8 +75,10 @@ export type UserPublic = {
   email: string
   is_active?: boolean
   is_superuser?: boolean
+  is_staff?: boolean
   full_name?: string | null
-  id: string
+  role?: string
+  id: number
 }
 
 export type UserRegister = {
@@ -92,7 +96,9 @@ export type UserUpdate = {
   email?: string | null
   is_active?: boolean
   is_superuser?: boolean
+  is_staff?: boolean
   full_name?: string | null
+  role?: string
   password?: string | null
 }
 
