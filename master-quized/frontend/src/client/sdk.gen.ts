@@ -4,6 +4,32 @@ import type { CancelablePromise } from "./core/CancelablePromise"
 import { OpenAPI } from "./core/OpenAPI"
 import { request as __request } from "./core/request"
 import type {
+  AreasReadAreasData,
+  AreasReadAreasResponse,
+  AssignmentsReadAssignmentsData,
+  AssignmentsReadAssignmentsResponse,
+  AssignmentsCreateAssignmentData,
+  AssignmentsCreateAssignmentResponse,
+  AssignmentsReadAssignmentData,
+  AssignmentsReadAssignmentResponse,
+  AssignmentsReadUserAssignmentsData,
+  AssignmentsReadUserAssignmentsResponse,
+  AttemptsReadAttemptsData,
+  AttemptsReadAttemptsResponse,
+  AttemptsCreateAttemptData,
+  AttemptsCreateAttemptResponse,
+  AttemptsReadAttemptData,
+  AttemptsReadAttemptResponse,
+  AttemptsCompleteAttemptData,
+  AttemptsCompleteAttemptResponse,
+  AttemptsReadUserAttemptsData,
+  AttemptsReadUserAttemptsResponse,
+  FeedbackCreateFeedbackData,
+  FeedbackCreateFeedbackResponse,
+  FeedbackReadFeedbackData,
+  FeedbackReadFeedbackResponse,
+  FeedbackReadFeedbackByResponseData,
+  FeedbackReadFeedbackByResponseResponse,
   ItemsReadItemsData,
   ItemsReadItemsResponse,
   ItemsCreateItemData,
@@ -23,8 +49,50 @@ import type {
   LoginResetPasswordResponse,
   LoginRecoverPasswordHtmlContentData,
   LoginRecoverPasswordHtmlContentResponse,
-  PrivateCreateUserData,
-  PrivateCreateUserResponse,
+  OptionsCreateOptionData,
+  OptionsCreateOptionResponse,
+  OptionsReadOptionData,
+  OptionsReadOptionResponse,
+  OptionsPartiallyUpdateOptionData,
+  OptionsPartiallyUpdateOptionResponse,
+  OptionsDeleteOptionData,
+  OptionsDeleteOptionResponse,
+  OptionsReadOptionsByQuestionData,
+  OptionsReadOptionsByQuestionResponse,
+  QuestionsCreateQuestionData,
+  QuestionsCreateQuestionResponse,
+  QuestionsReadQuestionsByQuizData,
+  QuestionsReadQuestionsByQuizResponse,
+  QuestionsReadQuestionData,
+  QuestionsReadQuestionResponse,
+  QuestionsPartiallyUpdateQuestionData,
+  QuestionsPartiallyUpdateQuestionResponse,
+  QuestionsDeleteQuestionData,
+  QuestionsDeleteQuestionResponse,
+  QuizzesReadQuizzesData,
+  QuizzesReadQuizzesResponse,
+  QuizzesCreateQuizData,
+  QuizzesCreateQuizResponse,
+  QuizzesReadQuizData,
+  QuizzesReadQuizResponse,
+  QuizzesUpdateQuizData,
+  QuizzesUpdateQuizResponse,
+  QuizzesDeleteQuizData,
+  QuizzesDeleteQuizResponse,
+  QuizzesReadUserQuizzesData,
+  QuizzesReadUserQuizzesResponse,
+  RecommendationsCreateRecommendationData,
+  RecommendationsCreateRecommendationResponse,
+  RecommendationsReadRecommendationData,
+  RecommendationsReadRecommendationResponse,
+  RecommendationsReadRecommendationsByFeedbackData,
+  RecommendationsReadRecommendationsByFeedbackResponse,
+  ResponsesCreateResponseData,
+  ResponsesCreateResponseResponse,
+  ResponsesReadResponseData,
+  ResponsesReadResponseResponse,
+  ResponsesReadResponsesByAttemptData,
+  ResponsesReadResponsesByAttemptResponse,
   UsersReadUsersData,
   UsersReadUsersResponse,
   UsersCreateUserData,
@@ -47,6 +115,324 @@ import type {
   UtilsTestEmailResponse,
   UtilsHealthCheckResponse,
 } from "./types.gen"
+
+export class AreasService {
+  /**
+   * Read Areas
+   * Retrieve knowledge areas.
+   * @param data The data for the request.
+   * @param data.skip
+   * @param data.limit
+   * @returns KnowledgeAreaRead Successful Response
+   * @throws ApiError
+   */
+  public static readAreas(
+    data: AreasReadAreasData = {},
+  ): CancelablePromise<AreasReadAreasResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/areas/",
+      query: {
+        skip: data.skip,
+        limit: data.limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
+
+export class AssignmentsService {
+  /**
+   * Read Assignments
+   * Retrieve quiz assignments.
+   * @param data The data for the request.
+   * @param data.skip
+   * @param data.limit
+   * @returns AssignmentRead Successful Response
+   * @throws ApiError
+   */
+  public static readAssignments(
+    data: AssignmentsReadAssignmentsData = {},
+  ): CancelablePromise<AssignmentsReadAssignmentsResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/assignments/",
+      query: {
+        skip: data.skip,
+        limit: data.limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Create Assignment
+   * Create new quiz assignment.
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns AssignmentRead Successful Response
+   * @throws ApiError
+   */
+  public static createAssignment(
+    data: AssignmentsCreateAssignmentData,
+  ): CancelablePromise<AssignmentsCreateAssignmentResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/v1/assignments/",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read Assignment
+   * Get assignment by ID.
+   * @param data The data for the request.
+   * @param data.assignmentId
+   * @returns AssignmentRead Successful Response
+   * @throws ApiError
+   */
+  public static readAssignment(
+    data: AssignmentsReadAssignmentData,
+  ): CancelablePromise<AssignmentsReadAssignmentResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/assignments/{assignment_id}",
+      path: {
+        assignment_id: data.assignmentId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read User Assignments
+   * Get assignments for the current user.
+   * @param data The data for the request.
+   * @param data.skip
+   * @param data.limit
+   * @returns AssignmentRead Successful Response
+   * @throws ApiError
+   */
+  public static readUserAssignments(
+    data: AssignmentsReadUserAssignmentsData = {},
+  ): CancelablePromise<AssignmentsReadUserAssignmentsResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/assignments/my_assignments/",
+      query: {
+        skip: data.skip,
+        limit: data.limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
+
+export class AttemptsService {
+  /**
+   * Read Attempts
+   * Retrieve quiz attempts.
+   * @param data The data for the request.
+   * @param data.skip
+   * @param data.limit
+   * @returns AttemptRead Successful Response
+   * @throws ApiError
+   */
+  public static readAttempts(
+    data: AttemptsReadAttemptsData = {},
+  ): CancelablePromise<AttemptsReadAttemptsResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/attempts/",
+      query: {
+        skip: data.skip,
+        limit: data.limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Create Attempt
+   * Create new quiz attempt.
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns AttemptRead Successful Response
+   * @throws ApiError
+   */
+  public static createAttempt(
+    data: AttemptsCreateAttemptData,
+  ): CancelablePromise<AttemptsCreateAttemptResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/v1/attempts/",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read Attempt
+   * Get attempt by ID.
+   * @param data The data for the request.
+   * @param data.attemptId
+   * @returns AttemptRead Successful Response
+   * @throws ApiError
+   */
+  public static readAttempt(
+    data: AttemptsReadAttemptData,
+  ): CancelablePromise<AttemptsReadAttemptResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/attempts/{attempt_id}",
+      path: {
+        attempt_id: data.attemptId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Complete Attempt
+   * Mark a quiz attempt as completed.
+   * @param data The data for the request.
+   * @param data.attemptId
+   * @param data.score
+   * @returns AttemptRead Successful Response
+   * @throws ApiError
+   */
+  public static completeAttempt(
+    data: AttemptsCompleteAttemptData,
+  ): CancelablePromise<AttemptsCompleteAttemptResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/v1/attempts/{attempt_id}/complete",
+      path: {
+        attempt_id: data.attemptId,
+      },
+      query: {
+        score: data.score,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read User Attempts
+   * Get attempts for the current user.
+   * @param data The data for the request.
+   * @param data.skip
+   * @param data.limit
+   * @returns AttemptRead Successful Response
+   * @throws ApiError
+   */
+  public static readUserAttempts(
+    data: AttemptsReadUserAttemptsData = {},
+  ): CancelablePromise<AttemptsReadUserAttemptsResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/attempts/my_attempts/",
+      query: {
+        skip: data.skip,
+        limit: data.limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
+
+export class FeedbackService {
+  /**
+   * Create Feedback
+   * Create new AI feedback.
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns FeedbackRead Successful Response
+   * @throws ApiError
+   */
+  public static createFeedback(
+    data: FeedbackCreateFeedbackData,
+  ): CancelablePromise<FeedbackCreateFeedbackResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/v1/feedback/",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read Feedback
+   * Get feedback by ID.
+   * @param data The data for the request.
+   * @param data.feedbackId
+   * @returns FeedbackRead Successful Response
+   * @throws ApiError
+   */
+  public static readFeedback(
+    data: FeedbackReadFeedbackData,
+  ): CancelablePromise<FeedbackReadFeedbackResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/feedback/{feedback_id}",
+      path: {
+        feedback_id: data.feedbackId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read Feedback By Response
+   * Get feedback for a specific response.
+   * @param data The data for the request.
+   * @param data.responseId ID of the response to get feedback for
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static readFeedbackByResponse(
+    data: FeedbackReadFeedbackByResponseData,
+  ): CancelablePromise<FeedbackReadFeedbackByResponseResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/feedback/by_response/",
+      query: {
+        response_id: data.responseId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
 
 export class ItemsService {
   /**
@@ -132,7 +518,7 @@ export class ItemsService {
     data: ItemsUpdateItemData,
   ): CancelablePromise<ItemsUpdateItemResponse> {
     return __request(OpenAPI, {
-      method: "PUT",
+      method: "PATCH",
       url: "/api/v1/items/{id}",
       path: {
         id: data.id,
@@ -274,23 +660,539 @@ export class LoginService {
   }
 }
 
-export class PrivateService {
+export class OptionsService {
   /**
-   * Create User
-   * Create a new user.
+   * Create Option
+   * Create new question option.
    * @param data The data for the request.
    * @param data.requestBody
-   * @returns UserPublic Successful Response
+   * @returns OptionRead Successful Response
    * @throws ApiError
    */
-  public static createUser(
-    data: PrivateCreateUserData,
-  ): CancelablePromise<PrivateCreateUserResponse> {
+  public static createOption(
+    data: OptionsCreateOptionData,
+  ): CancelablePromise<OptionsCreateOptionResponse> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/v1/private/users/",
+      url: "/api/v1/options/",
       body: data.requestBody,
       mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read Option
+   * Get option by ID.
+   * @param data The data for the request.
+   * @param data.optionId
+   * @returns OptionRead Successful Response
+   * @throws ApiError
+   */
+  public static readOption(
+    data: OptionsReadOptionData,
+  ): CancelablePromise<OptionsReadOptionResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/options/{option_id}",
+      path: {
+        option_id: data.optionId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Partially Update Option
+   * Partially update an option.
+   * @param data The data for the request.
+   * @param data.optionId
+   * @param data.requestBody
+   * @returns OptionRead Successful Response
+   * @throws ApiError
+   */
+  public static partiallyUpdateOption(
+    data: OptionsPartiallyUpdateOptionData,
+  ): CancelablePromise<OptionsPartiallyUpdateOptionResponse> {
+    return __request(OpenAPI, {
+      method: "PATCH",
+      url: "/api/v1/options/{option_id}",
+      path: {
+        option_id: data.optionId,
+      },
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Delete Option
+   * Delete an option.
+   * @param data The data for the request.
+   * @param data.optionId
+   * @returns void Successful Response
+   * @throws ApiError
+   */
+  public static deleteOption(
+    data: OptionsDeleteOptionData,
+  ): CancelablePromise<OptionsDeleteOptionResponse> {
+    return __request(OpenAPI, {
+      method: "DELETE",
+      url: "/api/v1/options/{option_id}",
+      path: {
+        option_id: data.optionId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read Options By Question
+   * Get options for a specific question.
+   * @param data The data for the request.
+   * @param data.questionId ID of the question to get options for
+   * @param data.skip
+   * @param data.limit
+   * @returns OptionRead Successful Response
+   * @throws ApiError
+   */
+  public static readOptionsByQuestion(
+    data: OptionsReadOptionsByQuestionData,
+  ): CancelablePromise<OptionsReadOptionsByQuestionResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/options/by_question/",
+      query: {
+        question_id: data.questionId,
+        skip: data.skip,
+        limit: data.limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
+
+export class QuestionsService {
+  /**
+   * Create Question
+   * Create new question.
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns QuestionRead Successful Response
+   * @throws ApiError
+   */
+  public static createQuestion(
+    data: QuestionsCreateQuestionData,
+  ): CancelablePromise<QuestionsCreateQuestionResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/v1/questions/",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read Questions By Quiz
+   * Get questions for a specific quiz.
+   * @param data The data for the request.
+   * @param data.quizId ID of the quiz to get questions for
+   * @param data.skip
+   * @param data.limit
+   * @returns QuestionRead Successful Response
+   * @throws ApiError
+   */
+  public static readQuestionsByQuiz(
+    data: QuestionsReadQuestionsByQuizData,
+  ): CancelablePromise<QuestionsReadQuestionsByQuizResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/questions/by_quiz/",
+      query: {
+        quiz_id: data.quizId,
+        skip: data.skip,
+        limit: data.limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read Question
+   * Get question by ID.
+   * @param data The data for the request.
+   * @param data.questionId
+   * @returns QuestionRead Successful Response
+   * @throws ApiError
+   */
+  public static readQuestion(
+    data: QuestionsReadQuestionData,
+  ): CancelablePromise<QuestionsReadQuestionResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/questions/{question_id}",
+      path: {
+        question_id: data.questionId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Partially Update Question
+   * Partially update a question.
+   * @param data The data for the request.
+   * @param data.questionId
+   * @param data.requestBody
+   * @returns QuestionRead Successful Response
+   * @throws ApiError
+   */
+  public static partiallyUpdateQuestion(
+    data: QuestionsPartiallyUpdateQuestionData,
+  ): CancelablePromise<QuestionsPartiallyUpdateQuestionResponse> {
+    return __request(OpenAPI, {
+      method: "PATCH",
+      url: "/api/v1/questions/{question_id}",
+      path: {
+        question_id: data.questionId,
+      },
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Delete Question
+   * Delete a question.
+   * @param data The data for the request.
+   * @param data.questionId
+   * @returns void Successful Response
+   * @throws ApiError
+   */
+  public static deleteQuestion(
+    data: QuestionsDeleteQuestionData,
+  ): CancelablePromise<QuestionsDeleteQuestionResponse> {
+    return __request(OpenAPI, {
+      method: "DELETE",
+      url: "/api/v1/questions/{question_id}",
+      path: {
+        question_id: data.questionId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
+
+export class QuizzesService {
+  /**
+   * Read Quizzes
+   * Retrieve quizzes.
+   * @param data The data for the request.
+   * @param data.skip
+   * @param data.limit
+   * @returns QuizRead Successful Response
+   * @throws ApiError
+   */
+  public static readQuizzes(
+    data: QuizzesReadQuizzesData = {},
+  ): CancelablePromise<QuizzesReadQuizzesResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/quizzes/",
+      query: {
+        skip: data.skip,
+        limit: data.limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Create Quiz
+   * Create new quiz.
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns QuizRead Successful Response
+   * @throws ApiError
+   */
+  public static createQuiz(
+    data: QuizzesCreateQuizData,
+  ): CancelablePromise<QuizzesCreateQuizResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/v1/quizzes/",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read Quiz
+   * Get quiz by ID.
+   * @param data The data for the request.
+   * @param data.quizId
+   * @returns QuizRead Successful Response
+   * @throws ApiError
+   */
+  public static readQuiz(
+    data: QuizzesReadQuizData,
+  ): CancelablePromise<QuizzesReadQuizResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/quizzes/{quiz_id}",
+      path: {
+        quiz_id: data.quizId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Update Quiz
+   * Update a quiz.
+   * @param data The data for the request.
+   * @param data.quizId
+   * @param data.requestBody
+   * @returns QuizRead Successful Response
+   * @throws ApiError
+   */
+  public static updateQuiz(
+    data: QuizzesUpdateQuizData,
+  ): CancelablePromise<QuizzesUpdateQuizResponse> {
+    return __request(OpenAPI, {
+      method: "PATCH",
+      url: "/api/v1/quizzes/{quiz_id}",
+      path: {
+        quiz_id: data.quizId,
+      },
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Delete Quiz
+   * Delete a quiz.
+   * @param data The data for the request.
+   * @param data.quizId
+   * @returns void Successful Response
+   * @throws ApiError
+   */
+  public static deleteQuiz(
+    data: QuizzesDeleteQuizData,
+  ): CancelablePromise<QuizzesDeleteQuizResponse> {
+    return __request(OpenAPI, {
+      method: "DELETE",
+      url: "/api/v1/quizzes/{quiz_id}",
+      path: {
+        quiz_id: data.quizId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read User Quizzes
+   * Get quizzes created by the current user.
+   * @param data The data for the request.
+   * @param data.skip
+   * @param data.limit
+   * @returns QuizRead Successful Response
+   * @throws ApiError
+   */
+  public static readUserQuizzes(
+    data: QuizzesReadUserQuizzesData = {},
+  ): CancelablePromise<QuizzesReadUserQuizzesResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/quizzes/my_quizzes/",
+      query: {
+        skip: data.skip,
+        limit: data.limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
+
+export class RecommendationsService {
+  /**
+   * Create Recommendation
+   * Create new learning resource recommendation.
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns ResourceRead Successful Response
+   * @throws ApiError
+   */
+  public static createRecommendation(
+    data: RecommendationsCreateRecommendationData,
+  ): CancelablePromise<RecommendationsCreateRecommendationResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/v1/recommendations/",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read Recommendation
+   * Get recommendation by ID.
+   * @param data The data for the request.
+   * @param data.resourceId
+   * @returns ResourceRead Successful Response
+   * @throws ApiError
+   */
+  public static readRecommendation(
+    data: RecommendationsReadRecommendationData,
+  ): CancelablePromise<RecommendationsReadRecommendationResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/recommendations/{resource_id}",
+      path: {
+        resource_id: data.resourceId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read Recommendations By Feedback
+   * Get recommendations for a specific feedback.
+   * @param data The data for the request.
+   * @param data.feedbackId ID of the feedback to get recommendations for
+   * @param data.skip
+   * @param data.limit
+   * @returns ResourceRead Successful Response
+   * @throws ApiError
+   */
+  public static readRecommendationsByFeedback(
+    data: RecommendationsReadRecommendationsByFeedbackData,
+  ): CancelablePromise<RecommendationsReadRecommendationsByFeedbackResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/recommendations/by_feedback/",
+      query: {
+        feedback_id: data.feedbackId,
+        skip: data.skip,
+        limit: data.limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
+
+export class ResponsesService {
+  /**
+   * Create Response
+   * Create new student response.
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns ResponseRead Successful Response
+   * @throws ApiError
+   */
+  public static createResponse(
+    data: ResponsesCreateResponseData,
+  ): CancelablePromise<ResponsesCreateResponseResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/v1/responses/",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read Response
+   * Get response by ID.
+   * @param data The data for the request.
+   * @param data.responseId
+   * @returns ResponseRead Successful Response
+   * @throws ApiError
+   */
+  public static readResponse(
+    data: ResponsesReadResponseData,
+  ): CancelablePromise<ResponsesReadResponseResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/responses/{response_id}",
+      path: {
+        response_id: data.responseId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read Responses By Attempt
+   * Get responses for a specific quiz attempt.
+   * @param data The data for the request.
+   * @param data.attemptId ID of the attempt to get responses for
+   * @param data.skip
+   * @param data.limit
+   * @returns ResponseRead Successful Response
+   * @throws ApiError
+   */
+  public static readResponsesByAttempt(
+    data: ResponsesReadResponsesByAttemptData,
+  ): CancelablePromise<ResponsesReadResponsesByAttemptResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/responses/by_attempt/",
+      query: {
+        attempt_id: data.attemptId,
+        skip: data.skip,
+        limit: data.limit,
+      },
       errors: {
         422: "Validation Error",
       },
