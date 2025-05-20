@@ -60,7 +60,7 @@ def read_option(
     return option
 
 
-@router.put("/{option_id}")
+@router.patch("/{option_id}")
 def update_option(
     *,
     session: SessionDep,

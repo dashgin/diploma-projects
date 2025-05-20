@@ -33,6 +33,7 @@ def create_question(
     question = crud.create_question(session=session, question_in=question_in)
     return question
 
+
 @router.get(
     "/by_quiz/",
     response_model=list[QuestionRead],
@@ -61,6 +62,7 @@ def read_questions_by_quiz(
     )
     return questions
 
+
 @router.get("/{question_id}", dependencies=[Depends(get_current_user)])
 def read_question(
     *,
@@ -86,7 +88,7 @@ def read_question(
     return question
 
 
-@router.put("/{question_id}", response_model=QuestionRead)
+@router.patch("/{question_id}", response_model=QuestionRead)
 def update_question(
     *,
     session: SessionDep,
@@ -188,5 +190,3 @@ def delete_question(
         )
 
     crud.delete_question(session=session, db_question=question)
-
-

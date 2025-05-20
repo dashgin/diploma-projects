@@ -68,7 +68,7 @@ def create_item(
     return item
 
 
-@router.put("/{id}", response_model=ItemPublic)
+@router.patch("/{id}", response_model=ItemPublic)
 def update_item(
     *,
     session: SessionDep,
