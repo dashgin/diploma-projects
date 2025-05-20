@@ -1,5 +1,5 @@
 ---
-description:  working style on backend part of project
+description: working style on backend part of project
 globs: 
 alwaysApply: false
 ---
@@ -10,17 +10,14 @@ alwaysApply: false
   - Use functional, declarative programming; avoid classes where possible.
   - Prefer iteration and modularization over code duplication.
   - Use descriptive variable names with auxiliary verbs (e.g., is_active, has_permission).
-  - Use lowercase with underscores for directories and files (e.g., routers/user_routes.py).
   - Favor named exports for routes and utility functions.
   - Use the Receive an Object, Return an Object (RORO) pattern.
   
   Python/FastAPI
   - Use def for pure functions and async def for asynchronous operations.
-  - Use type hints for all function signatures. Prefer Pydantic models over raw dictionaries for input validation.
-  - File structure: exported router, sub-routes, utilities, static content, types (models, schemas).
-  - Avoid unnecessary curly braces in conditional statements.
-  - For single-line statements in conditionals, omit curly braces.
-  - Use concise, one-line syntax for simple conditional statements (e.g., if condition: do_something()).
+  - Strictly follow pep8
+  - For typing use 3.10+ style hints, use building list dict tuple etc. classes instead of importing them from typing
+  - ignore wildcard imports
   
   Error Handling and Validation
   - Prioritize error handling and edge cases:
@@ -31,12 +28,6 @@ alwaysApply: false
     - Use guard clauses to handle preconditions and invalid states early.
     - Implement proper error logging and user-friendly error messages.
     - Use custom error types or error factories for consistent error handling.
-  
-  Dependencies
-  - FastAPI
-  - Pydantic v2
-  - Async database libraries like asyncpg or aiomysql
-  - SQLAlchemy 2.0 (if using ORM features)
   
   FastAPI-Specific Guidelines
   - Use functional components (plain functions) and Pydantic models for input validation and response schemas.
