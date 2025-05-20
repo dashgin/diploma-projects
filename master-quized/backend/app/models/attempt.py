@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import TYPE_CHECKING, Optional
 
-from sqlmodel import Field, Relationship
+from sqlmodel import Field, Relationship, SQLModel
 
 from .base import TimestampMixin
 
@@ -12,7 +12,25 @@ if TYPE_CHECKING:
     from .user import User
 
 
-class QuizAssignment(TimestampMixin, table=True):
+class AssignmentBase(SQLModel):
+    """Base model for quiz assignment schema"""
+    quiz_id: int
+    student_id: int
+    class_id: int | None = Field(default=None)
+    due_date: datetime | None = Field(default=None)
+
+
+class AssignmentCreate(AssignmentBase):
+    """Schema for quiz assignment creation"""
+    pass
+
+
+class AssignmentRead(AssignmentBase):
+    """Response schema for quiz assignments"""
+    id: int
+
+
+class QuizAssignment(TimestampMixin, AssignmentBase, table=True):
     """Assignment of a quiz to a student"""
 
     __tablename__ = "quiz_assignment"
@@ -23,7 +41,6 @@ class QuizAssignment(TimestampMixin, table=True):
     class_id: int | None = Field(
         default=None, foreign_key="study_class.id", ondelete="CASCADE"
     )
-    due_date: datetime | None = Field(default=None)
 
     # Relationships
     quiz: "Quiz" = Relationship(back_populates="assignments")
@@ -35,7 +52,34 @@ class QuizAssignment(TimestampMixin, table=True):
     )
 
 
-class StudentAttempt(TimestampMixin, table=True):
+class AttemptBase(SQLModel):
+    """Base model for student attempt schema"""
+    student_id: int
+    quiz_id: int
+    assignment_id: int | None = Field(default=None)
+    is_completed: bool = Field(default=False)
+
+
+class AttemptCreate(AttemptBase):
+    """Schema for student attempt creation"""
+    pass
+
+
+class AttemptUpdate(SQLModel):
+    """Schema for student attempt update"""
+    completed_at: datetime | None = Field(default=None)
+    score: float | None = Field(default=None)
+    is_completed: bool | None = Field(default=None)
+
+
+class AttemptRead(AttemptBase):
+    """Response schema for student attempts"""
+    id: int
+    completed_at: datetime | None = None
+    score: float | None = None
+
+
+class StudentAttempt(TimestampMixin, AttemptBase, table=True):
     """Record of a student attempting a quiz"""
 
     __tablename__ = "student_attempt"
@@ -48,7 +92,6 @@ class StudentAttempt(TimestampMixin, table=True):
     quiz_id: int = Field(foreign_key="quiz.id", ondelete="CASCADE")
     completed_at: datetime | None = Field(default=None)
     score: float | None = Field(default=None)
-    is_completed: bool = Field(default=False)
 
     # Relationships
     assignment: Optional["QuizAssignment"] = Relationship(back_populates="attempts")
@@ -60,7 +103,26 @@ class StudentAttempt(TimestampMixin, table=True):
     )
 
 
-class StudentResponse(TimestampMixin, table=True):
+class ResponseBase(SQLModel):
+    """Base model for student response schema"""
+    attempt_id: int
+    question_id: int
+    answer_text: str
+    is_correct: bool | None = Field(default=None)
+    selected_option_id: int | None = Field(default=None)
+
+
+class ResponseCreate(ResponseBase):
+    """Schema for student response creation"""
+    pass
+
+
+class ResponseRead(ResponseBase):
+    """Response schema for student responses"""
+    id: int
+
+
+class StudentResponse(TimestampMixin, ResponseBase, table=True):
     """Student's answer to a question in a quiz attempt"""
 
     __tablename__ = "student_response"
@@ -68,8 +130,6 @@ class StudentResponse(TimestampMixin, table=True):
     id: int = Field(default=None, primary_key=True)
     attempt_id: int = Field(foreign_key="student_attempt.id", ondelete="CASCADE")
     question_id: int = Field(foreign_key="quiz_question.id", ondelete="CASCADE")
-    answer_text: str = Field()
-    is_correct: bool | None = Field(default=None)
     selected_option_id: int | None = Field(
         default=None, foreign_key="question_option.id", ondelete="SET NULL"
     )

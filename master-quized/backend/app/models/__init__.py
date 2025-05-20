@@ -1,9 +1,7 @@
 from sqlmodel import SQLModel  # noqa
 
-from .attempt import QuizAssignment, StudentAttempt, StudentResponse
-from .class_model import StudyClass, StudyClassEnrollment
 from .common import Message, Token, TokenPayload
-from .feedback import AIFeedback, LearningResource
+from .feedback import AIFeedback, LearningResource, FeedbackCreate, FeedbackRead, ResourceCreate, ResourceRead
 from .item import Item, ItemCreate, ItemPatch, ItemRead
 from .quiz import (
     Quiz,
@@ -33,6 +31,19 @@ from .user import (
     UserUpdateMe,
 )
 from .base import TimestampMixin
+from .attempt import (
+    QuizAssignment,
+    AssignmentCreate,
+    AssignmentRead,
+    StudentAttempt,
+    AttemptCreate,
+    AttemptUpdate,
+    AttemptRead,
+    StudentResponse,
+    ResponseCreate,
+    ResponseRead
+)
+from .class_model import StudyClass
 
 __all__ = [
     # User models
@@ -42,9 +53,10 @@ __all__ = [
     "UserUpdate",
     "UsersPublic",
     "UpdatePassword",
-    "UserRegister",
     "NewPassword",
+    "UserRegister",
     "UserUpdateMe",
+    # Item models
     "Item",
     "ItemCreate",
     "ItemPatch",
@@ -69,13 +81,23 @@ __all__ = [
     "KnowledgeAreaRead",
     # Class models
     "StudyClass",
-    "StudyClassEnrollment",
     # Attempt models
     "QuizAssignment",
+    "AssignmentCreate",
+    "AssignmentRead",
     "StudentAttempt",
+    "AttemptCreate",
+    "AttemptUpdate",
+    "AttemptRead",
     "StudentResponse",
+    "ResponseCreate",
+    "ResponseRead",
     # Feedback models
     "AIFeedback",
+    "FeedbackCreate",
+    "FeedbackRead",
     "LearningResource",
+    "ResourceCreate",
+    "ResourceRead",
     "TimestampMixin",
 ]
