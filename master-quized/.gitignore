@@ -1,0 +1,9 @@
+.vscode
+frontend/node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+frontend/.env
+backend/.env
+backend/.venv/
