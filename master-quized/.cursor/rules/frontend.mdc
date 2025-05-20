@@ -41,10 +41,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 ```
 
 ### UI Components
-- Build on top of Chakra UI components
-- Extend Chakra UI props when creating custom components
 - Provide appropriate TypeScript interfaces
-- Support accessibility features
 - Include loading states where appropriate
 
 ## Routing Style
@@ -70,14 +67,9 @@ export const Route = createFileRoute("/path")({
 
 ## Request and Data Management
 
-### API Client
-- Use generated API clients from OpenAPI specs
-- Keep all API-related code in the `/client` directory
-- Use type definitions from generated client
 
 ### Data Fetching
 - Use TanStack Query (React Query) for data fetching
-- Define queries in custom hooks
 - Handle loading and error states consistently
 - Invalidate queries after mutations
 
@@ -133,14 +125,6 @@ const onSubmit: SubmitHandler<FormType> = async (data) => {
 }
 ```
 
-## Authentication
-
-### Auth Management
-- Store auth tokens in localStorage
-- Create a custom useAuth hook for authentication logic
-- Include login, logout, and registration functionality
-- Protect routes using TanStack Router's beforeLoad
-
 ## State Management
 
 ### Local State
@@ -162,38 +146,6 @@ const onSubmit: SubmitHandler<FormType> = async (data) => {
 - Display user-friendly error messages
 - Log detailed errors for debugging
 
-## Styling
-
-### Theme
-- Use Chakra UI for consistent styling
-- Define custom theme extensions in the theme directory
-- Use Chakra's component style recipes for custom styling
-- Maintain a consistent color scheme and spacing system
-
-## Code Quality
-
-### TypeScript
-- Use strict type checking
-- Define interfaces for all component props
-- Use type inference where appropriate
-- Avoid any type unless absolutely necessary
-
-### Formatting
-- Use Biome for code formatting and linting
-- Follow consistent naming conventions:
-  - PascalCase for components
-  - camelCase for functions and variables
-  - camelCase for files except for components (PascalCase)
-
-### Testing
-- Implement tests for critical components and functionality
-- Use Playwright for end-to-end testing
-
-## Performance Optimization
-
-### Code Splitting
-- Leverage TanStack Router's automatic code splitting
-- Split large components into smaller, focused ones
 
 ### Memoization
 - Use React.memo for expensive components
