@@ -1,6 +1,10 @@
 import uuid
+from typing import TYPE_CHECKING
 
 from sqlmodel import Field, Relationship, SQLModel
+
+if TYPE_CHECKING:
+    from .user import User
 
 
 # Shared properties
@@ -37,4 +41,3 @@ class ItemPublic(ItemBase):
 class ItemsPublic(SQLModel):
     data: list[ItemPublic]
     count: int
-
