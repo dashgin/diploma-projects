@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react"
 import { createFileRoute } from "@tanstack/react-router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { KnowledgeAreaSearch } from "../../components/Common/KnowledgeAreaSearch"
 import { KnowledgeAreasList } from "../../components/Common/KnowledgeAreasList"
 import { useKnowledgeAreas } from "../../hooks/useKnowledgeAreas"
@@ -11,7 +11,14 @@ export const Route = createFileRoute("/_layout/knowledge-areas")({
 
 function KnowledgeAreasPage() {
   const { data: areas } = useKnowledgeAreas()
-  const [filteredAreas, setFilteredAreas] = useState(areas || [])
+  const [filteredAreas, setFilteredAreas] = useState<typeof areas>([])
+
+  // Update filtered areas when data loads
+  useEffect(() => {
+    if (areas) {
+      setFilteredAreas(areas)
+    }
+  }, [areas])
 
   const handleSearch = (searchTerm: string) => {
     if (!areas) return

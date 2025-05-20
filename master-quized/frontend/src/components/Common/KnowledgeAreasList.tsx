@@ -1,7 +1,5 @@
 import {
   Box,
-  Card,
-  CardBody,
   Container,
   Grid,
   Heading,
@@ -12,7 +10,7 @@ import { KnowledgeAreaRead } from "../../client"
 import { useKnowledgeAreas } from "../../hooks/useKnowledgeAreas"
 
 interface KnowledgeAreasListProps {
-  areas?: KnowledgeAreaRead[]
+  areas?: KnowledgeAreaRead[] | null
 }
 
 export function KnowledgeAreasList({ areas: filteredAreas }: KnowledgeAreasListProps) {
@@ -50,25 +48,26 @@ export function KnowledgeAreasList({ areas: filteredAreas }: KnowledgeAreasListP
         }}
         gap={6}
       >
-        {displayAreas.map((area) => (
-          <Card
-            key={area.id}
-            bg="bg.surface"
-            _hover={{ bg: "bg.muted" }}
-            transition="all 0.2s"
-            shadow="md"
-            borderRadius="lg"
-          >
-            <CardBody>
+        {displayAreas.length === 0 ? (
+          <Text>No knowledge areas found. Please add some.</Text>
+        ) : (
+          displayAreas.map((area) => (
+            <Box
+              key={area.id}
+              p={4}
+              bg="bg.surface"
+              borderWidth="1px"
+              borderRadius="lg"
+              _hover={{ bg: "bg.muted" }}
+              transition="all 0.2s"
+              shadow="md"
+            >
               <Heading size="md" mb={2}>
                 {area.name}
               </Heading>
               <Text>{area.description}</Text>
-            </CardBody>
-          </Card>
-        ))}
-        {displayAreas.length === 0 && (
-          <Text>No knowledge areas found. Please add some.</Text>
+            </Box>
+          ))
         )}
       </Grid>
     </Container>

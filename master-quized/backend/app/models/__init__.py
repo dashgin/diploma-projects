@@ -13,7 +13,7 @@ from .attempt import (
     StudentResponse,
 )
 from .base import TimestampMixin
-from .class_model import StudyClass
+from .class_model import StudyClass, StudyClassEnrollment
 from .common import Message, Token, TokenPayload
 from .feedback import (
     AIFeedback,
@@ -89,6 +89,7 @@ __all__ = [
     "KnowledgeAreaRead",
     # Class models
     "StudyClass",
+    "StudyClassEnrollment",
     # Attempt models
     "QuizAssignment",
     "AssignmentCreate",
