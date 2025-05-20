@@ -1,29 +1,45 @@
-from sqlmodel import SQLModel  # type: ignore
+from sqlmodel import SQLModel  # noqa
 
 from .attempt import QuizAssignment, StudentAttempt, StudentResponse
 from .class_model import StudyClass, StudyClassEnrollment
 from .common import Message, Token, TokenPayload
 from .feedback import AIFeedback, LearningResource
-from .item import Item, ItemCreate, ItemPublic, ItemsPublic, ItemUpdate
-from .quiz import KnowledgeArea, QuestionOption, Quiz, QuizQuestion
+from .item import Item, ItemCreate, ItemPatch, ItemRead
+from .quiz import (
+    Quiz,
+    QuizCreate,
+    QuizUpdate,
+    QuizRead,
+    QuizQuestion,
+    QuestionCreate,
+    QuestionUpdate,
+    QuestionRead,
+    QuestionOption,
+    OptionCreate,
+    OptionUpdate,
+    OptionRead,
+    KnowledgeArea,
+    KnowledgeAreaRead
+)
 from .user import (
     NewPassword,
     UpdatePassword,
     User,
     UserCreate,
-    UserPublic,
+    UserRead,
+    UserUpdate,
     UserRegister,
     UsersPublic,
-    UserUpdate,
     UserUpdateMe,
 )
+from .base import TimestampMixin
 
 __all__ = [
     # User models
     "User",
     "UserCreate",
+    "UserRead",
     "UserUpdate",
-    "UserPublic",
     "UsersPublic",
     "UpdatePassword",
     "UserRegister",
@@ -31,17 +47,26 @@ __all__ = [
     "UserUpdateMe",
     "Item",
     "ItemCreate",
-    "ItemUpdate",
-    "ItemPublic",
-    "ItemsPublic",
+    "ItemPatch",
+    "ItemRead",
     "Message",
     "Token",
     "TokenPayload",
     # Quiz models
-    "KnowledgeArea",
     "Quiz",
+    "QuizCreate",
+    "QuizUpdate",
+    "QuizRead",
     "QuizQuestion",
+    "QuestionCreate",
+    "QuestionUpdate",
+    "QuestionRead",
     "QuestionOption",
+    "OptionCreate",
+    "OptionUpdate",
+    "OptionRead",
+    "KnowledgeArea",
+    "KnowledgeAreaRead",
     # Class models
     "StudyClass",
     "StudyClassEnrollment",
@@ -52,4 +77,5 @@ __all__ = [
     # Feedback models
     "AIFeedback",
     "LearningResource",
+    "TimestampMixin",
 ]
