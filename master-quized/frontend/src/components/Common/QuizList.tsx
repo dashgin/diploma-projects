@@ -1,14 +1,8 @@
 import React from "react"
 
-import {
-  Box,
-  Flex,
-  Heading,
-  Stack,
-  Text,
-} from "@chakra-ui/react"
-import { QuizRead, QuizzesService } from "../../client"
+import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
+import { type QuizRead, QuizzesService } from "../../client"
 
 interface QuizListProps {
   quizzes?: QuizRead[] | null
@@ -19,7 +13,7 @@ export function QuizList({ quizzes: filteredQuizzes }: QuizListProps) {
     queryKey: ["quizzes"],
     queryFn: () => QuizzesService.readQuizzes(),
   })
-  
+
   // Use filtered quizzes if provided, otherwise use all quizzes
   const displayQuizzes = filteredQuizzes || quizzes || []
 
@@ -33,11 +27,11 @@ export function QuizList({ quizzes: filteredQuizzes }: QuizListProps) {
       ) : (
         <Stack gap={4}>
           {displayQuizzes.map((quiz) => (
-            <Box 
-              key={quiz.id} 
-              p={4} 
-              borderWidth="1px" 
-              borderRadius="lg" 
+            <Box
+              key={quiz.id}
+              p={4}
+              borderWidth="1px"
+              borderRadius="lg"
               bg="bg.surface"
               _hover={{ bg: "bg.muted" }}
               transition="all 0.2s"
@@ -60,4 +54,4 @@ export function QuizList({ quizzes: filteredQuizzes }: QuizListProps) {
       )}
     </Box>
   )
-} 
+}

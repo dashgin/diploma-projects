@@ -1,17 +1,21 @@
 import { Box, Container, Spinner, Text } from "@chakra-ui/react"
+import { useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { useState } from "react"
+import { AreasService } from "../../client"
 import { KnowledgeAreaSearch } from "../../components/Common/KnowledgeAreaSearch"
 import { KnowledgeAreasList } from "../../components/Common/KnowledgeAreasList"
-import { useQuery } from "@tanstack/react-query"
-import { AreasService } from "../../client"
 
 export const Route = createFileRoute("/_layout/knowledge-areas")({
   component: KnowledgeAreasPage,
 })
 
 function KnowledgeAreasPage() {
-  const { data: areas, isLoading, error } = useQuery({
+  const {
+    data: areas,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["knowledgeAreas"],
     queryFn: () => AreasService.readAreas(),
   })
@@ -21,14 +25,15 @@ function KnowledgeAreasPage() {
     setSearchTerm(term)
   }
 
-  const filteredAreas = !areas ? [] : !searchTerm.trim() 
-    ? areas 
-    : areas.filter(
-        (area) =>
-          area.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (area.description &&
-            area.description.toLowerCase().includes(searchTerm.toLowerCase())),
-      )
+  const filteredAreas = !areas
+    ? []
+    : !searchTerm.trim()
+      ? areas
+      : areas.filter(
+          (area) =>
+            area.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            area.description?.toLowerCase().includes(searchTerm.toLowerCase()),
+        )
 
   if (isLoading) {
     return (
@@ -56,4 +61,4 @@ function KnowledgeAreasPage() {
       <KnowledgeAreasList areas={filteredAreas} />
     </Box>
   )
-} 
+}

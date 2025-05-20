@@ -7,14 +7,14 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router"
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router"
 import { FiSearch } from "react-icons/fi"
 import { z } from "zod"
 
 import { QuizzesService } from "@/client"
-import { QuizActionsMenu } from "@/components/Quizzes/QuizActionsMenu"
-import AddQuiz from "@/components/Quizzes/AddQuiz"
 import PendingQuizzes from "@/components/Pending/PendingQuizzes"
+import AddQuiz from "@/components/Quizzes/AddQuiz"
+import { QuizActionsMenu } from "@/components/Quizzes/QuizActionsMenu"
 import {
   PaginationItems,
   PaginationNextTrigger,
@@ -31,7 +31,10 @@ const PER_PAGE = 5
 function getQuizzesQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
-      QuizzesService.readQuizzes({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
+      QuizzesService.readQuizzes({
+        skip: (page - 1) * PER_PAGE,
+        limit: PER_PAGE,
+      }),
     queryKey: ["quizzes", { page }],
   }
 }
@@ -152,4 +155,4 @@ function Quizzes() {
       <QuizzesTable />
     </Container>
   )
-} 
+}

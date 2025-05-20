@@ -36,4 +36,4 @@ const PendingQuizzes = () => (
   </Table.Root>
 )
 
-export default PendingQuizzes 
+export default PendingQuizzes

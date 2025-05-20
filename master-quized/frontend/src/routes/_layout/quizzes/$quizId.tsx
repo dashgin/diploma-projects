@@ -9,10 +9,10 @@ import {
 } from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
 import {
-  createFileRoute,
-  useNavigate,
   Link,
   MatchRoute,
+  createFileRoute,
+  useNavigate,
 } from "@tanstack/react-router"
 import { FiArrowLeft } from "react-icons/fi"
 
@@ -23,24 +23,28 @@ import { Button } from "@/components/ui/button"
 
 // Interface for loader data
 interface QuizDetailLoaderData {
-  quizId: number;
-  quiz?: QuizRead;
-  questions?: any[];
+  quizId: number
+  quiz?: QuizRead
+  questions?: any[]
 }
 
 export const Route = createFileRoute("/_layout/quizzes/$quizId")({
   component: QuizDetail,
   loader: ({ params }): { quizId: number } => {
     return {
-      quizId: parseInt(params.quizId, 10),
+      quizId: Number.parseInt(params.quizId, 10),
     }
-  }
+  },
 })
 
 function QuizDetail() {
-  const { quizId, quiz: initialQuiz, questions: initialQuestions } = Route.useLoaderData() as QuizDetailLoaderData
+  const {
+    quizId,
+    quiz: initialQuiz,
+    questions: initialQuestions,
+  } = Route.useLoaderData() as QuizDetailLoaderData
   const navigate = useNavigate({ from: Route.fullPath })
-  
+
   // Fetch quiz details - initialized with data from the loader
   const {
     data: quiz,
@@ -77,11 +81,11 @@ function QuizDetail() {
         <Heading as="h3" size="md" mb={4}>
           Error loading quiz
         </Heading>
-        <Text>Unable to load the requested quiz. It may not exist or you may not have permission to view it.</Text>
-        <Button 
-          mt={4}
-          onClick={() => navigate({ to: "/_layout/quizzes" })}
-        >
+        <Text>
+          Unable to load the requested quiz. It may not exist or you may not
+          have permission to view it.
+        </Text>
+        <Button mt={4} onClick={() => navigate({ to: "/_layout/quizzes" })}>
           <FiArrowLeft />
           Back to Quizzes
         </Button>
@@ -92,11 +96,7 @@ function QuizDetail() {
   return (
     <Container maxW="full">
       <Flex align="center" pt={8} pb={4}>
-        <Link
-          to="/quizzes"
-          preload="intent"
-          className="mr-4"
-        >
+        <Link to="/quizzes" preload="intent" className="mr-4">
           <Button variant="ghost">
             <FiArrowLeft />
             Back
@@ -120,7 +120,9 @@ function QuizDetail() {
             <Heading size="xs" textTransform="uppercase">
               Instructions
             </Heading>
-            <Text pt={2}>{quiz.instructions || "No instructions provided"}</Text>
+            <Text pt={2}>
+              {quiz.instructions || "No instructions provided"}
+            </Text>
           </Box>
           <Box h="1px" bg="gray.200" />
           <Box>
@@ -140,7 +142,9 @@ function QuizDetail() {
       </Box>
 
       <Box borderWidth="1px" borderRadius="lg" p={6}>
-        <Heading size="md" mb={4}>Questions</Heading>
+        <Heading size="md" mb={4}>
+          Questions
+        </Heading>
         <Box h="1px" bg="gray.200" mb={4} />
         {questionsError ? (
           <Text>Error loading questions.</Text>
@@ -150,11 +154,11 @@ function QuizDetail() {
           <Stack gap={4}>
             {questions.map((question: any, index: number) => (
               <Box key={question.id}>
-                <Heading size="xs">
-                  Question {index + 1}
-                </Heading>
+                <Heading size="xs">Question {index + 1}</Heading>
                 <Text pt={2}>{question.text}</Text>
-                {index < questions.length - 1 && <Box h="1px" bg="gray.200" my={3} />}
+                {index < questions.length - 1 && (
+                  <Box h="1px" bg="gray.200" my={3} />
+                )}
               </Box>
             ))}
           </Stack>
@@ -162,4 +166,4 @@ function QuizDetail() {
       </Box>
     </Container>
   )
-} 
+}

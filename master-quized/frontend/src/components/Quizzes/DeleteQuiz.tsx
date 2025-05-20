@@ -101,4 +101,4 @@ const DeleteQuiz = ({ id }: { id: number }) => {
   )
 }
 
-export default DeleteQuiz 
+export default DeleteQuiz

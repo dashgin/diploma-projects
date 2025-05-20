@@ -529,7 +529,7 @@ export type OptionsDeleteOptionData = {
   optionId: number
 }
 
-export type OptionsDeleteOptionResponse = void
+export type OptionsDeleteOptionResponse = undefined
 
 export type OptionsReadOptionsByQuestionData = {
   limit?: number
@@ -576,7 +576,7 @@ export type QuestionsDeleteQuestionData = {
   questionId: number
 }
 
-export type QuestionsDeleteQuestionResponse = void
+export type QuestionsDeleteQuestionResponse = undefined
 
 export type QuizzesReadQuizzesData = {
   limit?: number
@@ -608,7 +608,7 @@ export type QuizzesDeleteQuizData = {
   quizId: number
 }
 
-export type QuizzesDeleteQuizResponse = void
+export type QuizzesDeleteQuizResponse = undefined
 
 export type QuizzesReadUserQuizzesData = {
   limit?: number

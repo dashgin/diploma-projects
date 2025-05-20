@@ -1,23 +1,19 @@
-import {
-  Box,
-  Container,
-  Grid,
-  Heading,
-  Text,
-} from "@chakra-ui/react"
-import { KnowledgeAreaRead, AreasService } from "../../client"
+import { Box, Container, Grid, Heading, Text } from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
+import { AreasService, type KnowledgeAreaRead } from "../../client"
 
 interface KnowledgeAreasListProps {
   areas?: KnowledgeAreaRead[] | null
 }
 
-export function KnowledgeAreasList({ areas: filteredAreas }: KnowledgeAreasListProps) {
+export function KnowledgeAreasList({
+  areas: filteredAreas,
+}: KnowledgeAreasListProps) {
   const { data: areas } = useQuery({
     queryKey: ["knowledgeAreas"],
     queryFn: () => AreasService.readAreas(),
   })
-  
+
   // Use filtered areas if provided, otherwise use all areas
   const displayAreas = filteredAreas || areas || []
 
@@ -58,4 +54,4 @@ export function KnowledgeAreasList({ areas: filteredAreas }: KnowledgeAreasListP
       </Grid>
     </Container>
   )
-} 
+}

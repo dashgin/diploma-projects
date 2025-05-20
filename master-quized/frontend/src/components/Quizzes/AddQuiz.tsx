@@ -16,6 +16,7 @@ import { type QuizCreate, QuizzesService } from "@/client"
 import type { ApiError } from "@/client/core/ApiError"
 import useCustomToast from "@/hooks/useCustomToast"
 import { handleError } from "@/utils"
+import { Checkbox } from "../ui/checkbox"
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -26,7 +27,6 @@ import {
   DialogTrigger,
 } from "../ui/dialog"
 import { Field } from "../ui/field"
-import { Checkbox } from "../ui/checkbox"
 
 const AddQuiz = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -122,10 +122,7 @@ const AddQuiz = () => {
                 errorText={errors.is_active?.message}
                 label="Active Status"
               >
-                <Checkbox
-                  id="is_active"
-                  {...register("is_active")}
-                >
+                <Checkbox id="is_active" {...register("is_active")}>
                   Make quiz active
                 </Checkbox>
               </Field>
@@ -158,4 +155,4 @@ const AddQuiz = () => {
   )
 }
 
-export default AddQuiz 
+export default AddQuiz

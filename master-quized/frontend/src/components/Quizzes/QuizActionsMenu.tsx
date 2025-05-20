@@ -24,4 +24,4 @@ export const QuizActionsMenu = ({ quiz }: QuizActionsMenuProps) => {
       </MenuContent>
     </MenuRoot>
   )
-} 
+}

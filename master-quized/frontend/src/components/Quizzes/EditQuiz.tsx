@@ -13,6 +13,7 @@ import { FiEdit } from "react-icons/fi"
 import { type ApiError, type QuizRead, QuizzesService } from "@/client"
 import useCustomToast from "@/hooks/useCustomToast"
 import { handleError } from "@/utils"
+import { Checkbox } from "../ui/checkbox"
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -24,7 +25,6 @@ import {
   DialogTrigger,
 } from "../ui/dialog"
 import { Field } from "../ui/field"
-import { Checkbox } from "../ui/checkbox"
 
 interface EditQuizProps {
   quiz: QuizRead
@@ -130,10 +130,7 @@ const EditQuiz = ({ quiz }: EditQuizProps) => {
                 errorText={errors.is_active?.message}
                 label="Active Status"
               >
-                <Checkbox
-                  id="is_active"
-                  {...register("is_active")}
-                >
+                <Checkbox id="is_active" {...register("is_active")}>
                   Make quiz active
                 </Checkbox>
               </Field>
@@ -150,11 +147,7 @@ const EditQuiz = ({ quiz }: EditQuizProps) => {
                 Cancel
               </Button>
             </DialogActionTrigger>
-            <Button
-              variant="solid"
-              type="submit"
-              loading={isSubmitting}
-            >
+            <Button variant="solid" type="submit" loading={isSubmitting}>
               Save
             </Button>
           </DialogFooter>
@@ -165,4 +158,4 @@ const EditQuiz = ({ quiz }: EditQuizProps) => {
   )
 }
 
-export default EditQuiz 
+export default EditQuiz

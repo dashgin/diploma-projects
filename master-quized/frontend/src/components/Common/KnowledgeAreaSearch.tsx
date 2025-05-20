@@ -1,8 +1,4 @@
-import {
-  Box,
-  Flex,
-  Input,
-} from "@chakra-ui/react"
+import { Box, Flex, Input } from "@chakra-ui/react"
 import { useState } from "react"
 
 interface KnowledgeAreaSearchProps {
@@ -30,4 +26,4 @@ export function KnowledgeAreaSearch({ onSearch }: KnowledgeAreaSearchProps) {
       </Flex>
     </Box>
   )
-} 
+}
