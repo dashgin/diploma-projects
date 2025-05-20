@@ -1,57 +1,64 @@
 from sqlmodel import SQLModel  # noqa
 
+from .attempt import (
+    AssignmentCreate,
+    AssignmentRead,
+    AttemptCreate,
+    AttemptRead,
+    AttemptUpdate,
+    QuizAssignment,
+    ResponseCreate,
+    ResponseRead,
+    StudentAttempt,
+    StudentResponse,
+)
+from .base import TimestampMixin
+from .class_model import StudyClass
 from .common import Message, Token, TokenPayload
-from .feedback import AIFeedback, LearningResource, FeedbackCreate, FeedbackRead, ResourceCreate, ResourceRead
-from .item import Item, ItemCreate, ItemPatch, ItemRead
+from .feedback import (
+    AIFeedback,
+    FeedbackCreate,
+    FeedbackRead,
+    LearningResource,
+    ResourceCreate,
+    ResourceRead,
+)
+from .item import Item, ItemCreate, ItemPublic, ItemsPublic, ItemUpdate
 from .quiz import (
+    KnowledgeArea,
+    KnowledgeAreaRead,
+    OptionCreate,
+    OptionRead,
+    OptionUpdate,
+    QuestionCreate,
+    QuestionOption,
+    QuestionRead,
+    QuestionUpdate,
     Quiz,
     QuizCreate,
-    QuizUpdate,
-    QuizRead,
     QuizQuestion,
-    QuestionCreate,
-    QuestionUpdate,
-    QuestionRead,
-    QuestionOption,
-    OptionCreate,
-    OptionUpdate,
-    OptionRead,
-    KnowledgeArea,
-    KnowledgeAreaRead
+    QuizRead,
+    QuizUpdate,
 )
 from .user import (
     NewPassword,
     UpdatePassword,
     User,
     UserCreate,
-    UserRead,
-    UserUpdate,
+    UserPublic,
     UserRegister,
     UsersPublic,
+    UserUpdate,
     UserUpdateMe,
 )
-from .base import TimestampMixin
-from .attempt import (
-    QuizAssignment,
-    AssignmentCreate,
-    AssignmentRead,
-    StudentAttempt,
-    AttemptCreate,
-    AttemptUpdate,
-    AttemptRead,
-    StudentResponse,
-    ResponseCreate,
-    ResponseRead
-)
-from .class_model import StudyClass
 
 __all__ = [
     # User models
     "User",
     "UserCreate",
-    "UserRead",
-    "UserUpdate",
+    "UserPublic",
     "UsersPublic",
+    "UserUpdate",
     "UpdatePassword",
     "NewPassword",
     "UserRegister",
@@ -59,8 +66,9 @@ __all__ = [
     # Item models
     "Item",
     "ItemCreate",
-    "ItemPatch",
-    "ItemRead",
+    "ItemPublic",
+    "ItemsPublic",
+    "ItemUpdate",
     "Message",
     "Token",
     "TokenPayload",

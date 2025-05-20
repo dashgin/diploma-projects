@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, List, Optional
+from typing import TYPE_CHECKING, Any
 
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlmodel import Field, Relationship, SQLModel
@@ -13,12 +13,14 @@ if TYPE_CHECKING:
 
 class KnowledgeAreaBase(SQLModel):
     """Base model for knowledge area schema"""
+
     name: str = Field(max_length=100)
     description: str | None = Field(default=None)
 
 
 class KnowledgeAreaRead(KnowledgeAreaBase):
     """Response schema for knowledge areas"""
+
     id: int
 
 
@@ -37,6 +39,7 @@ class KnowledgeArea(TimestampMixin, KnowledgeAreaBase, table=True):
 
 class QuizBase(SQLModel):
     """Base model for quiz schema"""
+
     title: str = Field(max_length=200)
     instructions: str | None = Field(default=None)
     area_id: int | None = Field(default=None)
@@ -45,11 +48,13 @@ class QuizBase(SQLModel):
 
 class QuizCreate(QuizBase):
     """Schema for quiz creation"""
+
     pass
 
 
 class QuizUpdate(SQLModel):
     """Schema for quiz update"""
+
     title: str | None = Field(default=None, max_length=200)
     instructions: str | None = Field(default=None)
     area_id: int | None = Field(default=None)
@@ -58,6 +63,7 @@ class QuizUpdate(SQLModel):
 
 class QuizRead(QuizBase):
     """Response schema for quizzes"""
+
     id: int
     creator_id: int
 
@@ -89,6 +95,7 @@ class Quiz(TimestampMixin, QuizBase, table=True):
 
 class QuestionBase(SQLModel):
     """Base model for question schema"""
+
     quiz_id: int
     area_id: int | None = Field(default=None)
     text: str
@@ -102,11 +109,13 @@ class QuestionBase(SQLModel):
 
 class QuestionCreate(QuestionBase):
     """Schema for question creation"""
+
     pass
 
 
 class QuestionUpdate(SQLModel):
     """Schema for question update"""
+
     area_id: int | None = Field(default=None)
     text: str | None = Field(default=None)
     question_type: str | None = Field(default=None, max_length=15)
@@ -119,6 +128,7 @@ class QuestionUpdate(SQLModel):
 
 class QuestionRead(QuestionBase):
     """Response schema for questions"""
+
     id: int
 
 
@@ -150,6 +160,7 @@ class QuizQuestion(TimestampMixin, QuestionBase, table=True):
 
 class OptionBase(SQLModel):
     """Base model for question option schema"""
+
     question_id: int
     text: str = Field(max_length=200)
     is_correct: bool = Field(default=False)
@@ -158,11 +169,13 @@ class OptionBase(SQLModel):
 
 class OptionCreate(OptionBase):
     """Schema for option creation"""
+
     pass
 
 
 class OptionUpdate(SQLModel):
     """Schema for option update"""
+
     text: str | None = Field(default=None, max_length=200)
     is_correct: bool | None = Field(default=None)
     order_position: int | None = Field(default=None)
@@ -170,6 +183,7 @@ class OptionUpdate(SQLModel):
 
 class OptionRead(OptionBase):
     """Response schema for options"""
+
     id: int
 
 

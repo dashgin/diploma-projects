@@ -14,6 +14,7 @@ if TYPE_CHECKING:
 
 class AssignmentBase(SQLModel):
     """Base model for quiz assignment schema"""
+
     quiz_id: int
     student_id: int
     class_id: int | None = Field(default=None)
@@ -22,11 +23,13 @@ class AssignmentBase(SQLModel):
 
 class AssignmentCreate(AssignmentBase):
     """Schema for quiz assignment creation"""
+
     pass
 
 
 class AssignmentRead(AssignmentBase):
     """Response schema for quiz assignments"""
+
     id: int
 
 
@@ -54,6 +57,7 @@ class QuizAssignment(TimestampMixin, AssignmentBase, table=True):
 
 class AttemptBase(SQLModel):
     """Base model for student attempt schema"""
+
     student_id: int
     quiz_id: int
     assignment_id: int | None = Field(default=None)
@@ -62,11 +66,13 @@ class AttemptBase(SQLModel):
 
 class AttemptCreate(AttemptBase):
     """Schema for student attempt creation"""
+
     pass
 
 
 class AttemptUpdate(SQLModel):
     """Schema for student attempt update"""
+
     completed_at: datetime | None = Field(default=None)
     score: float | None = Field(default=None)
     is_completed: bool | None = Field(default=None)
@@ -74,6 +80,7 @@ class AttemptUpdate(SQLModel):
 
 class AttemptRead(AttemptBase):
     """Response schema for student attempts"""
+
     id: int
     completed_at: datetime | None = None
     score: float | None = None
@@ -105,6 +112,7 @@ class StudentAttempt(TimestampMixin, AttemptBase, table=True):
 
 class ResponseBase(SQLModel):
     """Base model for student response schema"""
+
     attempt_id: int
     question_id: int
     answer_text: str
@@ -114,11 +122,13 @@ class ResponseBase(SQLModel):
 
 class ResponseCreate(ResponseBase):
     """Schema for student response creation"""
+
     pass
 
 
 class ResponseRead(ResponseBase):
     """Response schema for student responses"""
+
     id: int
 
 

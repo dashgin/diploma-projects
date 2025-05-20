@@ -1,9 +1,11 @@
 from sqlmodel import Session, select
 
-from app.models import QuizAssignment, AssignmentCreate
+from app.models import AssignmentCreate, QuizAssignment
 
 
-def create_assignment(*, session: Session, assignment_in: AssignmentCreate) -> QuizAssignment:
+def create_assignment(
+    *, session: Session, assignment_in: AssignmentCreate
+) -> QuizAssignment:
     """Create a new quiz assignment"""
     assignment = QuizAssignment.model_validate(assignment_in)
     session.add(assignment)
@@ -31,4 +33,4 @@ def get_user_assignments(
     """Get assignments for a specific user"""
     statement = select(QuizAssignment).where(QuizAssignment.student_id == user_id)
     statement = statement.offset(skip).limit(limit)
-    return session.exec(statement).all() 
+    return session.exec(statement).all()

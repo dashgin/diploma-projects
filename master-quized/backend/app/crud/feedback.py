@@ -22,4 +22,4 @@ def get_feedback_by_response(
 ) -> AIFeedback | None:
     """Get feedback for a specific response"""
     statement = select(AIFeedback).where(AIFeedback.response_id == response_id)
-    return session.exec(statement).first() 
+    return session.exec(statement).first()

@@ -1,6 +1,6 @@
 from sqlmodel import Session, select
 
-from app.models import QuestionOption, OptionCreate, OptionUpdate
+from app.models import OptionCreate, OptionUpdate, QuestionOption
 
 
 def create_option(*, session: Session, option_in: OptionCreate) -> QuestionOption:
@@ -25,7 +25,7 @@ def update_option(
         update_data = option_in
     else:
         update_data = option_in.model_dump(exclude_unset=True)
-    
+
     db_option.sqlmodel_update(update_data)
     session.add(db_option)
     session.commit()
@@ -45,4 +45,4 @@ def get_options_by_question(
     """Get options for a specific question"""
     statement = select(QuestionOption).where(QuestionOption.question_id == question_id)
     statement = statement.offset(skip).limit(limit)
-    return session.exec(statement).all() 
+    return session.exec(statement).all()

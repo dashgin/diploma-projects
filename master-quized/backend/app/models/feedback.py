@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 
 class FeedbackBase(SQLModel):
     """Base model for AI feedback schema"""
+
     response_id: int
     feedback_text: str
     error_type: str | None = Field(default="", max_length=50)
@@ -22,11 +23,13 @@ class FeedbackBase(SQLModel):
 
 class FeedbackCreate(FeedbackBase):
     """Schema for AI feedback creation"""
+
     pass
 
 
 class FeedbackRead(FeedbackBase):
     """Response schema for AI feedback"""
+
     id: int
 
 
@@ -53,6 +56,7 @@ class AIFeedback(TimestampMixin, FeedbackBase, table=True):
 
 class ResourceBase(SQLModel):
     """Base model for learning resource schema"""
+
     feedback_id: int
     title: str = Field(max_length=200)
     description: str | None = Field(default=None)
@@ -64,11 +68,13 @@ class ResourceBase(SQLModel):
 
 class ResourceCreate(ResourceBase):
     """Schema for learning resource creation"""
+
     pass
 
 
 class ResourceRead(ResourceBase):
     """Response schema for learning resources"""
+
     id: int
 
 

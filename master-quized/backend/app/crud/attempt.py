@@ -1,7 +1,8 @@
 from datetime import datetime
+
 from sqlmodel import Session, select
 
-from app.models import StudentAttempt, AttemptCreate, AttemptUpdate
+from app.models import AttemptCreate, StudentAttempt
 
 
 def create_attempt(*, session: Session, attempt_in: AttemptCreate) -> StudentAttempt:
@@ -18,7 +19,9 @@ def get_attempt(*, session: Session, attempt_id: int) -> StudentAttempt | None:
     return session.get(StudentAttempt, attempt_id)
 
 
-def complete_attempt(*, session: Session, db_attempt: StudentAttempt, score: float | None = None) -> StudentAttempt:
+def complete_attempt(
+    *, session: Session, db_attempt: StudentAttempt, score: float | None = None
+) -> StudentAttempt:
     """Mark an attempt as completed"""
     update_data = {
         "is_completed": True,
@@ -26,7 +29,7 @@ def complete_attempt(*, session: Session, db_attempt: StudentAttempt, score: flo
     }
     if score is not None:
         update_data["score"] = score
-        
+
     db_attempt.sqlmodel_update(update_data)
     session.add(db_attempt)
     session.commit()
@@ -48,4 +51,4 @@ def get_user_attempts(
     """Get attempts for a specific user"""
     statement = select(StudentAttempt).where(StudentAttempt.student_id == user_id)
     statement = statement.offset(skip).limit(limit)
-    return session.exec(statement).all() 
+    return session.exec(statement).all()
