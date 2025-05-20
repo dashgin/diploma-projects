@@ -7,7 +7,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
-import { createFileRoute, useNavigate } from "@tanstack/react-router"
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router"
 import { FiSearch } from "react-icons/fi"
 import { z } from "zod"
 
@@ -36,7 +36,7 @@ function getQuizzesQueryOptions({ page }: { page: number }) {
   }
 }
 
-export const Route = createFileRoute("/_layout/quizzes")({
+export const Route = createFileRoute("/_layout/quizzes/")({
   component: Quizzes,
   validateSearch: (search) => quizzesSearchSchema.parse(search),
 })
@@ -99,7 +99,14 @@ function QuizzesTable() {
                 {quiz.id}
               </Table.Cell>
               <Table.Cell truncate maxW="sm">
-                {quiz.title}
+                <Link
+                  to="/quizzes/$quizId"
+                  params={{ quizId: quiz.id }}
+                  className="text-blue-600 hover:underline"
+                  preload="intent"
+                >
+                  {quiz.title}
+                </Link>
               </Table.Cell>
               <Table.Cell
                 color={!quiz.instructions ? "gray" : "inherit"}

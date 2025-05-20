@@ -18,10 +18,11 @@ import { Route as LoginImport } from './routes/login'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
 import { Route as LayoutSettingsImport } from './routes/_layout/settings'
-import { Route as LayoutQuizzesImport } from './routes/_layout/quizzes'
 import { Route as LayoutKnowledgeAreasImport } from './routes/_layout/knowledge-areas'
 import { Route as LayoutItemsImport } from './routes/_layout/items'
 import { Route as LayoutAdminImport } from './routes/_layout/admin'
+import { Route as LayoutQuizzesIndexImport } from './routes/_layout/quizzes/index'
+import { Route as LayoutQuizzesQuizIdImport } from './routes/_layout/quizzes/$quizId'
 
 // Create/Update Routes
 
@@ -60,11 +61,6 @@ const LayoutSettingsRoute = LayoutSettingsImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
-const LayoutQuizzesRoute = LayoutQuizzesImport.update({
-  path: '/quizzes',
-  getParentRoute: () => LayoutRoute,
-} as any)
-
 const LayoutKnowledgeAreasRoute = LayoutKnowledgeAreasImport.update({
   path: '/knowledge-areas',
   getParentRoute: () => LayoutRoute,
@@ -77,6 +73,16 @@ const LayoutItemsRoute = LayoutItemsImport.update({
 
 const LayoutAdminRoute = LayoutAdminImport.update({
   path: '/admin',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutQuizzesIndexRoute = LayoutQuizzesIndexImport.update({
+  path: '/quizzes/',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutQuizzesQuizIdRoute = LayoutQuizzesQuizIdImport.update({
+  path: '/quizzes/$quizId',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -116,16 +122,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutKnowledgeAreasImport
       parentRoute: typeof LayoutImport
     }
-    '/_layout/quizzes': {
-      preLoaderRoute: typeof LayoutQuizzesImport
-      parentRoute: typeof LayoutImport
-    }
     '/_layout/settings': {
       preLoaderRoute: typeof LayoutSettingsImport
       parentRoute: typeof LayoutImport
     }
     '/_layout/': {
       preLoaderRoute: typeof LayoutIndexImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/quizzes/$quizId': {
+      preLoaderRoute: typeof LayoutQuizzesQuizIdImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/quizzes/': {
+      preLoaderRoute: typeof LayoutQuizzesIndexImport
       parentRoute: typeof LayoutImport
     }
   }
@@ -138,9 +148,10 @@ export const routeTree = rootRoute.addChildren([
     LayoutAdminRoute,
     LayoutItemsRoute,
     LayoutKnowledgeAreasRoute,
-    LayoutQuizzesRoute,
     LayoutSettingsRoute,
     LayoutIndexRoute,
+    LayoutQuizzesQuizIdRoute,
+    LayoutQuizzesIndexRoute,
   ]),
   LoginRoute,
   RecoverPasswordRoute,
