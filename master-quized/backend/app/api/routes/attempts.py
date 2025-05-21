@@ -4,6 +4,7 @@ from sqlmodel import func, select
 from app import crud
 from app.api.deps import CurrentUser, SessionDep
 from app.models import (
+    AttemptCreate,
     AttemptCreateApiSchema,
     AttemptRead,
     AttemptsPublic,
@@ -59,8 +60,13 @@ def create_attempt(
     """
     Create new quiz attempt.
     """
-    # Always use current user's ID instead of the one from the request
-    attempt_in.student_id = current_user.id
+    # Create attempt object with current user's ID
+    attempt_in = AttemptCreate(
+        student_id=current_user.id,
+        quiz_id=attempt_in.quiz_id,
+        assignment_id=attempt_in.assignment_id,
+        is_completed=attempt_in.is_completed
+    )
 
     # Check if quiz exists
     quiz = crud.get_quiz(session=session, quiz_id=attempt_in.quiz_id)
