@@ -104,6 +104,7 @@ class QuestionBase(SQLModel):
     correct_answer: str | None = Field(default="")
     model_answer: str | None = Field(default="")
     explanation: str | None = Field(default=None)
+    difficulty: str | None = Field(default=None, max_length=20)
     key_concepts: dict[str, Any] | None = None
     ai_guidance: dict[str, Any] | None = None
 
@@ -123,6 +124,7 @@ class QuestionUpdate(SQLModel):
     order_position: int | None = Field(default=None)
     correct_answer: str | None = Field(default=None)
     model_answer: str | None = Field(default=None)
+    difficulty: str | None = Field(default=None, max_length=20)
     key_concepts: dict[str, Any] | None = Field(default=None)
     ai_guidance: dict[str, Any] | None = Field(default=None)
 

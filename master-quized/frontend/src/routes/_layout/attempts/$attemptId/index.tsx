@@ -39,7 +39,7 @@ function AttemptPage() {
   const {
     attempt,
     questions,
-    responses,
+    attemptResponsesData,
     currentQuestionIndex,
     isSubmitting,
     isLoading,
@@ -48,6 +48,7 @@ function AttemptPage() {
     handlePrevious,
     handleQuestionSelect,
     handleSubmitQuiz,
+    responses,
   } = useQuizAttempt(attemptId);
 
   // Fetch options for the current question
@@ -68,16 +69,6 @@ function AttemptPage() {
   console.log("Current question type:", currentQuestionType);
   console.log("Options data:", optionsData);
 
-  // Fetch all responses for this attempt if completed
-  const { data: attemptResponses, isLoading: isLoadingAttemptResponses } = useQuery({
-    queryKey: ["attempt-responses", attemptId],
-    queryFn: () => ResponsesService.readResponsesByAttempt({
-      attemptId: Number(attemptId),
-      limit: 100
-    }),
-    enabled: attempt?.is_completed === true
-  });
-
   // Loading state
   if (isLoading) {
     return (
@@ -89,7 +80,7 @@ function AttemptPage() {
 
   // Check if attempt is already completed
   if (attempt?.is_completed) {
-    const isLoadingCompletedAttemptData = isLoadingAttemptResponses;
+    const isLoadingCompletedAttemptData = !attemptResponsesData;
     
     if (isLoadingCompletedAttemptData) {
       return (
@@ -99,10 +90,14 @@ function AttemptPage() {
       );
     }
     
-    // Create a map of responses by question ID
+    // Get attempt summary data
+    const attemptSummary = attemptResponsesData?.attempt;
+    const responseDetails = attemptResponsesData?.responses || [];
+    
+    // Create a map of responses by question ID for easier lookup
     const responsesByQuestionId: Record<number, any> = {};
-    attemptResponses?.forEach(response => {
-      responsesByQuestionId[response.question_id] = response;
+    responseDetails.forEach(response => {
+      responsesByQuestionId[response.question.id] = response;
     });
     
     return (
@@ -122,8 +117,8 @@ function AttemptPage() {
             <Card.Root>
               <Card.Body>
                 <Text fontWeight="bold">Score</Text>
-                <Text fontSize="3xl" color={(attempt.score ?? 0) >= 70 ? "green.500" : "red.500"}>
-                  {attempt.score !== null ? `${attempt.score}%` : "Not scored"}
+                <Text fontSize="3xl" color={(attemptSummary?.score ?? 0) >= 70 ? "green.500" : "red.500"}>
+                  {attemptSummary?.score !== undefined ? `${Math.round(attemptSummary.score)}%` : "Not scored"}
                 </Text>
               </Card.Body>
             </Card.Root>
@@ -142,6 +137,21 @@ function AttemptPage() {
               </Card.Body>
             </Card.Root>
           </Grid>
+          
+          <Card.Root mt={6}>
+            <Card.Body>
+              <Flex gap={6} wrap="wrap">
+                <Box>
+                  <Text fontWeight="bold">Total Questions</Text>
+                  <Text>{attemptSummary?.total_questions || 0}</Text>
+                </Box>
+                <Box>
+                  <Text fontWeight="bold">Correct Answers</Text>
+                  <Text>{attemptSummary?.correct_answers || 0}</Text>
+                </Box>
+              </Flex>
+            </Card.Body>
+          </Card.Root>
         </Box>
         
         <Separator my={6} />
@@ -150,8 +160,8 @@ function AttemptPage() {
           <Heading size="md" mb={6}>Question Results</Heading>
           
           {questions?.data.map((question, index) => {
-            const response = responsesByQuestionId[question.id];
-            const isCorrect = response?.is_correct;
+            const responseData = responsesByQuestionId[question.id];
+            const isCorrect = responseData?.answer?.is_correct;
             
             return (
               <Card.Root key={question.id} mb={6} variant="outline">
@@ -170,20 +180,32 @@ function AttemptPage() {
                   
                   <Box mb={4}>
                     <Text fontWeight="bold" fontSize="sm" color="gray.600">Your Answer:</Text>
-                    <Text>{response?.answer_text || "Not answered"}</Text>
+                    {responseData?.answer?.type === "multiple_choice" && typeof responseData.answer.answer === "object" ? (
+                      <Text>{responseData.answer.answer.text || "Not answered"}</Text>
+                    ) : (
+                      <Text>{responseData?.answer?.answer || "Not answered"}</Text>
+                    )}
                   </Box>
                   
-                  {!isCorrect && response?.correct_answer && (
-                    <Box mb={4}>
-                      <Text fontWeight="bold" fontSize="sm" color="green.600">Correct Answer:</Text>
-                      <Text>{response.correct_answer}</Text>
+                  {/* Display all options for multiple choice questions */}
+                  {responseData?.question?.question_type === "multiple_choice" && responseData.question.options && (
+                    <Box mt={4}>
+                      <Text fontWeight="bold" fontSize="sm" color="gray.600">All Options:</Text>
+                      {responseData.question.options.map((option: any, idx: number) => (
+                        <Flex key={idx} gap={2} mt={1}>
+                          <Badge colorScheme={option.is_correct ? "green" : responseData.answer.answer.option_id === option.id ? "blue" : "gray"}>
+                            {option.is_correct ? "✓" : responseData.answer.answer.option_id === option.id ? "•" : ""}
+                          </Badge>
+                          <Text>{option.text}</Text>
+                        </Flex>
+                      ))}
                     </Box>
                   )}
                   
-                  {response?.feedback && (
+                  {responseData?.explanation && (
                     <Box mt={4} p={3} bg="gray.50" borderRadius="md">
-                      <Text fontWeight="bold" fontSize="sm">Feedback:</Text>
-                      <Text>{response.feedback}</Text>
+                      <Text fontWeight="bold" fontSize="sm">Explanation:</Text>
+                      <Text>{responseData.explanation}</Text>
                     </Box>
                   )}
                 </Card.Body>

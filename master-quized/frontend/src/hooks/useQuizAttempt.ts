@@ -36,8 +36,8 @@ export function useQuizAttempt(attemptId: number | string) {
     enabled: !!attempt?.quiz_id,
   });
 
-  // Fetch existing responses
-  const { data: existingResponses, isLoading: isLoadingResponses } = useQuery({
+  // Fetch attempt responses with the new structure
+  const { data: attemptResponsesData, isLoading: isLoadingResponses } = useQuery({
     queryKey: ["responses", attemptIdNumber],
     queryFn: () => ResponsesService.readResponsesByAttempt({
       attemptId: attemptIdNumber,
@@ -97,27 +97,30 @@ export function useQuizAttempt(attemptId: number | string) {
     },
   });
 
-  // Initialize responses from existing data
+  // Initialize responses from existing data with the new structure
   useEffect(() => {
-    if (existingResponses && existingResponses.length > 0) {
-      console.log("Existing responses:", existingResponses);
+    if (attemptResponsesData?.responses && attemptResponsesData.responses.length > 0) {
+      console.log("Attempt responses data:", attemptResponsesData);
       
       const savedResponses: Record<number, string> = {};
-      existingResponses.forEach((response) => {
-        // For multiple-choice, use the selected_option_id as the value
-        if (response.selected_option_id) {
-          savedResponses[response.question_id] = response.selected_option_id.toString();
-          console.log("Setting multiple choice response for question:", response.question_id, "to option:", response.selected_option_id);
+      attemptResponsesData.responses.forEach((responseItem) => {
+        const questionId = responseItem.question.id;
+        
+        if (responseItem.answer.type === "multiple_choice" && typeof responseItem.answer.answer === "object") {
+          // For multiple-choice, use the option_id as the value
+          savedResponses[questionId] = responseItem.answer.answer.option_id?.toString() || "";
+          console.log("Setting multiple choice response for question:", questionId, "to option:", responseItem.answer.answer.option_id);
         } else {
-          savedResponses[response.question_id] = response.answer_text;
-          console.log("Setting text response for question:", response.question_id, "to:", response.answer_text);
+          // For short-answer, use the answer text
+          savedResponses[questionId] = responseItem.answer.answer?.toString() || "";
+          console.log("Setting text response for question:", questionId, "to:", responseItem.answer.answer);
         }
       });
       
       console.log("Saved responses:", savedResponses);
       setResponses(savedResponses);
     }
-  }, [existingResponses]);
+  }, [attemptResponsesData]);
 
   // Handle response change
   const handleResponseChange = (questionId: number, answer: string) => {
@@ -172,7 +175,7 @@ export function useQuizAttempt(attemptId: number | string) {
   return {
     attempt,
     questions,
-    existingResponses,
+    attemptResponsesData,
     currentQuestionIndex,
     responses,
     isSubmitting,

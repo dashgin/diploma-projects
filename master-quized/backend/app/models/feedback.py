@@ -15,7 +15,7 @@ class FeedbackBase(SQLModel):
 
     response_id: int
     feedback_text: str
-    error_type: str | None = Field(default="", max_length=50)
+    error_type: list[str] | None = Field(default=None)
     confidence_score: float | None = Field(default=None)
     feedback_content: dict[str, Any] = Field(default_factory=dict)
     ai_metadata: dict[str, Any] | None = None
@@ -43,6 +43,7 @@ class AIFeedback(TimestampMixin, FeedbackBase, table=True):
         foreign_key="student_response.id", ondelete="CASCADE", unique=True
     )
     # JSONB fields
+    error_type: list[str] | None = Field(default=None, sa_type=JSONB)
     feedback_content: dict[str, Any] = Field(default_factory=dict, sa_type=JSONB)
     ai_metadata: dict[str, Any] | None = Field(default=None, sa_type=JSONB)
 
