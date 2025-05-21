@@ -9,7 +9,6 @@ from .base import TimestampMixin
 if TYPE_CHECKING:
     from .attempt import QuizAssignment, StudentAttempt
     from .class_model import StudyClass, StudyClassEnrollment
-    from .item import Item
     from .quiz import Quiz
 
 
@@ -58,9 +57,6 @@ class User(UserBase, TimestampMixin, table=True):
     hashed_password: str
     last_login: datetime | None = Field(default=None)
     date_joined: datetime = Field(default_factory=datetime.utcnow)
-
-    # Keep existing relationship for compatibility
-    items: list["Item"] = Relationship(back_populates="owner", cascade_delete=True)
 
     # New relationships from db.md
     created_quizzes: list["Quiz"] = Relationship(

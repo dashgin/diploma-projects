@@ -3,7 +3,6 @@ import { useQueryClient } from "@tanstack/react-query"
 import { Link as RouterLink } from "@tanstack/react-router"
 import {
   FiBook,
-  FiBriefcase,
   FiCalendar,
   FiClipboard,
   FiHome,
@@ -18,7 +17,6 @@ const items = [
   { icon: FiHome, title: "Dashboard", path: "/" },
   { icon: FiClipboard, title: "Quizzes", path: "/quizzes/" },
   { icon: FiCalendar, title: "Assignments", path: "/assignments" },
-  { icon: FiBriefcase, title: "Items", path: "/items" },
   { icon: FiBook, title: "Knowledge Areas", path: "/knowledge-areas" },
   { icon: FiSettings, title: "User Settings", path: "/settings" },
 ]

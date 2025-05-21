@@ -35,7 +35,6 @@ from .feedback import (
     ResourceRead,
     ResourcesPublic,
 )
-from .item import Item, ItemCreate, ItemPublic, ItemsPublic, ItemUpdate
 from .quiz import (
     AreasPublic,
     KnowledgeArea,
@@ -79,12 +78,6 @@ __all__ = [
     "NewPassword",
     "UserRegister",
     "UserUpdateMe",
-    # Item models
-    "Item",
-    "ItemCreate",
-    "ItemPublic",
-    "ItemsPublic",
-    "ItemUpdate",
     "Message",
     "Token",
     "TokenPayload",

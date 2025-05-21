@@ -5,7 +5,6 @@ from app.api.routes import (
     assignments,
     attempts,
     feedback,
-    items,
     login,
     options,
     questions,
@@ -20,7 +19,6 @@ api_router = APIRouter()
 api_router.include_router(login.router)
 api_router.include_router(users.router)
 api_router.include_router(utils.router)
-api_router.include_router(items.router)
 
 # Include new routes
 api_router.include_router(areas.router)

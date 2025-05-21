@@ -13,7 +13,6 @@ from app.crud.attempt import (
     get_user_attempts,
 )
 from app.crud.feedback import create_feedback, get_feedback, get_feedback_by_response
-from app.crud.item import create_item
 from app.crud.option import (
     create_option,
     delete_option,
@@ -52,8 +51,6 @@ __all__ = [
     "update_user",
     "get_user_by_email",
     "authenticate",
-    # Item operations
-    "create_item",
     # Quiz operations
     "create_quiz",
     "get_quiz",

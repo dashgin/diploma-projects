@@ -126,7 +126,7 @@ export type EnhancedResponse = {
 export type FeedbackCreate = {
   response_id: number
   feedback_text: string
-  error_type?: string | null
+  error_type?: Array<string> | null
   confidence_score?: number | null
   feedback_content?: {
     [key: string]: unknown
@@ -142,7 +142,7 @@ export type FeedbackCreate = {
 export type FeedbackRead = {
   response_id: number
   feedback_text: string
-  error_type?: string | null
+  error_type?: Array<string> | null
   confidence_score?: number | null
   feedback_content?: {
     [key: string]: unknown
@@ -155,28 +155,6 @@ export type FeedbackRead = {
 
 export type HTTPValidationError = {
   detail?: Array<ValidationError>
-}
-
-export type ItemCreate = {
-  title: string
-  description?: string | null
-}
-
-export type ItemPublic = {
-  title: string
-  description?: string | null
-  id: string
-  owner_id: number
-}
-
-export type ItemsPublic = {
-  data: Array<ItemPublic>
-  count: number
-}
-
-export type ItemUpdate = {
-  title?: string | null
-  description?: string | null
 }
 
 /**
@@ -256,6 +234,7 @@ export type QuestionCreate = {
   correct_answer?: string | null
   model_answer?: string | null
   explanation?: string | null
+  difficulty?: string | null
   key_concepts?: {
     [key: string]: unknown
   } | null
@@ -286,6 +265,7 @@ export type QuestionRead = {
   correct_answer?: string | null
   model_answer?: string | null
   explanation?: string | null
+  difficulty?: string | null
   key_concepts?: {
     [key: string]: unknown
   } | null
@@ -313,6 +293,7 @@ export type QuestionUpdate = {
   order_position?: number | null
   correct_answer?: string | null
   model_answer?: string | null
+  difficulty?: string | null
   key_concepts?: {
     [key: string]: unknown
   } | null
@@ -559,38 +540,6 @@ export type FeedbackReadFeedbackByResponseData = {
 }
 
 export type FeedbackReadFeedbackByResponseResponse = FeedbackRead | null
-
-export type ItemsReadItemsData = {
-  limit?: number
-  skip?: number
-}
-
-export type ItemsReadItemsResponse = ItemsPublic
-
-export type ItemsCreateItemData = {
-  requestBody: ItemCreate
-}
-
-export type ItemsCreateItemResponse = ItemPublic
-
-export type ItemsReadItemData = {
-  id: string
-}
-
-export type ItemsReadItemResponse = ItemPublic
-
-export type ItemsUpdateItemData = {
-  id: string
-  requestBody: ItemUpdate
-}
-
-export type ItemsUpdateItemResponse = ItemPublic
-
-export type ItemsDeleteItemData = {
-  id: string
-}
-
-export type ItemsDeleteItemResponse = Message
 
 export type LoginLoginAccessTokenData = {
   formData: Body_login_login_access_token
