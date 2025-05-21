@@ -14,20 +14,20 @@
 - [x] User can see quizzes they created
 
 ## Question Management
-- [ ] User can create new questions
-- [ ] User can view question details
-- [ ] User can edit questions
-- [ ] User can partially update questions
-- [ ] User can delete questions
-- [ ] User can see questions for a specific quiz
+- [x] User can create new questions
+- [x] User can view question details
+- [x] User can edit questions
+- [x] User can partially update questions
+- [x] User can delete questions
+- [x] User can see questions for a specific quiz
 
 ## Options Management
-- [ ] User can create new options for multiple-choice questions
-- [ ] User can view option details
-- [ ] User can edit options
-- [ ] User can partially update options
-- [ ] User can delete options
-- [ ] User can see options for a specific question
+- [x] User can create new options for multiple-choice questions
+- [x] User can view option details
+- [x] User can edit options
+- [x] User can partially update options
+- [x] User can delete options
+- [x] User can see options for a specific question
 
 ## Assignments
 - [ ] User can view quiz assignments
