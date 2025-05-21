@@ -200,3 +200,32 @@ class QuestionOption(OptionBase, table=True):
     selected_in: list["StudentResponse"] = Relationship(
         back_populates="selected_option",
     )
+
+
+# Pagination models
+class QuizzesPublic(SQLModel):
+    """Paginated quizzes response"""
+
+    data: list[QuizRead]
+    count: int
+
+
+class QuestionsPublic(SQLModel):
+    """Paginated questions response"""
+
+    data: list[QuestionRead]
+    count: int
+
+
+class OptionsPublic(SQLModel):
+    """Paginated options response"""
+
+    data: list[OptionRead]
+    count: int
+
+
+class AreasPublic(SQLModel):
+    """Paginated knowledge areas response"""
+
+    data: list[KnowledgeAreaRead]
+    count: int

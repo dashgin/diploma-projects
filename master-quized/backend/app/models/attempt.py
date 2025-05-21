@@ -153,3 +153,25 @@ class StudentResponse(TimestampMixin, ResponseBase, table=True):
     feedback: Optional["AIFeedback"] = Relationship(
         back_populates="response", sa_relationship_kwargs={"uselist": False}
     )
+
+
+# Pagination models
+class AssignmentsPublic(SQLModel):
+    """Paginated assignments response"""
+
+    data: list[AssignmentRead]
+    count: int
+
+
+class AttemptsPublic(SQLModel):
+    """Paginated attempts response"""
+
+    data: list[AttemptRead]
+    count: int
+
+
+class ResponsesPublic(SQLModel):
+    """Paginated responses response"""
+
+    data: list[ResponseRead]
+    count: int

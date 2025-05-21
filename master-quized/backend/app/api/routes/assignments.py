@@ -1,31 +1,52 @@
 from fastapi import APIRouter, HTTPException, status
+from sqlmodel import func, select
 
 from app import crud
 from app.api.deps import CurrentUser, SessionDep
-from app.models import AssignmentCreate, AssignmentRead
+from app.models import (
+    AssignmentCreate,
+    AssignmentRead,
+    AssignmentsPublic,
+    QuizAssignment,
+)
 
 router = APIRouter(prefix="/assignments", tags=["assignments"])
 
 
-@router.get("/", response_model=list[AssignmentRead])
+@router.get("/", response_model=AssignmentsPublic)
 def read_assignments(
     session: SessionDep,
     current_user: CurrentUser,
     skip: int = 0,
     limit: int = 100,
-) -> list[AssignmentRead]:
+) -> AssignmentsPublic:
     """
     Retrieve quiz assignments.
     """
     # For regular users, limit to their own assignments
     # For admins, return all assignments
     if current_user.is_superuser:
+        # Get the count
+        count_statement = select(func.count()).select_from(QuizAssignment)
+        count = session.exec(count_statement).one()
+
+        # Get paginated data
         assignments = crud.get_assignments(session=session, skip=skip, limit=limit)
     else:
+        # Get the count
+        count_statement = (
+            select(func.count())
+            .select_from(QuizAssignment)
+            .where(QuizAssignment.student_id == current_user.id)
+        )
+        count = session.exec(count_statement).one()
+
+        # Get paginated data
         assignments = crud.get_user_assignments(
             session=session, user_id=current_user.id, skip=skip, limit=limit
         )
-    return assignments
+
+    return AssignmentsPublic(data=assignments, count=count)
 
 
 @router.post("/", response_model=AssignmentRead, status_code=status.HTTP_201_CREATED)
@@ -89,17 +110,27 @@ def read_assignment(
     return assignment
 
 
-@router.get("/my_assignments/", response_model=list[AssignmentRead])
+@router.get("/my_assignments/", response_model=AssignmentsPublic)
 def read_user_assignments(
     session: SessionDep,
     current_user: CurrentUser,
     skip: int = 0,
     limit: int = 100,
-) -> list[AssignmentRead]:
+) -> AssignmentsPublic:
     """
     Get assignments for the current user.
     """
+    # Get the count
+    count_statement = (
+        select(func.count())
+        .select_from(QuizAssignment)
+        .where(QuizAssignment.student_id == current_user.id)
+    )
+    count = session.exec(count_statement).one()
+
+    # Get paginated data
     assignments = crud.get_user_assignments(
         session=session, user_id=current_user.id, skip=skip, limit=limit
     )
-    return assignments
+
+    return AssignmentsPublic(data=assignments, count=count)

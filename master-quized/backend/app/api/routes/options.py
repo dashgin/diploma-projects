@@ -1,8 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlmodel import func, select
 
 from app import crud
 from app.api.deps import CurrentUser, SessionDep, get_current_user
-from app.models import OptionCreate, OptionRead, OptionUpdate
+from app.models import (
+    OptionCreate,
+    OptionRead,
+    OptionsPublic,
+    OptionUpdate,
+    QuestionOption,
+)
 
 router = APIRouter(prefix="/options", tags=["options"])
 
@@ -178,14 +185,18 @@ def delete_option(
     crud.delete_option(session=session, db_option=option)
 
 
-@router.get("/by_question/", dependencies=[Depends(get_current_user)])
+@router.get(
+    "/by_question/",
+    response_model=OptionsPublic,
+    dependencies=[Depends(get_current_user)],
+)
 def read_options_by_question(
     *,
     session: SessionDep,
     question_id: int = Query(..., description="ID of the question to get options for"),
     skip: int = 0,
     limit: int = 100,
-) -> list[OptionRead]:
+) -> OptionsPublic:
     """
     Get options for a specific question.
     """
@@ -197,7 +208,17 @@ def read_options_by_question(
             detail="Question not found",
         )
 
+    # Get the count
+    count_statement = (
+        select(func.count())
+        .select_from(QuestionOption)
+        .where(QuestionOption.question_id == question_id)
+    )
+    count = session.exec(count_statement).one()
+
+    # Get paginated data
     options = crud.get_options_by_question(
         session=session, question_id=question_id, skip=skip, limit=limit
     )
-    return options
+
+    return OptionsPublic(data=options, count=count)

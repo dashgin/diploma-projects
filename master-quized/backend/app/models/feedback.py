@@ -92,3 +92,18 @@ class LearningResource(TimestampMixin, ResourceBase, table=True):
     # Relationships
     feedback: AIFeedback = Relationship(back_populates="resources")
     area: Optional["KnowledgeArea"] = Relationship(back_populates="resources")
+
+
+# Pagination models
+class FeedbacksPublic(SQLModel):
+    """Paginated feedback response"""
+
+    data: list[FeedbackRead]
+    count: int
+
+
+class ResourcesPublic(SQLModel):
+    """Paginated resources response"""
+
+    data: list[ResourceRead]
+    count: int

@@ -1,8 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlmodel import func, select
 
 from app import crud
 from app.api.deps import CurrentUser, SessionDep, get_current_user
-from app.models import QuestionCreate, QuestionRead, QuestionUpdate
+from app.models import (
+    QuestionCreate,
+    QuestionRead,
+    QuestionsPublic,
+    QuestionUpdate,
+    QuizQuestion,
+)
 
 router = APIRouter(prefix="/questions", tags=["questions"])
 
@@ -36,7 +43,7 @@ def create_question(
 
 @router.get(
     "/by_quiz/",
-    response_model=list[QuestionRead],
+    response_model=QuestionsPublic,
     dependencies=[Depends(get_current_user)],
 )
 def read_questions_by_quiz(
@@ -45,7 +52,7 @@ def read_questions_by_quiz(
     quiz_id: int = Query(..., description="ID of the quiz to get questions for"),
     skip: int = 0,
     limit: int = 100,
-) -> list[QuestionRead]:
+) -> QuestionsPublic:
     """
     Get questions for a specific quiz.
     """
@@ -57,10 +64,20 @@ def read_questions_by_quiz(
             detail="Quiz not found",
         )
 
+    # Get the count
+    count_statement = (
+        select(func.count())
+        .select_from(QuizQuestion)
+        .where(QuizQuestion.quiz_id == quiz_id)
+    )
+    count = session.exec(count_statement).one()
+
+    # Get paginated data
     questions = crud.get_questions_by_quiz(
         session=session, quiz_id=quiz_id, skip=skip, limit=limit
     )
-    return questions
+
+    return QuestionsPublic(data=questions, count=count)
 
 
 @router.get("/{question_id}", dependencies=[Depends(get_current_user)])

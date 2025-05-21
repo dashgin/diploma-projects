@@ -1,24 +1,30 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlmodel import func, select
 
 from app import crud
 from app.api.deps import CurrentUser, SessionDep, get_current_user
-from app.models import QuizCreate, QuizRead, QuizUpdate
+from app.models import Quiz, QuizCreate, QuizRead, QuizUpdate, QuizzesPublic
 
 router = APIRouter(prefix="/quizzes", tags=["quizzes"])
 
 
-@router.get("/", dependencies=[Depends(get_current_user)])
+@router.get("/", dependencies=[Depends(get_current_user)], response_model=QuizzesPublic)
 def read_quizzes(
     session: SessionDep,
     skip: int = 0,
     limit: int = 100,
-) -> list[QuizRead]:
+) -> QuizzesPublic:
     """
     Retrieve quizzes.
     """
-    # Here you might add logic to filter by user role
+    # Get the count
+    count_statement = select(func.count()).select_from(Quiz)
+    count = session.exec(count_statement).one()
+
+    # Get paginated data
     quizzes = crud.get_quizzes(session=session, skip=skip, limit=limit)
-    return quizzes
+
+    return QuizzesPublic(data=quizzes, count=count)
 
 
 @router.post("/", response_model=QuizRead, status_code=status.HTTP_201_CREATED)
@@ -107,17 +113,25 @@ def delete_quiz(
     crud.delete_quiz(session=session, db_quiz=quiz)
 
 
-@router.get("/my_quizzes/", response_model=list[QuizRead])
+@router.get("/my_quizzes/", response_model=QuizzesPublic)
 def read_user_quizzes(
     session: SessionDep,
     current_user: CurrentUser,
     skip: int = 0,
     limit: int = 100,
-) -> list[QuizRead]:
+) -> QuizzesPublic:
     """
     Get quizzes created by the current user.
     """
+    # Get the count
+    count_statement = (
+        select(func.count()).select_from(Quiz).where(Quiz.creator_id == current_user.id)
+    )
+    count = session.exec(count_statement).one()
+
+    # Get paginated data
     quizzes = crud.get_user_quizzes(
         session=session, user_id=current_user.id, skip=skip, limit=limit
     )
-    return quizzes
+
+    return QuizzesPublic(data=quizzes, count=count)

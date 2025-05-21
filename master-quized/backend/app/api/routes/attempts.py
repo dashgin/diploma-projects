@@ -1,31 +1,47 @@
 from fastapi import APIRouter, HTTPException, status
+from sqlmodel import func, select
 
 from app import crud
 from app.api.deps import CurrentUser, SessionDep
-from app.models import AttemptCreate, AttemptRead
+from app.models import AttemptCreate, AttemptRead, AttemptsPublic, StudentAttempt
 
 router = APIRouter(prefix="/attempts", tags=["attempts"])
 
 
-@router.get("/", response_model=list[AttemptRead])
+@router.get("/", response_model=AttemptsPublic)
 def read_attempts(
     session: SessionDep,
     current_user: CurrentUser,
     skip: int = 0,
     limit: int = 100,
-) -> list[AttemptRead]:
+) -> AttemptsPublic:
     """
     Retrieve quiz attempts.
     """
     # For regular users, limit to their own attempts
     # For admins, return all attempts
     if current_user.is_superuser:
+        # Get the count
+        count_statement = select(func.count()).select_from(StudentAttempt)
+        count = session.exec(count_statement).one()
+
+        # Get paginated data
         attempts = crud.get_attempts(session=session, skip=skip, limit=limit)
     else:
+        # Get the count
+        count_statement = (
+            select(func.count())
+            .select_from(StudentAttempt)
+            .where(StudentAttempt.student_id == current_user.id)
+        )
+        count = session.exec(count_statement).one()
+
+        # Get paginated data
         attempts = crud.get_user_attempts(
             session=session, user_id=current_user.id, skip=skip, limit=limit
         )
-    return attempts
+
+    return AttemptsPublic(data=attempts, count=count)
 
 
 @router.post("/", response_model=AttemptRead, status_code=status.HTTP_201_CREATED)
@@ -139,17 +155,27 @@ def complete_attempt(
     return attempt
 
 
-@router.get("/my_attempts/", response_model=list[AttemptRead])
+@router.get("/my_attempts/", response_model=AttemptsPublic)
 def read_user_attempts(
     session: SessionDep,
     current_user: CurrentUser,
     skip: int = 0,
     limit: int = 100,
-) -> list[AttemptRead]:
+) -> AttemptsPublic:
     """
     Get attempts for the current user.
     """
+    # Get the count
+    count_statement = (
+        select(func.count())
+        .select_from(StudentAttempt)
+        .where(StudentAttempt.student_id == current_user.id)
+    )
+    count = session.exec(count_statement).one()
+
+    # Get paginated data
     attempts = crud.get_user_attempts(
         session=session, user_id=current_user.id, skip=skip, limit=limit
     )
-    return attempts
+
+    return AttemptsPublic(data=attempts, count=count)
