@@ -12,11 +12,13 @@ import {
   Progress,
   Spinner,
   Text,
-  VStack,
+  Stack,
   useDisclosure,
   Alert,
+  Dialog,
+  Portal,
+  CloseButton
 } from "@chakra-ui/react";
-import * as Dialog from "../../../../components/ui/dialog";
 import { OptionsService } from "../../../../client/sdk.gen";
 import { useQuizAttempt } from "../../../../hooks/useQuizAttempt";
 import { useQuery } from "@tanstack/react-query";
@@ -70,9 +72,11 @@ function AttemptPage() {
   if (attempt?.is_completed) {
     return (
       <Container maxW="container.lg" py={8}>
-        <Alert status="info">
-          This quiz attempt has already been completed.
-        </Alert>
+        <Alert.Root status="info">
+          <Alert.Description>
+            This quiz attempt has already been completed.
+          </Alert.Description>
+        </Alert.Root>
         <Button 
           mt={4} 
           onClick={() => navigate({ to: `/quizzes/${attempt.quiz_id}` })}
@@ -104,7 +108,11 @@ function AttemptPage() {
 
       {/* Progress Bar */}
       <Box mb={6}>
-        <Progress value={progress} size="sm" colorScheme="blue" borderRadius="md" />
+        <Progress.Root size="sm" colorScheme="blue" borderRadius="md" value={progress}>
+          <Progress.Track>
+            <Progress.Range />
+          </Progress.Track>
+        </Progress.Root>
         <Text mt={1} fontSize="sm">
           Question {currentQuestionIndex + 1} of {totalQuestions}
         </Text>
@@ -123,7 +131,7 @@ function AttemptPage() {
             top="4"
           >
             <Heading size="sm" mb={4}>Questions</Heading>
-            <VStack align="stretch" spacing={2}>
+            <Stack direction="column" gap={2}>
               {questions?.data.map((question, index) => (
                 <Button
                   key={question.id}
@@ -139,7 +147,7 @@ function AttemptPage() {
                     : question.text}
                 </Button>
               ))}
-            </VStack>
+            </Stack>
           </Box>
         </GridItem>
 
@@ -170,13 +178,13 @@ function AttemptPage() {
               <HStack mt={8} justifyContent="space-between">
                 <Button 
                   onClick={handlePrevious} 
-                  isDisabled={currentQuestionIndex === 0}
+                  disabled={currentQuestionIndex === 0}
                 >
                   Previous
                 </Button>
                 <Button 
                   onClick={handleNext} 
-                  isDisabled={currentQuestionIndex === totalQuestions - 1}
+                  disabled={currentQuestionIndex === totalQuestions - 1}
                   colorScheme="blue"
                 >
                   Next
@@ -188,44 +196,51 @@ function AttemptPage() {
       </Grid>
 
       {/* Submit Confirmation Dialog */}
-      <Dialog.DialogRoot open={disclosure.open} onOpenChange={disclosure.setOpen}>
-        <Dialog.DialogContent>
-          <Dialog.DialogHeader>
-            <Dialog.DialogTitle>Submit Quiz</Dialog.DialogTitle>
-            <Dialog.DialogCloseTrigger />
-          </Dialog.DialogHeader>
-          <Dialog.DialogBody>
-            <Text>
-              Are you sure you want to submit this quiz? 
-              You won't be able to change your answers after submission.
-            </Text>
-            
-            {/* Response status */}
-            {totalQuestions > 0 && (
-              <Box mt={4}>
-                <Text fontWeight="medium">Question Status:</Text>
+      <Dialog.Root open={disclosure.open} onOpenChange={(e) => disclosure.setOpen(e.open)}>
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Submit Quiz</Dialog.Title>
+                <Dialog.CloseTrigger asChild>
+                  <CloseButton size="sm" />
+                </Dialog.CloseTrigger>
+              </Dialog.Header>
+              <Dialog.Body>
                 <Text>
-                  {Object.keys(responses).length} of {totalQuestions} questions answered
+                  Are you sure you want to submit this quiz? 
+                  You won't be able to change your answers after submission.
                 </Text>
-                {Object.keys(responses).length < totalQuestions && (
-                  <Text color="orange.500" mt={1}>
-                    You have unanswered questions.
-                  </Text>
+                
+                {/* Response status */}
+                {totalQuestions > 0 && (
+                  <Box mt={4}>
+                    <Text fontWeight="medium">Question Status:</Text>
+                    <Text>
+                      {Object.keys(responses).length} of {totalQuestions} questions answered
+                    </Text>
+                    {Object.keys(responses).length < totalQuestions && (
+                      <Text color="orange.500" mt={1}>
+                        You have unanswered questions.
+                      </Text>
+                    )}
+                  </Box>
                 )}
-              </Box>
-            )}
-          </Dialog.DialogBody>
-          <Dialog.DialogFooter>
-            <Button 
-              colorScheme="blue" 
-              onClick={handleSubmitQuiz}
-              loading={isSubmitting}
-            >
-              Submit Quiz
-            </Button>
-          </Dialog.DialogFooter>
-        </Dialog.DialogContent>
-      </Dialog.DialogRoot>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Button 
+                  colorScheme="blue" 
+                  onClick={handleSubmitQuiz}
+                  loading={isSubmitting}
+                >
+                  Submit Quiz
+                </Button>
+              </Dialog.Footer>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
     </Container>
   );
 } 
