@@ -1,32 +1,24 @@
 import {
   Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
   Badge,
   Box,
   Button,
   Card,
-  CardBody,
-  CardHeader,
-  Divider,
+  Separator,
   Flex,
   Heading,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Text,
   useDisclosure,
+  Dialog,
+  Portal,
+  CloseButton,
 } from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import React from "react"
 import { AttemptsService, ResponsesService } from "../../../../client/sdk.gen"
 import { FeedbackForm, FeedbackList } from "../../../../components/Feedback"
+import { Span } from "@chakra-ui/react"
 
 export const Route = createFileRoute("/_layout/attempts/$attemptId/responses")({
   component: AttemptResponsesPage,
@@ -35,7 +27,7 @@ export const Route = createFileRoute("/_layout/attempts/$attemptId/responses")({
 function AttemptResponsesPage() {
   const { attemptId } = Route.useParams()
   const parsedAttemptId = Number.parseInt(attemptId, 10)
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { open: isOpen, onOpen, onClose } = useDisclosure()
   const [selectedResponseId, setSelectedResponseId] = React.useState<
     number | null
   >(null)
@@ -68,8 +60,8 @@ function AttemptResponsesPage() {
 
   return (
     <Box>
-      <Card mb={6}>
-        <CardHeader>
+      <Card.Root mb={6}>
+        <Card.Header>
           <Heading size="md">Quiz Attempt #{attempt.id}</Heading>
           <Text mt={2}>
             Score: {attempt.score !== null ? `${attempt.score}%` : "Not scored"}
@@ -80,71 +72,79 @@ function AttemptResponsesPage() {
               {attempt.is_completed ? "Completed" : "In Progress"}
             </Badge>
           </Text>
-        </CardHeader>
-      </Card>
+        </Card.Header>
+      </Card.Root>
 
       <Heading size="md" mb={4}>
         Responses & Feedback
       </Heading>
 
-      <Accordion allowMultiple>
+      <Accordion.Root multiple>
         {responses.map((response) => (
-          <AccordionItem key={response.id}>
-            <h2>
-              <AccordionButton>
-                <Box flex="1" textAlign="left">
-                  Question #{response.question_id}
-                </Box>
-                <Badge
-                  colorScheme={response.is_correct ? "green" : "red"}
-                  mr={2}
-                >
-                  {response.is_correct ? "Correct" : "Incorrect"}
-                </Badge>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>
-              <Text fontWeight="bold" mb={2}>
-                Student Answer:
-              </Text>
-              <Text mb={4}>{response.answer_text}</Text>
+          <Accordion.Item key={response.id} value={response.id.toString()}>
+            <Accordion.ItemTrigger>
+              <Span flex="1" textAlign="left">
+                Question #{response.question_id}
+              </Span>
+              <Badge
+                colorScheme={response.is_correct ? "green" : "red"}
+                mr={2}
+              >
+                {response.is_correct ? "Correct" : "Incorrect"}
+              </Badge>
+              <Accordion.ItemIndicator />
+            </Accordion.ItemTrigger>
+            <Accordion.ItemContent>
+              <Accordion.ItemBody>
+                <Text fontWeight="bold" mb={2}>
+                  Student Answer:
+                </Text>
+                <Text mb={4}>{response.answer_text}</Text>
 
-              <Divider my={4} />
+                <Separator my={4} />
 
-              <Flex justifyContent="space-between" alignItems="center" mb={4}>
-                <Heading size="sm">Feedback</Heading>
-                <Button
-                  size="sm"
-                  colorScheme="blue"
-                  onClick={() => handleAddFeedback(response.id)}
-                >
-                  Add Feedback
-                </Button>
-              </Flex>
+                <Flex justifyContent="space-between" alignItems="center" mb={4}>
+                  <Heading size="sm">Feedback</Heading>
+                  <Button
+                    size="sm"
+                    colorScheme="blue"
+                    onClick={() => handleAddFeedback(response.id)}
+                  >
+                    Add Feedback
+                  </Button>
+                </Flex>
 
-              <FeedbackList responseId={response.id} />
-            </AccordionPanel>
-          </AccordionItem>
+                <FeedbackList responseId={response.id} />
+              </Accordion.ItemBody>
+            </Accordion.ItemContent>
+          </Accordion.Item>
         ))}
-      </Accordion>
+      </Accordion.Root>
 
       {/* Feedback Modal */}
-      <Modal isOpen={isOpen} onClose={onClose} size="lg">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Add Feedback</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            {selectedResponseId && (
-              <FeedbackForm
-                responseId={selectedResponseId}
-                onSuccess={onClose}
-              />
-            )}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      <Dialog.Root open={isOpen} onOpenChange={({ open }: { open: boolean }) => !open && onClose()} size="lg">
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Add Feedback</Dialog.Title>
+                <Dialog.CloseTrigger asChild>
+                  <CloseButton size="sm" />
+                </Dialog.CloseTrigger>
+              </Dialog.Header>
+              <Dialog.Body pb={6}>
+                {selectedResponseId && (
+                  <FeedbackForm
+                    responseId={selectedResponseId}
+                    onSuccess={onClose}
+                  />
+                )}
+              </Dialog.Body>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
     </Box>
   )
 }
