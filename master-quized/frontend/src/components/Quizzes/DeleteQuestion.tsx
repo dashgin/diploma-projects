@@ -65,14 +65,20 @@ const DeleteQuestion = ({ question, useIcon = false }: DeleteQuestionProps) => {
     >
       <DialogTrigger asChild>
         {useIcon ? (
-          <IconButton
+          <Flex
+            as="span"
+            role="button"
             aria-label="Delete Question"
-            variant="ghost"
-            size="sm"
-            colorPalette="red"
+            display="inline-flex"
+            alignItems="center"
+            justifyContent="center"
+            fontSize="sm"
+            color="red.500"
+            _hover={{ color: "red.700" }}
+            cursor="pointer"
           >
             <FiTrash />
-          </IconButton>
+          </Flex>
         ) : (
           <Flex
             as="span"

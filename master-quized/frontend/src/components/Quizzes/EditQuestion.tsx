@@ -116,9 +116,20 @@ const EditQuestion = ({ question, useIcon = false }: EditQuestionProps) => {
     >
       <DialogTrigger asChild>
         {useIcon ? (
-          <IconButton aria-label="Edit Question" variant="ghost" size="sm">
+          <Flex
+            as="span"
+            role="button"
+            aria-label="Edit Question"
+            display="inline-flex"
+            alignItems="center"
+            justifyContent="center"
+            fontSize="sm"
+            color="gray.500"
+            _hover={{ color: "gray.700" }}
+            cursor="pointer"
+          >
             <FiEdit />
-          </IconButton>
+          </Flex>
         ) : (
           <Flex as="span" align="center" gap={1} cursor="pointer" px={2} py={1}>
             <FiEdit />
