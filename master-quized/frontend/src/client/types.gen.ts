@@ -38,10 +38,9 @@ export type AssignmentsPublic = {
 }
 
 /**
- * Schema for student attempt creation
+ * Schema for student attempt creation from API
  */
-export type AttemptCreate = {
-  student_id: number
+export type AttemptCreateApiSchema = {
   quiz_id: number
   assignment_id?: number | null
   is_completed?: boolean
@@ -450,7 +449,7 @@ export type AttemptsReadAttemptsData = {
 export type AttemptsReadAttemptsResponse = AttemptsPublic
 
 export type AttemptsCreateAttemptData = {
-  requestBody: AttemptCreate
+  requestBody: AttemptCreateApiSchema
 }
 
 export type AttemptsCreateAttemptResponse = AttemptRead
@@ -577,7 +576,7 @@ export type OptionsDeleteOptionData = {
   optionId: number
 }
 
-export type OptionsDeleteOptionResponse = undefined
+export type OptionsDeleteOptionResponse = void
 
 export type OptionsReadOptionsByQuestionData = {
   limit?: number
@@ -624,7 +623,7 @@ export type QuestionsDeleteQuestionData = {
   questionId: number
 }
 
-export type QuestionsDeleteQuestionResponse = undefined
+export type QuestionsDeleteQuestionResponse = void
 
 export type QuizzesReadQuizzesData = {
   limit?: number
@@ -656,7 +655,7 @@ export type QuizzesDeleteQuizData = {
   quizId: number
 }
 
-export type QuizzesDeleteQuizResponse = undefined
+export type QuizzesDeleteQuizResponse = void
 
 export type QuizzesReadUserQuizzesData = {
   limit?: number

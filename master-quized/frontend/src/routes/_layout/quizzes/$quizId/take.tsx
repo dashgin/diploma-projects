@@ -42,7 +42,6 @@ function QuizTakePage() {
       return AttemptsService.createAttempt({
         requestBody: {
           quiz_id: Number(quizId),
-          student_id: 0, // This will be replaced by the current user's ID on the server
           is_completed: false,
         },
       });
