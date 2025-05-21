@@ -45,6 +45,9 @@ from app.crud.recommendation import (
 from app.crud.response import create_response, get_response, get_responses_by_attempt
 from app.crud.user import authenticate, create_user, get_user_by_email, update_user
 
+# New imports for create_resource function
+from .resource import create_resource
+
 __all__ = [
     # User operations
     "create_user",
@@ -95,4 +98,6 @@ __all__ = [
     "create_recommendation",
     "get_recommendation",
     "get_recommendations_by_feedback",
+    # New operations
+    "create_resource",
 ]

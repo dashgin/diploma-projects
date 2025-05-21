@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException, Query, status
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Query, status
 
 from app import crud
 from app.api.deps import CurrentUser, SessionDep
-from app.models import FeedbackCreate, FeedbackRead
+from app.models import FeedbackCreate, FeedbackRead, LearningResource, ResourceCreate
+from app.services.ai_feedback import process_ai_feedback, request_ai_feedback
 
 router = APIRouter(prefix="/feedback", tags=["feedback"])
 
@@ -142,3 +143,122 @@ def read_feedback_by_response(
 
     feedback = crud.get_feedback_by_response(session=session, response_id=response_id)
     return feedback
+
+
+@router.post("/request/{response_id}", response_model=dict, status_code=status.HTTP_202_ACCEPTED)
+async def request_feedback_generation(
+    *,
+    session: SessionDep,
+    current_user: CurrentUser,
+    response_id: int,
+    background_tasks: BackgroundTasks,
+) -> dict:
+    """
+    Request AI-generated feedback for a student response.
+    
+    This is an asynchronous operation. The feedback will be generated in the background.
+    """
+    # Check if response exists
+    response = crud.get_response(session=session, response_id=response_id)
+    if not response:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Response not found",
+        )
+
+    # Check if feedback already exists for this response
+    existing_feedback = crud.get_feedback_by_response(
+        session=session, response_id=response_id
+    )
+    if existing_feedback:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Feedback already exists for this response",
+        )
+
+    # Check if user has permission to create feedback
+    attempt = crud.get_attempt(session=session, attempt_id=response.attempt_id)
+    if not attempt:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Attempt not found",
+        )
+
+    quiz = crud.get_quiz(session=session, quiz_id=attempt.quiz_id)
+    if not quiz:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Quiz not found",
+        )
+
+    # Only quiz creator or admin can create feedback
+    if quiz.creator_id != current_user.id and not current_user.is_superuser:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not enough permissions",
+        )
+    
+    # Add background task to generate feedback
+    background_tasks.add_task(
+        generate_and_save_feedback,
+        session=session,
+        response_id=response_id,
+    )
+    
+    return {
+        "message": "Feedback generation requested. It will be processed in the background.",
+        "response_id": response_id,
+    }
+
+
+async def generate_and_save_feedback(
+    *,
+    session: SessionDep,
+    response_id: int,
+) -> None:
+    """
+    Background task to generate and save AI feedback.
+    """
+    try:
+        # Get the response
+        response = crud.get_response(session=session, response_id=response_id)
+        if not response:
+            return
+        
+        # Request feedback from AI service
+        ai_interaction_data = await request_ai_feedback(response)
+        
+        # Process the feedback data
+        processed_feedback = await process_ai_feedback(ai_interaction_data)
+        
+        # Create feedback object
+        feedback_in = FeedbackCreate(
+            response_id=response_id,
+            feedback_text=processed_feedback["feedback_text"],
+            error_type=processed_feedback["error_type"],
+            confidence_score=processed_feedback["confidence_score"],
+            feedback_content=processed_feedback["feedback_content"],
+            ai_metadata=processed_feedback["ai_metadata"],
+        )
+        
+        # Save feedback to database
+        feedback = crud.create_feedback(session=session, feedback_in=feedback_in)
+        
+        # Save recommended resources if available
+        if processed_feedback["resources"]:
+            for resource_data in processed_feedback["resources"]:
+                resource_in = ResourceCreate(
+                    feedback_id=feedback.id,
+                    title=resource_data["title"],
+                    url=resource_data["url"],
+                    resource_type=resource_data["resource_type"],
+                    relevance_score=resource_data.get("relevance_score"),
+                )
+                
+                crud.create_resource(session=session, resource_in=resource_in)
+                
+    except Exception as e:
+        # Log the error but don't raise it (this is a background task)
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error generating AI feedback for response {response_id}: {e}")
