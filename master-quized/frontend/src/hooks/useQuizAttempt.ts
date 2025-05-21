@@ -60,7 +60,6 @@ export function useQuizAttempt(attemptId: number | string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["responses", attemptIdNumber] });
-      showSuccessToast("Response saved");
     },
     onError: (error) => {
       console.error("Error saving response:", error);
