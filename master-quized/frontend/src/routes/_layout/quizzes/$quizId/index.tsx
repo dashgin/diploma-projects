@@ -28,7 +28,7 @@ interface QuizDetailLoaderData {
   quiz?: QuizRead
 }
 
-export const Route = createFileRoute("/_layout/quizzes/$quizId")({
+export const Route = createFileRoute("/_layout/quizzes/$quizId/")({
   component: QuizDetail,
   loader: async ({ params }) => {
     const quizId = Number.parseInt(params.quizId)
@@ -74,6 +74,11 @@ function QuizDetail() {
         <Flex justify="space-between" align="center" mb={4}>
           <Heading size="md">{quiz.title}</Heading>
           <Flex gap={2}>
+            <Link to={`/quizzes/${quiz.id}/take`} preload="intent">
+              <Button variant="solid" colorScheme="blue">
+                Take Quiz
+              </Button>
+            </Link>
             <CreateAssignment quizId={quiz.id} />
             <EditQuiz quiz={quiz} />
           </Flex>
