@@ -36,23 +36,23 @@
 - [x] User can see their assigned quizzes
 
 ## Quiz Attempts
-- [ ] User can view all quiz attempts
-- [ ] User can start new quiz attempts
-- [ ] User can view attempt details
-- [ ] User can submit completed attempts
-- [ ] User can see their quiz attempt history
+- [x] User can view all quiz attempts
+- [x] User can start new quiz attempts
+- [x] User can view attempt details
+- [x] User can submit completed attempts
+- [x] User can see their quiz attempt history
 
 ## Responses
-- [ ] User can submit answers to questions
-- [ ] User can view their response details
-- [ ] User can see all responses for an attempt
+- [x] User can submit answers to questions
+- [x] User can view their response details
+- [x] User can see all responses for an attempt
 
 ## Feedback
-- [ ] User can provide feedback
-- [ ] User can view specific feedback
-- [ ] User can see feedback for their responses
+- [x] User can provide feedback
+- [x] User can view specific feedback
+- [x] User can see feedback for their responses
 
 ## Resource Recommendations
-- [ ] User can create resource recommendations
-- [ ] User can view recommendation details
-- [ ] User can see recommendations for specific feedback
+- [x] User can create resource recommendations
+- [x] User can view recommendation details
+- [x] User can see recommendations for specific feedback

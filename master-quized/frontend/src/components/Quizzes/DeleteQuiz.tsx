@@ -56,7 +56,7 @@ const DeleteQuiz = ({ id }: { id: number }) => {
       open={isOpen}
       onOpenChange={({ open }) => setIsOpen(open)}
     >
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant="ghost" size="sm" colorPalette="red">
           <FiTrash2 fontSize="16px" />
           Delete Quiz
@@ -77,7 +77,7 @@ const DeleteQuiz = ({ id }: { id: number }) => {
           </DialogBody>
 
           <DialogFooter gap={2}>
-            <DialogActionTrigger>
+            <DialogActionTrigger asChild>
               <Button
                 variant="subtle"
                 colorPalette="gray"

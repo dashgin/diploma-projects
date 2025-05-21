@@ -90,7 +90,10 @@ export const AssignmentDetails = ({ assignmentId }: AssignmentDetailsProps) => {
   }
 
   const handleStartQuiz = () => {
-    navigate({ to: `/quizzes/${quiz.id}/take` })
+    navigate({
+      to: `/quizzes/${quiz.id}/take`,
+      search: { assignmentId: assignment.id.toString() },
+    })
   }
 
   const dueDate = assignment.due_date ? new Date(assignment.due_date) : null

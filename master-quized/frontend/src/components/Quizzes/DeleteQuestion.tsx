@@ -1,4 +1,10 @@
-import { Button, DialogActionTrigger, Text } from "@chakra-ui/react"
+import {
+  Button,
+  DialogActionTrigger,
+  Flex,
+  IconButton,
+  Text,
+} from "@chakra-ui/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { FiTrash } from "react-icons/fi"
@@ -19,9 +25,10 @@ import {
 
 interface DeleteQuestionProps {
   question: QuestionRead
+  useIcon?: boolean
 }
 
-const DeleteQuestion = ({ question }: DeleteQuestionProps) => {
+const DeleteQuestion = ({ question, useIcon = false }: DeleteQuestionProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
   const { showSuccessToast } = useCustomToast()
@@ -56,11 +63,30 @@ const DeleteQuestion = ({ question }: DeleteQuestionProps) => {
       open={isOpen}
       onOpenChange={({ open }) => setIsOpen(open)}
     >
-      <DialogTrigger>
-        <Button variant="ghost" size="sm" colorPalette="red">
-          <FiTrash />
-          Delete
-        </Button>
+      <DialogTrigger asChild>
+        {useIcon ? (
+          <IconButton
+            aria-label="Delete Question"
+            variant="ghost"
+            size="sm"
+            colorPalette="red"
+          >
+            <FiTrash />
+          </IconButton>
+        ) : (
+          <Flex
+            as="span"
+            align="center"
+            gap={1}
+            cursor="pointer"
+            px={2}
+            py={1}
+            color="red.500"
+          >
+            <FiTrash />
+            Delete
+          </Flex>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -73,7 +99,7 @@ const DeleteQuestion = ({ question }: DeleteQuestionProps) => {
           </Text>
         </DialogBody>
         <DialogFooter gap={2}>
-          <DialogActionTrigger>
+          <DialogActionTrigger asChild>
             <Button variant="subtle" colorPalette="gray">
               Cancel
             </Button>

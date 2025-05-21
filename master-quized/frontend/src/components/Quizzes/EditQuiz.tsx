@@ -82,7 +82,7 @@ const EditQuiz = ({ quiz }: EditQuizProps) => {
       open={isOpen}
       onOpenChange={({ open }) => setIsOpen(open)}
     >
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant="ghost" size="sm">
           <FiEdit fontSize="16px" />
           Edit Quiz
@@ -138,7 +138,7 @@ const EditQuiz = ({ quiz }: EditQuizProps) => {
           </DialogBody>
 
           <DialogFooter gap={2}>
-            <DialogActionTrigger>
+            <DialogActionTrigger asChild>
               <Button
                 variant="subtle"
                 colorPalette="gray"

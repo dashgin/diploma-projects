@@ -74,7 +74,7 @@ const AddQuiz = () => {
       open={isOpen}
       onOpenChange={({ open }) => setIsOpen(open)}
     >
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button value="add-quiz" my={4}>
           <FaPlus fontSize="16px" />
           Add Quiz
@@ -130,7 +130,7 @@ const AddQuiz = () => {
           </DialogBody>
 
           <DialogFooter gap={2}>
-            <DialogActionTrigger>
+            <DialogActionTrigger asChild>
               <Button
                 variant="subtle"
                 colorPalette="gray"

@@ -13,8 +13,13 @@ interface QuizActionsMenuProps {
 export const QuizActionsMenu = ({ quiz }: QuizActionsMenuProps) => {
   return (
     <MenuRoot>
-      <MenuTrigger>
-        <IconButton variant="ghost" color="inherit">
+      <MenuTrigger asChild>
+        <IconButton
+          aria-label="Quiz actions"
+          variant="ghost"
+          color="inherit"
+          size="sm"
+        >
           <BsThreeDotsVertical />
         </IconButton>
       </MenuTrigger>

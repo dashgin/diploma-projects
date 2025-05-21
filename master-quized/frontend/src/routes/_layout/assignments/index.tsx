@@ -14,13 +14,13 @@ function AssignmentsPage() {
         <Flex justifyContent="space-between" alignItems="center">
           <Heading size="lg">Assignments</Heading>
         </Flex>
-        
+
         {/* Show user's assigned quizzes */}
         <AssignmentsList userAssignments={true} />
-        
+
         {/* Show all assignments (for teachers/admins) */}
         <AssignmentsList />
       </Stack>
     </Container>
   )
-} 
+}

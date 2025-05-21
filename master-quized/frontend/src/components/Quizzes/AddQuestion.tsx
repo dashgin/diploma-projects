@@ -99,7 +99,7 @@ const AddQuestion = ({ quizId }: AddQuestionProps) => {
       open={isOpen}
       onOpenChange={({ open }) => setIsOpen(open)}
     >
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant="solid" size="sm">
           <FiPlus />
           Add Question
@@ -211,7 +211,7 @@ const AddQuestion = ({ quizId }: AddQuestionProps) => {
           </DialogBody>
 
           <DialogFooter gap={2}>
-            <DialogActionTrigger>
+            <DialogActionTrigger asChild>
               <Button
                 variant="subtle"
                 colorPalette="gray"

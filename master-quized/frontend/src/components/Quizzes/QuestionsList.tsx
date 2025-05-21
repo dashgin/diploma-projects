@@ -9,11 +9,7 @@ import {
 } from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
 
-import {
-  OptionsService,
-  type QuestionRead,
-  QuestionsService,
-} from "@/client"
+import { OptionsService, type QuestionRead, QuestionsService } from "@/client"
 import AddOption from "./AddOption"
 import AddQuestion from "./AddQuestion"
 import DeleteOption from "./DeleteOption"
@@ -24,7 +20,6 @@ import EditQuestion from "./EditQuestion"
 interface QuestionsListProps {
   quizId: number
 }
-
 
 const QuestionsList = ({ quizId }: QuestionsListProps) => {
   // Fetch questions
@@ -125,8 +120,8 @@ const QuestionItem = ({
               </Text>
             </Box>
             <HStack gap={2}>
-              <EditQuestion question={question} />
-              <DeleteQuestion question={question} />
+              <EditQuestion question={question} useIcon={true} />
+              <DeleteQuestion question={question} useIcon={true} />
             </HStack>
           </Flex>
         </Accordion.ItemTrigger>

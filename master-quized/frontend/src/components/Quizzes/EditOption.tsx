@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
-import { type SubmitHandler, useForm, Controller } from "react-hook-form"
+import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import { FiEdit } from "react-icons/fi"
 
 import {
@@ -93,7 +93,7 @@ const EditOption = ({ option }: EditOptionProps) => {
       open={isOpen}
       onOpenChange={({ open }) => setIsOpen(open)}
     >
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant="ghost" size="sm">
           <FiEdit />
           Edit
@@ -160,7 +160,7 @@ const EditOption = ({ option }: EditOptionProps) => {
           </DialogBody>
 
           <DialogFooter gap={2}>
-            <DialogActionTrigger>
+            <DialogActionTrigger asChild>
               <Button
                 variant="subtle"
                 colorPalette="gray"

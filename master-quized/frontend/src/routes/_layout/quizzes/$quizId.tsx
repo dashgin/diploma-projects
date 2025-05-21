@@ -14,7 +14,7 @@ import {
   createFileRoute,
   useNavigate,
 } from "@tanstack/react-router"
-import { FiArrowLeft } from "react-icons/fi"
+import { FiArrowLeft, FiPlay } from "react-icons/fi"
 
 import { QuizzesService } from "@/client"
 import type { QuizRead } from "@/client"
@@ -31,52 +31,32 @@ interface QuizDetailLoaderData {
 
 export const Route = createFileRoute("/_layout/quizzes/$quizId")({
   component: QuizDetail,
-  loader: ({ params }): { quizId: number } => {
-    return {
-      quizId: Number.parseInt(params.quizId, 10),
-    }
+  loader: async ({ params }) => {
+    const quizId = Number.parseInt(params.quizId)
+    return { quizId }
   },
 })
 
 function QuizDetail() {
   const { quizId, quiz: initialQuiz } =
     Route.useLoaderData() as QuizDetailLoaderData
-  const navigate = useNavigate({ from: Route.fullPath })
+  const navigate = useNavigate()
 
-  // Fetch quiz details - initialized with data from the loader
-  const {
-    data: quiz,
-    isLoading: isQuizLoading,
-    error: quizError,
-  } = useQuery({
-    queryKey: ["quiz", quizId],
+  const { data: quiz, isLoading } = useQuery({
+    queryKey: ["quizzes", quizId],
     queryFn: () => QuizzesService.readQuiz({ quizId }),
     initialData: initialQuiz,
   })
 
-  if (isQuizLoading) {
-    return (
-      <Flex justify="center" align="center" height="50vh">
-        <Spinner size="xl" />
-      </Flex>
-    )
+  const handleTakeQuiz = () => {
+    navigate({ to: `/quizzes/${quizId}/take` })
   }
 
-  if (quizError || !quiz) {
+  if (isLoading || !quiz) {
     return (
-      <Box p={5} textAlign="center">
-        <Heading as="h3" size="md" mb={4}>
-          Error loading quiz
-        </Heading>
-        <Text>
-          Unable to load the requested quiz. It may not exist or you may not
-          have permission to view it.
-        </Text>
-        <Button mt={4} onClick={() => navigate({ to: "/_layout/quizzes" })}>
-          <FiArrowLeft />
-          Back to Quizzes
-        </Button>
-      </Box>
+      <Flex justify="center" align="center" height="100vh">
+        <Spinner size="xl" />
+      </Flex>
     )
   }
 
@@ -100,6 +80,10 @@ function QuizDetail() {
         <Flex justify="space-between" align="center" mb={4}>
           <Heading size="md">{quiz.title}</Heading>
           <Flex gap={2}>
+            <Button onClick={handleTakeQuiz} variant="solid" size="sm">
+              <FiPlay />
+              Take Quiz
+            </Button>
             <CreateAssignment quizId={quiz.id} />
             <EditQuiz quiz={quiz} />
           </Flex>

@@ -128,7 +128,7 @@ const CreateAssignment = ({ quizId }: CreateAssignmentProps) => {
       open={isOpen}
       onOpenChange={({ open }) => setIsOpen(open)}
     >
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant="solid" size="sm">
           <FiPlus />
           Assign Quiz
@@ -198,7 +198,7 @@ const CreateAssignment = ({ quizId }: CreateAssignmentProps) => {
           </DialogBody>
 
           <DialogFooter gap={2}>
-            <DialogActionTrigger>
+            <DialogActionTrigger asChild>
               <Button
                 variant="subtle"
                 colorPalette="gray"

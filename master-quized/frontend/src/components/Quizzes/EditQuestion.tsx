@@ -1,6 +1,8 @@
 import {
   Button,
   DialogActionTrigger,
+  Flex,
+  IconButton,
   Input,
   Select,
   Text,
@@ -35,6 +37,7 @@ import { Field } from "../ui/field"
 
 interface EditQuestionProps {
   question: QuestionRead
+  useIcon?: boolean
 }
 
 interface QuestionUpdateForm {
@@ -55,7 +58,7 @@ const questionTypeCollection = createListCollection({
   items: QUESTION_TYPES,
 })
 
-const EditQuestion = ({ question }: EditQuestionProps) => {
+const EditQuestion = ({ question, useIcon = false }: EditQuestionProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
   const { showSuccessToast } = useCustomToast()
@@ -111,11 +114,17 @@ const EditQuestion = ({ question }: EditQuestionProps) => {
       open={isOpen}
       onOpenChange={({ open }) => setIsOpen(open)}
     >
-      <DialogTrigger>
-        <Button variant="ghost" size="sm">
-          <FiEdit />
-          Edit Question
-        </Button>
+      <DialogTrigger asChild>
+        {useIcon ? (
+          <IconButton aria-label="Edit Question" variant="ghost" size="sm">
+            <FiEdit />
+          </IconButton>
+        ) : (
+          <Flex as="span" align="center" gap={1} cursor="pointer" px={2} py={1}>
+            <FiEdit />
+            Edit Question
+          </Flex>
+        )}
       </DialogTrigger>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -223,7 +232,7 @@ const EditQuestion = ({ question }: EditQuestionProps) => {
           </DialogBody>
 
           <DialogFooter gap={2}>
-            <DialogActionTrigger>
+            <DialogActionTrigger asChild>
               <Button
                 variant="subtle"
                 colorPalette="gray"

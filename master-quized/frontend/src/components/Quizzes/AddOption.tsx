@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
-import { type SubmitHandler, useForm, Controller } from "react-hook-form"
+import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import { FiPlus } from "react-icons/fi"
 
 import { type ApiError, type OptionCreate, OptionsService } from "@/client"
@@ -83,7 +83,7 @@ const AddOption = ({ questionId }: AddOptionProps) => {
       open={isOpen}
       onOpenChange={({ open }) => setIsOpen(open)}
     >
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           <FiPlus />
           Add Option
@@ -150,7 +150,7 @@ const AddOption = ({ questionId }: AddOptionProps) => {
           </DialogBody>
 
           <DialogFooter gap={2}>
-            <DialogActionTrigger>
+            <DialogActionTrigger asChild>
               <Button
                 variant="subtle"
                 colorPalette="gray"
