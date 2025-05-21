@@ -30,10 +30,10 @@
 - [x] User can see options for a specific question
 
 ## Assignments
-- [ ] User can view quiz assignments
-- [ ] User can create new assignments
-- [ ] User can view assignment details
-- [ ] User can see their assigned quizzes
+- [x] User can view quiz assignments
+- [x] User can create new assignments
+- [x] User can view assignment details
+- [x] User can see their assigned quizzes
 
 ## Quiz Attempts
 - [ ] User can view all quiz attempts
