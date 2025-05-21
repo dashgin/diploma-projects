@@ -139,7 +139,7 @@ const AddOption = ({ questionId }: AddOptionProps) => {
                   render={({ field }) => (
                     <Checkbox
                       checked={field.value}
-                      onCheckedChange={(val) => field.onChange(val)}
+                      onCheckedChange={({ checked }) => field.onChange(checked)}
                     >
                       This is the correct answer
                     </Checkbox>
