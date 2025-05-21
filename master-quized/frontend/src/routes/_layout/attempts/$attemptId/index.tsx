@@ -14,15 +14,18 @@ import {
   Text,
   Stack,
   useDisclosure,
-  Alert,
   Dialog,
   Portal,
-  CloseButton
+  CloseButton,
+  Badge,
+  Separator,
+  Card
 } from "@chakra-ui/react";
-import { OptionsService } from "../../../../client/sdk.gen";
+import { OptionsService, QuestionsService, ResponsesService } from "../../../../client/sdk.gen";
 import { useQuizAttempt } from "../../../../hooks/useQuizAttempt";
 import { useQuery } from "@tanstack/react-query";
 import QuestionRenderer from "../../../../components/Quizzes/QuestionRenderer";
+import { formatDate } from "../../../../utils/formatters";
 
 export const Route = createFileRoute("/_layout/attempts/$attemptId/")({
   component: AttemptPage,
@@ -59,6 +62,16 @@ function AttemptPage() {
     enabled: !!currentQuestionId,
   });
 
+  // Fetch all responses for this attempt if completed
+  const { data: attemptResponses, isLoading: isLoadingAttemptResponses } = useQuery({
+    queryKey: ["attempt-responses", attemptId],
+    queryFn: () => ResponsesService.readResponsesByAttempt({
+      attemptId: Number(attemptId),
+      limit: 100
+    }),
+    enabled: attempt?.is_completed === true
+  });
+
   // Loading state
   if (isLoading) {
     return (
@@ -70,19 +83,108 @@ function AttemptPage() {
 
   // Check if attempt is already completed
   if (attempt?.is_completed) {
+    const isLoadingCompletedAttemptData = isLoadingAttemptResponses;
+    
+    if (isLoadingCompletedAttemptData) {
+      return (
+        <Center height="50vh">
+          <Spinner size="xl" />
+        </Center>
+      );
+    }
+    
+    // Create a map of responses by question ID
+    const responsesByQuestionId: Record<number, any> = {};
+    attemptResponses?.forEach(response => {
+      responsesByQuestionId[response.question_id] = response;
+    });
+    
     return (
       <Container maxW="container.lg" py={8}>
-        <Alert.Root status="info">
-          <Alert.Description>
-            This quiz attempt has already been completed.
-          </Alert.Description>
-        </Alert.Root>
-        <Button 
-          mt={4} 
-          onClick={() => navigate({ to: `/quizzes/${attempt.quiz_id}` })}
-        >
-          Return to Quiz
-        </Button>
+        <Box mb={6}>
+          <Flex justifyContent="space-between" alignItems="center">
+            <Heading size="lg">Attempt Results</Heading>
+            <Button 
+              onClick={() => navigate({ to: `/quizzes/${attempt.quiz_id}` })}
+              variant="outline"
+            >
+              Return to Quiz
+            </Button>
+          </Flex>
+          
+          <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={4} mt={6}>
+            <Card.Root>
+              <Card.Body>
+                <Text fontWeight="bold">Score</Text>
+                <Text fontSize="3xl" color={(attempt.score ?? 0) >= 70 ? "green.500" : "red.500"}>
+                  {attempt.score !== null ? `${attempt.score}%` : "Not scored"}
+                </Text>
+              </Card.Body>
+            </Card.Root>
+            
+            <Card.Root>
+              <Card.Body>
+                <Text fontWeight="bold">Started</Text>
+                <Text>{formatDate(attempt.started_at)}</Text>
+              </Card.Body>
+            </Card.Root>
+            
+            <Card.Root>
+              <Card.Body>
+                <Text fontWeight="bold">Completed</Text>
+                <Text>{formatDate(attempt.completed_at)}</Text>
+              </Card.Body>
+            </Card.Root>
+          </Grid>
+        </Box>
+        
+        <Separator my={6} />
+        
+        <Box>
+          <Heading size="md" mb={6}>Question Results</Heading>
+          
+          {questions?.data.map((question, index) => {
+            const response = responsesByQuestionId[question.id];
+            const isCorrect = response?.is_correct;
+            
+            return (
+              <Card.Root key={question.id} mb={6} variant="outline">
+                <Card.Header>
+                  <Flex justify="space-between" align="center">
+                    <Text fontWeight="bold">Question {index + 1}</Text>
+                    {isCorrect !== undefined && (
+                      <Badge colorScheme={isCorrect ? "green" : "red"}>
+                        {isCorrect ? "Correct" : "Incorrect"}
+                      </Badge>
+                    )}
+                  </Flex>
+                </Card.Header>
+                <Card.Body>
+                  <Text mb={4}>{question.text}</Text>
+                  
+                  <Box mb={4}>
+                    <Text fontWeight="bold" fontSize="sm" color="gray.600">Your Answer:</Text>
+                    <Text>{response?.answer_text || "Not answered"}</Text>
+                  </Box>
+                  
+                  {!isCorrect && response?.correct_answer && (
+                    <Box mb={4}>
+                      <Text fontWeight="bold" fontSize="sm" color="green.600">Correct Answer:</Text>
+                      <Text>{response.correct_answer}</Text>
+                    </Box>
+                  )}
+                  
+                  {response?.feedback && (
+                    <Box mt={4} p={3} bg="gray.50" borderRadius="md">
+                      <Text fontWeight="bold" fontSize="sm">Feedback:</Text>
+                      <Text>{response.feedback}</Text>
+                    </Box>
+                  )}
+                </Card.Body>
+              </Card.Root>
+            );
+          })}
+        </Box>
       </Container>
     );
   }
