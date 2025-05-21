@@ -9,6 +9,7 @@ import {
   FiHome,
   FiSettings,
   FiUsers,
+  FiActivity,
 } from "react-icons/fi"
 import type { IconType } from "react-icons/lib"
 
@@ -16,7 +17,8 @@ import type { UserPublic } from "@/client"
 
 const items = [
   { icon: FiHome, title: "Dashboard", path: "/" },
-  { icon: FiClipboard, title: "Quizzes", path: "/quizzes" },
+  { icon: FiClipboard, title: "Quizzes", path: "/quizzes/" },
+  { icon: FiActivity, title: "Attempts", path: "/attempts/" },
   { icon: FiCalendar, title: "Assignments", path: "/assignments" },
   { icon: FiBriefcase, title: "Items", path: "/items" },
   { icon: FiBook, title: "Knowledge Areas", path: "/knowledge-areas" },
