@@ -43,6 +43,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 ### UI Components
 - Provide appropriate TypeScript interfaces
 - Include loading states where appropriate
+- Use react-icons when you nneed icon
 
 ## Routing Style
 

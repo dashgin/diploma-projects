@@ -541,6 +541,14 @@ export type FeedbackReadFeedbackByResponseData = {
 
 export type FeedbackReadFeedbackByResponseResponse = FeedbackRead | null
 
+export type FeedbackRequestFeedbackGenerationData = {
+  responseId: number
+}
+
+export type FeedbackRequestFeedbackGenerationResponse = {
+  [key: string]: unknown
+}
+
 export type LoginLoginAccessTokenData = {
   formData: Body_login_login_access_token
 }

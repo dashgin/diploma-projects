@@ -70,7 +70,6 @@ const LayoutKnowledgeAreasRoute = LayoutKnowledgeAreasImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
-
 const LayoutAssignmentsRoute = LayoutAssignmentsImport.update({
   path: '/assignments',
   getParentRoute: () => LayoutRoute,

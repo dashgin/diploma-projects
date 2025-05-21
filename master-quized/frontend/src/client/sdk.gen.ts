@@ -30,6 +30,8 @@ import type {
   FeedbackReadFeedbackResponse,
   FeedbackReadFeedbackByResponseData,
   FeedbackReadFeedbackByResponseResponse,
+  FeedbackRequestFeedbackGenerationData,
+  FeedbackRequestFeedbackGenerationResponse,
   LoginLoginAccessTokenData,
   LoginLoginAccessTokenResponse,
   LoginTestTokenResponse,
@@ -401,6 +403,31 @@ export class FeedbackService {
   }
 
   /**
+ * Request Feedback Generation
+ * Request AI-generated feedback for a student response.
+ *
+ * This is an asynchronous operation. The feedback will be generated in the background.
+ * @param data The data for the request.
+ * @param data.responseId
+ * @returns unknown Successful Response
+ * @throws ApiError
+ */
+  public static requestFeedbackGeneration(
+    data: FeedbackRequestFeedbackGenerationData,
+  ): CancelablePromise<FeedbackRequestFeedbackGenerationResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/v1/feedback/request/{response_id}",
+      path: {
+        response_id: data.responseId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
    * Read Feedback By Response
    * Get feedback for a specific response.
    * @param data The data for the request.
@@ -422,6 +449,8 @@ export class FeedbackService {
       },
     })
   }
+
+
 }
 
 export class LoginService {

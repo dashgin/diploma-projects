@@ -26,6 +26,7 @@ import { useQuizAttempt } from "../../../../hooks/useQuizAttempt";
 import { useQuery } from "@tanstack/react-query";
 import QuestionRenderer from "../../../../components/Quizzes/QuestionRenderer";
 import { formatDate } from "../../../../utils/formatters";
+import { AIFeedbackButton, AIFeedbackDisplay } from "../../../../components/Feedback";
 
 export const Route = createFileRoute("/_layout/attempts/$attemptId/")({
   component: AttemptPage,
@@ -206,6 +207,17 @@ function AttemptPage() {
                     <Box mt={4} p={3} bg="gray.50" borderRadius="md">
                       <Text fontWeight="bold" fontSize="sm">Explanation:</Text>
                       <Text>{responseData.explanation}</Text>
+                    </Box>
+                  )}
+                  
+                  {/* AI Feedback section - only for open-ended questions */}
+                  {responseData?.question?.question_type === "open_ended" && (
+                    <Box mt={4}>
+                      <Flex justifyContent="space-between" alignItems="center" mb={2}>
+                        <Text fontWeight="bold" fontSize="sm" color="gray.600">AI Feedback:</Text>
+                        <AIFeedbackButton responseId={responseData.id} />
+                      </Flex>
+                      <AIFeedbackDisplay responseId={responseData.id} />
                     </Box>
                   )}
                 </Card.Body>
