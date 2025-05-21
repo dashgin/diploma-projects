@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Query, status
 
 from app import crud
 from app.api.deps import CurrentUser, SessionDep
-from app.models import ResponseCreate, ResponseRead
+from app.models import ResponseCreate, ResponseRead, ResponseWithDetails
 
 router = APIRouter(prefix="/responses", tags=["responses"])
 
@@ -104,7 +104,7 @@ def read_response(
     return response
 
 
-@router.get("/by_attempt/", response_model=list[ResponseRead])
+@router.get("/by_attempt/", response_model=list[ResponseWithDetails])
 def read_responses_by_attempt(
     *,
     session: SessionDep,
@@ -112,7 +112,7 @@ def read_responses_by_attempt(
     attempt_id: int = Query(..., description="ID of the attempt to get responses for"),
     skip: int = 0,
     limit: int = 100,
-) -> list[ResponseRead]:
+) -> list[ResponseWithDetails]:
     """
     Get responses for a specific quiz attempt.
     """
@@ -137,4 +137,37 @@ def read_responses_by_attempt(
     responses = crud.get_responses_by_attempt(
         session=session, attempt_id=attempt_id, skip=skip, limit=limit
     )
-    return responses
+
+    # Enhance responses with question details for completed attempts
+    if attempt.is_completed:
+        responses_with_details = []
+        for response in responses:
+            # Get the question
+            question = crud.get_question(session=session, question_id=response.question_id)
+
+            # Get correct answers for this question
+            correct_options = []
+            if question.question_type == "multiple_choice":
+                options = crud.get_options_by_question(
+                    session=session, question_id=question.id
+                )
+                correct_options = [opt for opt in options if opt.is_correct]
+
+            # Check if response is correct
+            is_correct = False
+            if response.selected_option_id and any(opt.id == response.selected_option_id for opt in correct_options):
+                is_correct = True
+            elif question.question_type == "short_answer" and response.answer_text.strip().lower() == question.correct_answer.strip().lower():
+                is_correct = True
+
+            # Create enhanced response
+            enhanced_response = ResponseWithDetails(
+                **response.model_dump(),
+                is_correct=is_correct,
+                explanation=question.explanation
+            )
+            responses_with_details.append(enhanced_response)
+
+        return responses_with_details
+
+    return [ResponseWithDetails(**r.model_dump(), is_correct=None, explanation=None) for r in responses]

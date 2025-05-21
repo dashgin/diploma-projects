@@ -11,7 +11,7 @@ import useCustomToast from './useCustomToast';
 export function useQuizAttempt(attemptId: number | string) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const toast = useCustomToast();
+  const { showSuccessToast, showErrorToast } = useCustomToast();
   
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [responses, setResponses] = useState<Record<number, string>>({});
@@ -60,17 +60,11 @@ export function useQuizAttempt(attemptId: number | string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["responses", attemptIdNumber] });
-      toast({
-        title: "Response saved",
-        status: "success",
-      });
+      showSuccessToast("Response saved");
     },
     onError: (error) => {
       console.error("Error saving response:", error);
-      toast({
-        title: "Failed to save response",
-        status: "error",
-      });
+      showErrorToast("Failed to save response");
     },
   });
 
@@ -85,19 +79,13 @@ export function useQuizAttempt(attemptId: number | string) {
     },
     onSuccess: (data) => {
       setIsSubmitting(false);
-      toast({
-        title: "Quiz submitted successfully",
-        status: "success",
-      });
+      showSuccessToast("Quiz submitted successfully");
       navigate({ to: `/quizzes/${data.quiz_id}` });
     },
     onError: (error) => {
       setIsSubmitting(false);
       console.error("Error completing attempt:", error);
-      toast({
-        title: "Failed to submit quiz",
-        status: "error",
-      });
+      showErrorToast("Failed to submit quiz");
     },
   });
 

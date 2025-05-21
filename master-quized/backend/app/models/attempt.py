@@ -143,6 +143,13 @@ class ResponseRead(ResponseBase):
     id: int
 
 
+class ResponseWithDetails(ResponseRead):
+    """Enhanced response schema with correctness and explanation"""
+
+    is_correct: bool | None = None
+    explanation: str | None = None
+
+
 class StudentResponse(TimestampMixin, ResponseBase, table=True):
     """Student's answer to a question in a quiz attempt"""
 

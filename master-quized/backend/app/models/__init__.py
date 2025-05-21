@@ -12,6 +12,7 @@ from .attempt import (
     QuizAssignment,
     ResponseCreate,
     ResponseRead,
+    ResponseWithDetails,
     ResponsesPublic,
     StudentAttempt,
     StudentResponse,
@@ -118,6 +119,7 @@ __all__ = [
     "StudentResponse",
     "ResponseCreate",
     "ResponseRead",
+    "ResponseWithDetails",
     "ResponsesPublic",
     # Feedback models
     "AIFeedback",
