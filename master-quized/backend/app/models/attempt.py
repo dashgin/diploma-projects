@@ -143,10 +143,56 @@ class ResponseRead(ResponseBase):
     id: int
 
 
-class ResponseWithDetails(ResponseRead):
-    """Enhanced response schema with correctness and explanation"""
+class OptionData(SQLModel):
+    """Option data for response details"""
 
+    id: int
+    text: str
+    is_correct: bool
+
+
+class QuestionData(SQLModel):
+    """Question data for response details"""
+
+    id: int
+    text: str
+    question_type: str
+    options: list[OptionData] | None = None
+
+
+class AnswerData(SQLModel):
+    """Answer data for response details"""
+
+    type: str
+    answer: str | dict
+    is_correct: bool
+    created_at: datetime
+
+
+class EnhancedResponse(SQLModel):
+    """Detailed response with question and answer information"""
+
+    id: int
+    question: QuestionData
+    answer: AnswerData
     explanation: str | None = None
+
+
+class AttemptSummary(SQLModel):
+    """Summary data for an attempt"""
+
+    id: int
+    is_completed: bool
+    score: float
+    total_questions: int
+    correct_answers: int
+
+
+class AttemptResponsesDetailed(SQLModel):
+    """Complete attempt with detailed responses"""
+
+    attempt: AttemptSummary
+    responses: list[EnhancedResponse]
 
 
 class StudentResponse(TimestampMixin, ResponseBase, table=True):

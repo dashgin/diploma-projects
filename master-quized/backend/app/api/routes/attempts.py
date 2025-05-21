@@ -65,7 +65,7 @@ def create_attempt(
         student_id=current_user.id,
         quiz_id=attempt_in.quiz_id,
         assignment_id=attempt_in.assignment_id,
-        is_completed=attempt_in.is_completed
+        is_completed=attempt_in.is_completed,
     )
 
     # Check if quiz exists
@@ -166,9 +166,7 @@ def complete_attempt(
         )
 
         # Get all questions for this quiz
-        questions = crud.get_questions_by_quiz(
-            session=session, quiz_id=attempt.quiz_id
-        )
+        questions = crud.get_questions_by_quiz(session=session, quiz_id=attempt.quiz_id)
 
         # Calculate score
         correct_count = 0
@@ -176,17 +174,27 @@ def complete_attempt(
 
         if total_questions > 0:
             for response in responses:
-                question = crud.get_question(session=session, question_id=response.question_id)
+                question = crud.get_question(
+                    session=session, question_id=response.question_id
+                )
 
                 # Check if response is correct for multiple-choice questions
-                if question.question_type == "multiple_choice" and response.selected_option_id:
-                    option = crud.get_option(session=session, option_id=response.selected_option_id)
+                if (
+                    question.question_type == "multiple_choice"
+                    and response.selected_option_id
+                ):
+                    option = crud.get_option(
+                        session=session, option_id=response.selected_option_id
+                    )
                     if option and option.is_correct:
                         correct_count += 1
 
                 # Check if response is correct for short answer questions
                 elif question.question_type == "short_answer" and response.answer_text:
-                    if response.answer_text.strip().lower() == question.correct_answer.strip().lower():
+                    if (
+                        response.answer_text.strip().lower()
+                        == question.correct_answer.strip().lower()
+                    ):
                         correct_count += 1
 
             # Calculate percentage

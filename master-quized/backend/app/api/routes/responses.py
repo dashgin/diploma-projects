@@ -2,7 +2,16 @@ from fastapi import APIRouter, HTTPException, Query, status
 
 from app import crud
 from app.api.deps import CurrentUser, SessionDep
-from app.models import ResponseCreate, ResponseRead, ResponseWithDetails
+from app.models import (
+    AnswerData,
+    AttemptResponsesDetailed,
+    AttemptSummary,
+    EnhancedResponse,
+    OptionData,
+    QuestionData,
+    ResponseCreate,
+    ResponseRead,
+)
 
 router = APIRouter(prefix="/responses", tags=["responses"])
 
@@ -123,7 +132,7 @@ def read_response(
     return response
 
 
-@router.get("/by_attempt/", response_model=list[ResponseWithDetails])
+@router.get("/by_attempt/", response_model=AttemptResponsesDetailed)
 def read_responses_by_attempt(
     *,
     session: SessionDep,
@@ -131,7 +140,7 @@ def read_responses_by_attempt(
     attempt_id: int = Query(..., description="ID of the attempt to get responses for"),
     skip: int = 0,
     limit: int = 100,
-) -> list[ResponseWithDetails]:
+) -> AttemptResponsesDetailed:
     """
     Get responses for a specific quiz attempt.
     """
@@ -157,37 +166,105 @@ def read_responses_by_attempt(
         session=session, attempt_id=attempt_id, skip=skip, limit=limit
     )
 
-    # Enhance responses with question details for completed attempts
-    if attempt.is_completed:
-        responses_with_details = []
-        for response in responses:
-            # Get the question
-            question = crud.get_question(session=session, question_id=response.question_id)
+    # Get quiz to count total questions
+    quiz = crud.get_quiz(session=session, quiz_id=attempt.quiz_id)
+    total_questions = len(crud.get_questions_by_quiz(session=session, quiz_id=quiz.id))
 
-            # Get correct answers for this question
-            correct_options = []
-            if question.question_type == "multiple_choice":
-                options = crud.get_options_by_question(
-                    session=session, question_id=question.id
-                )
-                correct_options = [opt for opt in options if opt.is_correct]
+    enhanced_responses = []
+    correct_answers_count = 0
 
-            # Check if response is correct
-            is_correct = False
-            if response.selected_option_id and any(opt.id == response.selected_option_id for opt in correct_options):
-                is_correct = True
-            elif question.question_type == "short_answer" and response.answer_text.strip().lower() == question.correct_answer.strip().lower():
-                is_correct = True
+    for response in responses:
+        # Get the question
+        question = crud.get_question(session=session, question_id=response.question_id)
 
-            # Create enhanced response
-            enhanced_response = ResponseWithDetails(
-                **response.model_dump(),
-                explanation=question.explanation
+        # Get options for this question if it's multiple choice
+        all_options = []
+        selected_option = None
+        correct_options = []
+
+        if question.question_type == "multiple_choice":
+            options = crud.get_options_by_question(
+                session=session, question_id=question.id
             )
-            # Update is_correct after creation to avoid duplicate
-            enhanced_response.is_correct = is_correct
-            responses_with_details.append(enhanced_response)
+            all_options = [
+                OptionData(id=opt.id, text=opt.text, is_correct=opt.is_correct)
+                for opt in options
+            ]
+            correct_options = [opt for opt in options if opt.is_correct]
 
-        return responses_with_details
+            # Get selected option details if available
+            if response.selected_option_id:
+                selected_option = next(
+                    (opt for opt in options if opt.id == response.selected_option_id),
+                    None,
+                )
 
-    return [ResponseWithDetails(**r.model_dump(), explanation=None) for r in responses]
+        # Check if response is correct
+        is_correct = False
+        if response.selected_option_id and any(
+            opt.id == response.selected_option_id for opt in correct_options
+        ):
+            is_correct = True
+            correct_answers_count += 1
+        elif (
+            question.question_type == "short_answer"
+            and response.answer_text
+            and question.correct_answer
+            and response.answer_text.strip().lower()
+            == question.correct_answer.strip().lower()
+        ):
+            is_correct = True
+            correct_answers_count += 1
+
+        # Create question data
+        question_data = QuestionData(
+            id=question.id,
+            text=question.text,
+            question_type=question.question_type,
+            options=(
+                all_options if question.question_type == "multiple_choice" else None
+            ),
+        )
+
+        # Create answer data
+        answer = None
+        if question.question_type == "multiple_choice" and selected_option:
+            answer = {"option_id": selected_option.id, "text": selected_option.text}
+        else:
+            answer = response.answer_text or ""
+
+        answer_data = AnswerData(
+            type=question.question_type,
+            answer=answer,
+            is_correct=is_correct,
+            created_at=response.created_at,
+        )
+
+        # Create enhanced response
+        enhanced_response = EnhancedResponse(
+            id=response.id,
+            question=question_data,
+            answer=answer_data,
+            explanation=question.explanation if attempt.is_completed else None,
+        )
+
+        enhanced_responses.append(enhanced_response)
+
+    # Calculate score as percentage
+    score = 0
+    if total_questions > 0 and len(responses) > 0:
+        score = (correct_answers_count / total_questions) * 100
+
+    # Create attempt summary
+    attempt_summary = AttemptSummary(
+        id=attempt.id,
+        is_completed=attempt.is_completed,
+        score=score,
+        total_questions=total_questions,
+        correct_answers=correct_answers_count,
+    )
+
+    # Return the complete response
+    return AttemptResponsesDetailed(
+        attempt=attempt_summary, responses=enhanced_responses
+    )

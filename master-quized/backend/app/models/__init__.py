@@ -1,18 +1,23 @@
 from sqlmodel import SQLModel  # noqa
 
 from .attempt import (
+    AnswerData,
     AssignmentCreate,
     AssignmentRead,
     AssignmentsPublic,
     AttemptCreate,
     AttemptCreateApiSchema,
     AttemptRead,
+    AttemptResponsesDetailed,
     AttemptsPublic,
+    AttemptSummary,
     AttemptUpdate,
+    EnhancedResponse,
+    OptionData,
+    QuestionData,
     QuizAssignment,
     ResponseCreate,
     ResponseRead,
-    ResponseWithDetails,
     ResponsesPublic,
     StudentAttempt,
     StudentResponse,
@@ -48,8 +53,8 @@ from .quiz import (
     QuizCreate,
     QuizQuestion,
     QuizRead,
-    QuizzesPublic,
     QuizUpdate,
+    QuizzesPublic,
 )
 from .user import (
     NewPassword,
@@ -119,8 +124,14 @@ __all__ = [
     "StudentResponse",
     "ResponseCreate",
     "ResponseRead",
-    "ResponseWithDetails",
     "ResponsesPublic",
+    # Detailed response models
+    "AnswerData",
+    "AttemptResponsesDetailed",
+    "AttemptSummary",
+    "EnhancedResponse",
+    "OptionData",
+    "QuestionData",
     # Feedback models
     "AIFeedback",
     "FeedbackCreate",

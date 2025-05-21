@@ -1179,7 +1179,7 @@ export class ResponsesService {
    * @param data.attemptId ID of the attempt to get responses for
    * @param data.skip
    * @param data.limit
-   * @returns ResponseRead Successful Response
+   * @returns AttemptResponsesDetailed Successful Response
    * @throws ApiError
    */
   public static readResponsesByAttempt(
