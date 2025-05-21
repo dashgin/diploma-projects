@@ -22,6 +22,7 @@ import { CreateAssignment } from "@/components/Assignments"
 import EditQuiz from "@/components/Quizzes/EditQuiz"
 import QuestionsList from "@/components/Quizzes/QuestionsList"
 import { Button } from "@/components/ui/button"
+import { logEvent } from "@/utils/analytics"
 
 // Interface for loader data
 interface QuizDetailLoaderData {
@@ -49,6 +50,8 @@ function QuizDetail() {
   })
 
   const handleTakeQuiz = () => {
+    // Log the event when the user clicks "Take Quiz"
+    logEvent("quiz", "start_quiz", { quizId, quizTitle: quiz?.title })
     navigate({ to: `/quizzes/${quizId}/take` })
   }
 

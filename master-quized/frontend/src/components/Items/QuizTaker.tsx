@@ -6,6 +6,7 @@ import {
   Flex,
   Heading,
   Progress,
+  RadioGroup,
   Spinner,
   Stack,
   Text,
@@ -25,8 +26,8 @@ import {
   ResponsesService,
 } from "@/client"
 import { Button } from "@/components/ui/button"
-import { Radio, RadioGroup } from "@/components/ui/radio"
 import useCustomToast from "@/hooks/useCustomToast"
+import { logEvent } from "@/utils/analytics"
 
 interface QuizTakerProps {
   quizId: number
@@ -125,6 +126,13 @@ export function QuizTaker({ quizId, assignmentId }: QuizTakerProps) {
     if (!userData) return
 
     try {
+      logEvent("quiz", "start_attempt", {
+        quizId,
+        quizTitle: quiz?.title,
+        studentId: userData.id,
+        assignmentId,
+      })
+
       await createAttemptMutation.mutateAsync({
         student_id: userData.id,
         quiz_id: quizId,
@@ -159,10 +167,23 @@ export function QuizTaker({ quizId, assignmentId }: QuizTakerProps) {
         selected_option_id: isMultipleChoice ? (responseValue as number) : null,
       })
 
+      // Log response submission
+      logEvent("quiz", "submit_response", {
+        attemptId,
+        questionId: currentQuestion.id,
+        questionType: currentQuestion.question_type,
+        questionIndex: currentQuestionIndex + 1,
+      })
+
       // Move to next question or complete quiz
       if (currentQuestionIndex < questions.length - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1)
       } else {
+        logEvent("quiz", "complete_quiz", {
+          attemptId,
+          quizId,
+          quizTitle: quiz?.title,
+        })
         await completeAttemptMutation.mutateAsync(attemptId)
       }
     } catch (error) {
@@ -173,10 +194,20 @@ export function QuizTaker({ quizId, assignmentId }: QuizTakerProps) {
   // Skip current question
   const skipQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
+      logEvent("quiz", "skip_question", {
+        attemptId,
+        questionId: currentQuestion?.id,
+        questionIndex: currentQuestionIndex + 1,
+      })
       setCurrentQuestionIndex(currentQuestionIndex + 1)
     } else {
       // If on last question, attempt to complete quiz
       if (attemptId) {
+        logEvent("quiz", "complete_quiz", {
+          attemptId,
+          quizId,
+          quizTitle: quiz?.title,
+        })
         completeAttemptMutation.mutate(attemptId)
       }
     }
@@ -261,11 +292,14 @@ export function QuizTaker({ quizId, assignmentId }: QuizTakerProps) {
             </Text>
           </Flex>
 
-          <Progress
+          <Progress.Root
             value={((currentQuestionIndex + 1) / questions.length) * 100}
             size="sm"
-            borderRadius="md"
-          />
+          >
+            <Progress.Track>
+              <Progress.Range />
+            </Progress.Track>
+          </Progress.Root>
 
           {currentQuestion && (
             <Box>
@@ -275,11 +309,11 @@ export function QuizTaker({ quizId, assignmentId }: QuizTakerProps) {
 
               {currentQuestion.question_type === "multiple_choice" ? (
                 // Multiple choice input
-                <RadioGroup
+                <RadioGroup.Root
                   defaultValue={responses[currentQuestion.id]?.toString() || ""}
-                  onChange={(e: string) => {
-                    if (e) {
-                      handleResponseChange(Number.parseInt(e))
+                  onValueChange={(details) => {
+                    if (details.value) {
+                      handleResponseChange(Number.parseInt(details.value))
                     }
                   }}
                 >
@@ -288,13 +322,20 @@ export function QuizTaker({ quizId, assignmentId }: QuizTakerProps) {
                       <Spinner />
                     ) : (
                       options.map((option) => (
-                        <Radio key={option.id} value={option.id.toString()}>
-                          {option.text}
-                        </Radio>
+                        <RadioGroup.Item
+                          key={option.id}
+                          value={option.id.toString()}
+                        >
+                          <RadioGroup.ItemHiddenInput />
+                          <RadioGroup.ItemIndicator />
+                          <RadioGroup.ItemText>
+                            {option.text}
+                          </RadioGroup.ItemText>
+                        </RadioGroup.Item>
                       ))
                     )}
                   </Stack>
-                </RadioGroup>
+                </RadioGroup.Root>
               ) : (
                 // Text input for short/long answer
                 <Textarea

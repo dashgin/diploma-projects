@@ -4,21 +4,21 @@ import {
   Box,
   Button,
   Card,
-  Separator,
+  CloseButton,
+  Dialog,
   Flex,
   Heading,
+  Portal,
+  Separator,
   Text,
   useDisclosure,
-  Dialog,
-  Portal,
-  CloseButton,
 } from "@chakra-ui/react"
+import { Span } from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import React from "react"
 import { AttemptsService, ResponsesService } from "../../../../client/sdk.gen"
 import { FeedbackForm, FeedbackList } from "../../../../components/Feedback"
-import { Span } from "@chakra-ui/react"
 
 export const Route = createFileRoute("/_layout/attempts/$attemptId/responses")({
   component: AttemptResponsesPage,
@@ -86,10 +86,7 @@ function AttemptResponsesPage() {
               <Span flex="1" textAlign="left">
                 Question #{response.question_id}
               </Span>
-              <Badge
-                colorScheme={response.is_correct ? "green" : "red"}
-                mr={2}
-              >
+              <Badge colorScheme={response.is_correct ? "green" : "red"} mr={2}>
                 {response.is_correct ? "Correct" : "Incorrect"}
               </Badge>
               <Accordion.ItemIndicator />
@@ -122,7 +119,11 @@ function AttemptResponsesPage() {
       </Accordion.Root>
 
       {/* Feedback Modal */}
-      <Dialog.Root open={isOpen} onOpenChange={({ open }: { open: boolean }) => !open && onClose()} size="lg">
+      <Dialog.Root
+        open={isOpen}
+        onOpenChange={({ open }: { open: boolean }) => !open && onClose()}
+        size="lg"
+      >
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>

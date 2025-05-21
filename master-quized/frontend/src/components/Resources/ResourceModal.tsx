@@ -1,9 +1,9 @@
 import {
   Box,
   Button,
+  Dialog,
   Field,
   Input,
-  Dialog,
   Select,
   Slider,
   Textarea,
@@ -96,7 +96,6 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({
         ? data.relevance_score_percentage / 100
         : undefined,
     }
-
     ;(resourceData as any).relevance_score_percentage = undefined
     mutation.mutate(resourceData)
   }
@@ -145,7 +144,9 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({
                     placeholder="Brief description of the resource"
                     {...register("description")}
                   />
-                  <Field.ErrorText>{errors.description?.message}</Field.ErrorText>
+                  <Field.ErrorText>
+                    {errors.description?.message}
+                  </Field.ErrorText>
                 </Field.Root>
 
                 <Field.Root invalid={!!errors.url}>
@@ -159,7 +160,9 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({
                 </Field.Root>
 
                 <Field.Root invalid={!!errors.resource_type} required>
-                  <Field.Label htmlFor="resource_type">Resource Type</Field.Label>
+                  <Field.Label htmlFor="resource_type">
+                    Resource Type
+                  </Field.Label>
                   <Select.Root
                     id="resource_type"
                     {...register("resource_type", {
@@ -172,7 +175,9 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({
                       </option>
                     ))}
                   </Select.Root>
-                  <Field.ErrorText>{errors.resource_type?.message}</Field.ErrorText>
+                  <Field.ErrorText>
+                    {errors.resource_type?.message}
+                  </Field.ErrorText>
                 </Field.Root>
 
                 <Field.Root invalid={!!errors.area_id}>
@@ -211,9 +216,7 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({
                     <Slider.Track>
                       <Slider.FilledTrack />
                     </Slider.Track>
-                    <Tooltip.Root
-                      open={showTooltip}
-                    >
+                    <Tooltip.Root open={showTooltip}>
                       <Tooltip.Trigger asChild>
                         <Slider.Thumb index={0} />
                       </Tooltip.Trigger>

@@ -67,7 +67,6 @@ const DeleteQuestion = ({ question, useIcon = false }: DeleteQuestionProps) => {
         {useIcon ? (
           <Flex
             as="span"
-            role="button"
             aria-label="Delete Question"
             display="inline-flex"
             alignItems="center"

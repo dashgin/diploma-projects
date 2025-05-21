@@ -118,7 +118,6 @@ const EditQuestion = ({ question, useIcon = false }: EditQuestionProps) => {
         {useIcon ? (
           <Flex
             as="span"
-            role="button"
             aria-label="Edit Question"
             display="inline-flex"
             alignItems="center"

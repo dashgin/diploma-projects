@@ -82,7 +82,6 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
         : undefined,
       feedback_content: {}, // Empty object for now
     }
-
     ;(feedbackData as any).confidence_score_percentage = undefined
     mutation.mutate(feedbackData)
   }

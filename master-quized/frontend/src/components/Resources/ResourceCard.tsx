@@ -1,4 +1,3 @@
-import { FaExternalLinkAlt } from "react-icons/fa";
 import {
   Badge,
   Box,
@@ -12,6 +11,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import type React from "react"
+import { FaExternalLinkAlt } from "react-icons/fa"
 import type { ResourceRead } from "../../client/types.gen"
 
 interface ResourceCardProps {

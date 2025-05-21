@@ -1,5 +1,5 @@
 import { Alert, Box, Spinner, Text } from "@chakra-ui/react"
-import { FiAlertCircle } from "react-icons/fi";
+import { FiAlertCircle } from "react-icons/fi"
 
 import { useQuery } from "@tanstack/react-query"
 import type React from "react"

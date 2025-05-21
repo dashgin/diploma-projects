@@ -8,9 +8,9 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { FiAlertCircle } from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query"
 import type React from "react"
+import { FiAlertCircle } from "react-icons/fi"
 import { RecommendationsService } from "../../client/sdk.gen"
 import { ResourceCard } from "./ResourceCard"
 import { ResourceModal } from "./ResourceModal"
