@@ -55,6 +55,7 @@ export type AttemptRead = {
   assignment_id?: number | null
   is_completed?: boolean
   id: number
+  started_at?: string | null
   completed_at?: string | null
   score?: number | null
 }

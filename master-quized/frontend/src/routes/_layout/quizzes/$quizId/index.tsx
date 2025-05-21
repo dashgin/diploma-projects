@@ -4,8 +4,7 @@ import {
   Flex,
   Heading,
   Spinner,
-  Stack,
-  Text,
+  Tabs,
 } from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
 import {
@@ -13,6 +12,7 @@ import {
   MatchRoute,
   createFileRoute,
 } from "@tanstack/react-router"
+import { LuInfo, LuList, LuClock } from "react-icons/lu"
 import { FiArrowLeft } from "react-icons/fi"
 
 import { QuizzesService } from "@/client"
@@ -20,6 +20,8 @@ import type { QuizRead } from "@/client"
 import { CreateAssignment } from "@/components/Assignments"
 import EditQuiz from "@/components/Quizzes/EditQuiz"
 import QuestionsList from "@/components/Quizzes/QuestionsList"
+import QuizAttemptsList from "@/components/Quizzes/QuizAttemptsList"
+import QuizDetailsTab from "@/components/Quizzes/QuizDetailsTab"
 import { Button } from "@/components/ui/button"
 
 // Interface for loader data
@@ -83,35 +85,34 @@ function QuizDetail() {
             <EditQuiz quiz={quiz} />
           </Flex>
         </Flex>
-        <Box h="1px" bg="gray.200" my={4} />
-        <Stack gap={4}>
-          <Box>
-            <Heading size="xs" textTransform="uppercase">
-              Instructions
-            </Heading>
-            <Text pt={2}>
-              {quiz.instructions || "No instructions provided"}
-            </Text>
-          </Box>
-          <Box h="1px" bg="gray.200" />
-          <Box>
-            <Heading size="xs" textTransform="uppercase">
-              Status
-            </Heading>
-            <Text pt={2}>{quiz.is_active ? "Active" : "Inactive"}</Text>
-          </Box>
-          <Box h="1px" bg="gray.200" />
-          <Box>
-            <Heading size="xs" textTransform="uppercase">
-              Quiz ID
-            </Heading>
-            <Text pt={2}>{quiz.id}</Text>
-          </Box>
-        </Stack>
       </Box>
 
       <Box borderWidth="1px" borderRadius="lg" p={6}>
-        <QuestionsList quizId={quiz.id} />
+        <Tabs.Root defaultValue="details" variant="line">
+          <Tabs.List>
+            <Tabs.Trigger value="details">
+              <LuInfo />
+              Details
+            </Tabs.Trigger>
+            <Tabs.Trigger value="questions">
+              <LuList />
+              Questions
+            </Tabs.Trigger>
+            <Tabs.Trigger value="attempts">
+              <LuClock />
+              Attempts
+            </Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content value="details" pt={4}>
+            <QuizDetailsTab quiz={quiz} />
+          </Tabs.Content>
+          <Tabs.Content value="questions" pt={4}>
+            <QuestionsList quizId={quiz.id} />
+          </Tabs.Content>
+          <Tabs.Content value="attempts" pt={4}>
+            <QuizAttemptsList quizId={quiz.id} />
+          </Tabs.Content>
+        </Tabs.Root>
       </Box>
     </Container>
   )
