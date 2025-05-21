@@ -1,6 +1,6 @@
 ---
 description: 
-globs: backend/**
+globs: backend/**,ai_service/**
 alwaysApply: false
 ---
 # Backend Style Guide

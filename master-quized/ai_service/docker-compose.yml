@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  ai_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    env_file:
+      - .env
+    environment:
+      - ERROR_CLASSIFIER_MODEL_PATH=/app/app/models/error_classifier
+    volumes:
+      - ./app:/app/app
+
+networks:
+  traefik-public:
+    external: true 
