@@ -70,6 +70,14 @@ class AttemptCreate(AttemptBase):
     pass
 
 
+class AttemptCreateApiSchema(SQLModel):
+    """Schema for student attempt creation from API"""
+
+    quiz_id: int
+    assignment_id: int | None = Field(default=None)
+    is_completed: bool = Field(default=False)
+
+
 class AttemptUpdate(SQLModel):
     """Schema for student attempt update"""
 

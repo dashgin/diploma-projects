@@ -3,7 +3,12 @@ from sqlmodel import func, select
 
 from app import crud
 from app.api.deps import CurrentUser, SessionDep
-from app.models import AttemptCreate, AttemptRead, AttemptsPublic, StudentAttempt
+from app.models import (
+    AttemptCreateApiSchema,
+    AttemptRead,
+    AttemptsPublic,
+    StudentAttempt,
+)
 
 router = APIRouter(prefix="/attempts", tags=["attempts"])
 
@@ -49,17 +54,13 @@ def create_attempt(
     *,
     session: SessionDep,
     current_user: CurrentUser,
-    attempt_in: AttemptCreate,
+    attempt_in: AttemptCreateApiSchema,
 ) -> AttemptRead:
     """
     Create new quiz attempt.
     """
-    # Ensure the user is creating an attempt for themselves
-    if attempt_in.student_id != current_user.id and not current_user.is_superuser:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not enough permissions",
-        )
+    # Always use current user's ID instead of the one from the request
+    attempt_in.student_id = current_user.id
 
     # Check if quiz exists
     quiz = crud.get_quiz(session=session, quiz_id=attempt_in.quiz_id)
