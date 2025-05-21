@@ -20,14 +20,31 @@ export default function QuestionRenderer({
   value,
   onChange,
 }: QuestionRendererProps) {
+  console.log("QuestionRenderer props:", { questionType, questionId, options, value });
+
   // Handle rendering based on question type
   switch (questionType) {
     case "multiple_choice":
+      // Set the value correctly for radio group - it might be a number string
+      const radioValue = ensureString(value);
+      console.log("Multiple choice value:", radioValue);
+      console.log("Options count:", options.length);
+      
+      // If no options are available, show a fallback
+      if (!options || options.length === 0) {
+        return (
+          <Box p={4} borderWidth="1px" borderRadius="md" bg="gray.50">
+            <Text color="gray.500">No options available for this question</Text>
+          </Box>
+        );
+      }
+      
       return (
         <RadioGroup.Root 
-          defaultValue={ensureString(value)}
+          defaultValue={radioValue}
           onValueChange={(details) => {
             if (details && details.value) {
+              console.log("Selected option:", details.value);
               onChange(questionId, details.value);
             }
           }}

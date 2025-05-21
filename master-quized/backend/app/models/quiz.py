@@ -103,6 +103,7 @@ class QuestionBase(SQLModel):
     order_position: int = Field(default=0)
     correct_answer: str | None = Field(default="")
     model_answer: str | None = Field(default="")
+    explanation: str | None = Field(default=None)
     key_concepts: dict[str, Any] | None = None
     ai_guidance: dict[str, Any] | None = None
 

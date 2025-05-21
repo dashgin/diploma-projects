@@ -146,7 +146,6 @@ class ResponseRead(ResponseBase):
 class ResponseWithDetails(ResponseRead):
     """Enhanced response schema with correctness and explanation"""
 
-    is_correct: bool | None = None
     explanation: str | None = None
 
 

@@ -21,7 +21,7 @@ import {
   Separator,
   Card
 } from "@chakra-ui/react";
-import { OptionsService, QuestionsService, ResponsesService } from "../../../../client/sdk.gen";
+import { OptionsService, ResponsesService } from "../../../../client/sdk.gen";
 import { useQuizAttempt } from "../../../../hooks/useQuizAttempt";
 import { useQuery } from "@tanstack/react-query";
 import QuestionRenderer from "../../../../components/Quizzes/QuestionRenderer";
@@ -52,6 +52,8 @@ function AttemptPage() {
 
   // Fetch options for the current question
   const currentQuestionId = questions?.data?.[currentQuestionIndex]?.id;
+  const currentQuestionType = questions?.data?.[currentQuestionIndex]?.question_type;
+  
   const { data: optionsData, isLoading: isLoadingOptions } = useQuery({
     queryKey: ["options", currentQuestionId],
     queryFn: () => 
@@ -59,8 +61,12 @@ function AttemptPage() {
         questionId: currentQuestionId || 0, 
         limit: 20 
       }),
-    enabled: !!currentQuestionId,
+    enabled: !!currentQuestionId && currentQuestionType === "multiple_choice",
   });
+
+  // Debug options data
+  console.log("Current question type:", currentQuestionType);
+  console.log("Options data:", optionsData);
 
   // Fetch all responses for this attempt if completed
   const { data: attemptResponses, isLoading: isLoadingAttemptResponses } = useQuery({
@@ -191,7 +197,9 @@ function AttemptPage() {
 
   // Current question
   const currentQuestion = questions?.data?.[currentQuestionIndex];
+  // Ensure we handle the nested data structure correctly
   const questionOptions = optionsData?.data || [];
+  console.log("Processed question options:", questionOptions);
   const totalQuestions = questions?.data.length || 0;
   const progress = totalQuestions ? ((currentQuestionIndex + 1) / totalQuestions) * 100 : 0;
 
@@ -270,7 +278,7 @@ function AttemptPage() {
                 <QuestionRenderer 
                   questionType={currentQuestion.question_type}
                   questionId={currentQuestion.id}
-                  options={questionOptions}
+                  options={currentQuestion.question_type === "multiple_choice" ? questionOptions : []}
                   value={responses[currentQuestion.id] || ""}
                   onChange={handleResponseChange}
                 />

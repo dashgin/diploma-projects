@@ -47,6 +47,25 @@ def create_response(
             detail="Question not found",
         )
 
+    # Validate response data based on question type
+    if question.question_type == "multiple_choice":
+        if not response_in.selected_option_id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="selected_option_id is required for multiple-choice questions",
+            )
+    elif question.question_type == "short_answer":
+        if not response_in.answer_text or response_in.answer_text.strip() == "":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="answer_text is required for short-answer questions",
+            )
+        if response_in.selected_option_id is not None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="selected_option_id should not be provided for short-answer questions",
+            )
+
     # If selected_option_id is provided, check if it exists and belongs to the question
     if response_in.selected_option_id:
         option = crud.get_option(
@@ -163,11 +182,12 @@ def read_responses_by_attempt(
             # Create enhanced response
             enhanced_response = ResponseWithDetails(
                 **response.model_dump(),
-                is_correct=is_correct,
                 explanation=question.explanation
             )
+            # Update is_correct after creation to avoid duplicate
+            enhanced_response.is_correct = is_correct
             responses_with_details.append(enhanced_response)
 
         return responses_with_details
 
-    return [ResponseWithDetails(**r.model_dump(), is_correct=None, explanation=None) for r in responses]
+    return [ResponseWithDetails(**r.model_dump(), explanation=None) for r in responses]

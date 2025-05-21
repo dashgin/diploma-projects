@@ -49,12 +49,21 @@ export function useQuizAttempt(attemptId: number | string) {
   // Submit response mutation
   const submitResponseMutation = useMutation({
     mutationFn: (data: { questionId: number; answer: string }) => {
+      console.log("Submitting response:", data);
+      
+      // Check if the answer is a number (indicating a selected option ID for multiple choice)
+      const isOptionId = !isNaN(Number(data.answer));
+      const selectedOptionId = isOptionId ? Number(data.answer) : null;
+      
+      console.log("Is option ID:", isOptionId, "Selected option ID:", selectedOptionId);
+      
       return ResponsesService.createResponse({
         requestBody: {
           attempt_id: attemptIdNumber,
           question_id: data.questionId,
-          answer_text: data.answer,
-          selected_option_id: null, // This would be set for multiple-choice questions
+          // For multiple choice questions, the answer is the option ID
+          answer_text: isOptionId ? "" : data.answer,
+          selected_option_id: selectedOptionId,
         },
       });
     },
@@ -91,10 +100,21 @@ export function useQuizAttempt(attemptId: number | string) {
   // Initialize responses from existing data
   useEffect(() => {
     if (existingResponses && existingResponses.length > 0) {
+      console.log("Existing responses:", existingResponses);
+      
       const savedResponses: Record<number, string> = {};
       existingResponses.forEach((response) => {
-        savedResponses[response.question_id] = response.answer_text;
+        // For multiple-choice, use the selected_option_id as the value
+        if (response.selected_option_id) {
+          savedResponses[response.question_id] = response.selected_option_id.toString();
+          console.log("Setting multiple choice response for question:", response.question_id, "to option:", response.selected_option_id);
+        } else {
+          savedResponses[response.question_id] = response.answer_text;
+          console.log("Setting text response for question:", response.question_id, "to:", response.answer_text);
+        }
       });
+      
+      console.log("Saved responses:", savedResponses);
       setResponses(savedResponses);
     }
   }, [existingResponses]);
