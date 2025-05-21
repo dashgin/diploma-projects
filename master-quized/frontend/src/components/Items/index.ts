@@ -1,3 +1,1 @@
-export * from "./AttemptsList"
-export * from "./AttemptDetails"
-export * from "./QuizTaker"
+// This file is intentionally empty - quiz taking functionality has been removed

@@ -2,7 +2,6 @@ import { Box, Flex, Icon, Text } from "@chakra-ui/react"
 import { useQueryClient } from "@tanstack/react-query"
 import { Link as RouterLink } from "@tanstack/react-router"
 import {
-  FiActivity,
   FiBook,
   FiBriefcase,
   FiCalendar,
@@ -18,7 +17,6 @@ import type { UserPublic } from "@/client"
 const items = [
   { icon: FiHome, title: "Dashboard", path: "/" },
   { icon: FiClipboard, title: "Quizzes", path: "/quizzes/" },
-  { icon: FiActivity, title: "Attempts", path: "/attempts/" },
   { icon: FiCalendar, title: "Assignments", path: "/assignments" },
   { icon: FiBriefcase, title: "Items", path: "/items" },
   { icon: FiBook, title: "Knowledge Areas", path: "/knowledge-areas" },

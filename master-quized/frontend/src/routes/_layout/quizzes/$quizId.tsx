@@ -12,9 +12,8 @@ import {
   Link,
   MatchRoute,
   createFileRoute,
-  useNavigate,
 } from "@tanstack/react-router"
-import { FiArrowLeft, FiPlay } from "react-icons/fi"
+import { FiArrowLeft } from "react-icons/fi"
 
 import { QuizzesService } from "@/client"
 import type { QuizRead } from "@/client"
@@ -22,7 +21,6 @@ import { CreateAssignment } from "@/components/Assignments"
 import EditQuiz from "@/components/Quizzes/EditQuiz"
 import QuestionsList from "@/components/Quizzes/QuestionsList"
 import { Button } from "@/components/ui/button"
-import { logEvent } from "@/utils/analytics"
 
 // Interface for loader data
 interface QuizDetailLoaderData {
@@ -41,19 +39,12 @@ export const Route = createFileRoute("/_layout/quizzes/$quizId")({
 function QuizDetail() {
   const { quizId, quiz: initialQuiz } =
     Route.useLoaderData() as QuizDetailLoaderData
-  const navigate = useNavigate()
 
   const { data: quiz, isLoading } = useQuery({
     queryKey: ["quizzes", quizId],
     queryFn: () => QuizzesService.readQuiz({ quizId }),
     initialData: initialQuiz,
   })
-
-  const handleTakeQuiz = () => {
-    // Log the event when the user clicks "Take Quiz"
-    logEvent("quiz", "start_quiz", { quizId, quizTitle: quiz?.title })
-    navigate({ to: `/quizzes/${quizId}/take` })
-  }
 
   if (isLoading || !quiz) {
     return (
@@ -83,10 +74,6 @@ function QuizDetail() {
         <Flex justify="space-between" align="center" mb={4}>
           <Heading size="md">{quiz.title}</Heading>
           <Flex gap={2}>
-            <Button onClick={handleTakeQuiz} variant="solid" size="sm">
-              <FiPlay />
-              Take Quiz
-            </Button>
             <CreateAssignment quizId={quiz.id} />
             <EditQuiz quiz={quiz} />
           </Flex>

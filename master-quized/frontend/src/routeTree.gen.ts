@@ -23,13 +23,9 @@ import { Route as LayoutItemsImport } from './routes/_layout/items'
 import { Route as LayoutAssignmentsImport } from './routes/_layout/assignments'
 import { Route as LayoutAdminImport } from './routes/_layout/admin'
 import { Route as LayoutQuizzesIndexImport } from './routes/_layout/quizzes/index'
-import { Route as LayoutAttemptsIndexImport } from './routes/_layout/attempts/index'
 import { Route as LayoutAssignmentsIndexImport } from './routes/_layout/assignments/index'
 import { Route as LayoutQuizzesQuizIdImport } from './routes/_layout/quizzes/$quizId'
-import { Route as LayoutAttemptsAttemptIdImport } from './routes/_layout/attempts/$attemptId'
 import { Route as LayoutAssignmentsAssignmentIdImport } from './routes/_layout/assignments/$assignmentId'
-import { Route as LayoutQuizzesQuizIdTakeImport } from './routes/_layout/quizzes/$quizId/take'
-import { Route as LayoutAttemptsAttemptIdResponsesImport } from './routes/_layout/attempts/$attemptId/responses'
 
 // Create/Update Routes
 
@@ -93,11 +89,6 @@ const LayoutQuizzesIndexRoute = LayoutQuizzesIndexImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
-const LayoutAttemptsIndexRoute = LayoutAttemptsIndexImport.update({
-  path: '/attempts/',
-  getParentRoute: () => LayoutRoute,
-} as any)
-
 const LayoutAssignmentsIndexRoute = LayoutAssignmentsIndexImport.update({
   path: '/',
   getParentRoute: () => LayoutAssignmentsRoute,
@@ -108,26 +99,10 @@ const LayoutQuizzesQuizIdRoute = LayoutQuizzesQuizIdImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
-const LayoutAttemptsAttemptIdRoute = LayoutAttemptsAttemptIdImport.update({
-  path: '/attempts/$attemptId',
-  getParentRoute: () => LayoutRoute,
-} as any)
-
 const LayoutAssignmentsAssignmentIdRoute =
   LayoutAssignmentsAssignmentIdImport.update({
     path: '/$assignmentId',
     getParentRoute: () => LayoutAssignmentsRoute,
-  } as any)
-
-const LayoutQuizzesQuizIdTakeRoute = LayoutQuizzesQuizIdTakeImport.update({
-  path: '/take',
-  getParentRoute: () => LayoutQuizzesQuizIdRoute,
-} as any)
-
-const LayoutAttemptsAttemptIdResponsesRoute =
-  LayoutAttemptsAttemptIdResponsesImport.update({
-    path: '/responses',
-    getParentRoute: () => LayoutAttemptsAttemptIdRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -182,10 +157,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAssignmentsAssignmentIdImport
       parentRoute: typeof LayoutAssignmentsImport
     }
-    '/_layout/attempts/$attemptId': {
-      preLoaderRoute: typeof LayoutAttemptsAttemptIdImport
-      parentRoute: typeof LayoutImport
-    }
     '/_layout/quizzes/$quizId': {
       preLoaderRoute: typeof LayoutQuizzesQuizIdImport
       parentRoute: typeof LayoutImport
@@ -194,21 +165,9 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAssignmentsIndexImport
       parentRoute: typeof LayoutAssignmentsImport
     }
-    '/_layout/attempts/': {
-      preLoaderRoute: typeof LayoutAttemptsIndexImport
-      parentRoute: typeof LayoutImport
-    }
     '/_layout/quizzes/': {
       preLoaderRoute: typeof LayoutQuizzesIndexImport
       parentRoute: typeof LayoutImport
-    }
-    '/_layout/attempts/$attemptId/responses': {
-      preLoaderRoute: typeof LayoutAttemptsAttemptIdResponsesImport
-      parentRoute: typeof LayoutAttemptsAttemptIdImport
-    }
-    '/_layout/quizzes/$quizId/take': {
-      preLoaderRoute: typeof LayoutQuizzesQuizIdTakeImport
-      parentRoute: typeof LayoutQuizzesQuizIdImport
     }
   }
 }
@@ -226,11 +185,7 @@ export const routeTree = rootRoute.addChildren([
     LayoutKnowledgeAreasRoute,
     LayoutSettingsRoute,
     LayoutIndexRoute,
-    LayoutAttemptsAttemptIdRoute.addChildren([
-      LayoutAttemptsAttemptIdResponsesRoute,
-    ]),
-    LayoutQuizzesQuizIdRoute.addChildren([LayoutQuizzesQuizIdTakeRoute]),
-    LayoutAttemptsIndexRoute,
+    LayoutQuizzesQuizIdRoute,
     LayoutQuizzesIndexRoute,
   ]),
   LoginRoute,

@@ -11,7 +11,7 @@ import {
 import { useQuery } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { format } from "date-fns"
-import { FiArrowLeft, FiClipboard } from "react-icons/fi"
+import { FiArrowLeft } from "react-icons/fi"
 
 import {
   type ApiError,
@@ -89,13 +89,6 @@ export const AssignmentDetails = ({ assignmentId }: AssignmentDetailsProps) => {
     navigate({ to: "/assignments" })
   }
 
-  const handleStartQuiz = () => {
-    navigate({
-      to: `/quizzes/${quiz.id}/take`,
-      search: { assignmentId: assignment.id.toString() },
-    })
-  }
-
   const dueDate = assignment.due_date ? new Date(assignment.due_date) : null
   const isOverdue = dueDate ? dueDate < new Date() : false
   const statusColor = !dueDate ? "blue" : isOverdue ? "red" : "green"
@@ -148,17 +141,6 @@ export const AssignmentDetails = ({ assignmentId }: AssignmentDetailsProps) => {
             </Stack>
           </Stack>
         </Card.Body>
-        <Card.Footer>
-          <Button
-            variant="solid"
-            onClick={handleStartQuiz}
-            colorPalette="primary"
-            width="full"
-          >
-            <FiClipboard />
-            Start Quiz
-          </Button>
-        </Card.Footer>
       </Card.Root>
     </Stack>
   )
