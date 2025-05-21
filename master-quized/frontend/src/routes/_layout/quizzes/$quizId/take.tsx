@@ -3,21 +3,21 @@ import { useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { 
   Button, 
-  VStack, 
   Heading, 
   Text, 
-  Box, 
-  Card, 
-  CardBody, 
-  CardFooter,
+  Box,
   useDisclosure,
   Spinner,
   Center,
+  Dialog,
+  Portal,
+  CloseButton,
+  Stack,
   Alert,
+  Card
 } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { QuizzesService, AttemptsService } from "../../../../client/sdk.gen";
-import * as Dialog from "../../../../components/ui/dialog";
 
 export const Route = createFileRoute("/_layout/quizzes/$quizId/take")({
   component: QuizTakePage,
@@ -72,21 +72,23 @@ function QuizTakePage() {
 
   if (quizError) {
     return (
-      <Alert status="error" borderRadius="md">
-        There was an error loading this quiz. Please try again later.
-      </Alert>
+      <Alert.Root status="error" borderRadius="md">
+        <Alert.Description>
+          There was an error loading this quiz. Please try again later.
+        </Alert.Description>
+      </Alert.Root>
     );
   }
 
   return (
-    <VStack spacing={6} align="stretch" w="full" maxW="800px" mx="auto" py={8}>
+    <Stack direction="column" gap={6} align="stretch" w="full" maxW="800px" mx="auto" py={8}>
       <Heading as="h1" size="xl">
         {quiz?.title}
       </Heading>
 
-      <Card variant="outline">
-        <CardBody>
-          <VStack spacing={4} align="start">
+      <Card.Root>
+        <Card.Body>
+          <Stack direction="column" gap={4} align="start">
             <Heading as="h2" size="md">
               Instructions
             </Heading>
@@ -99,41 +101,48 @@ function QuizTakePage() {
               <Text>• You can navigate between questions freely</Text>
               <Text>• Submit your quiz when you're finished</Text>
             </Box>
-          </VStack>
-        </CardBody>
-        <CardFooter justifyContent="center">
+          </Stack>
+        </Card.Body>
+        <Card.Footer justifyContent="center">
           <Button 
             colorScheme="blue" 
             onClick={disclosure.onOpen}
             size="lg"
-            isLoading={isSubmitting}
+            loading={isSubmitting}
           >
             Start Quiz
           </Button>
-        </CardFooter>
-      </Card>
+        </Card.Footer>
+      </Card.Root>
 
       {/* Confirmation Dialog */}
-      <Dialog.DialogRoot open={disclosure.open} onOpenChange={disclosure.setOpen}>
-        <Dialog.DialogContent>
-          <Dialog.DialogHeader>
-            <Dialog.DialogTitle>Start Quiz</Dialog.DialogTitle>
-            <Dialog.DialogCloseTrigger />
-          </Dialog.DialogHeader>
-          <Dialog.DialogBody>
-            Are you ready to start this quiz? Once started, your attempt will be recorded.
-          </Dialog.DialogBody>
-          <Dialog.DialogFooter>
-            <Button 
-              colorScheme="blue" 
-              onClick={handleStartQuiz}
-              isLoading={isSubmitting}
-            >
-              Start Now
-            </Button>
-          </Dialog.DialogFooter>
-        </Dialog.DialogContent>
-      </Dialog.DialogRoot>
-    </VStack>
+      <Dialog.Root open={disclosure.open} onOpenChange={(e) => disclosure.setOpen(e.open)}>
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Start Quiz</Dialog.Title>
+                <Dialog.CloseTrigger asChild>
+                  <CloseButton size="sm" />
+                </Dialog.CloseTrigger>
+              </Dialog.Header>
+              <Dialog.Body>
+                Are you ready to start this quiz? Once started, your attempt will be recorded.
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Button 
+                  colorScheme="blue" 
+                  onClick={handleStartQuiz}
+                  loading={isSubmitting}
+                >
+                  Start Now
+                </Button>
+              </Dialog.Footer>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
+    </Stack>
   );
 } 
