@@ -6,12 +6,12 @@
 
 ## Quiz Management
 - [x] User can view all accessible quizzes 
-- [ ] User can create new quizzes
-- [ ] User can view quiz details
-- [ ] User can edit quizzes
-- [ ] User can partially update quizzes
-- [ ] User can delete quizzes
-- [ ] User can see quizzes they created
+- [x] User can create new quizzes
+- [x] User can view quiz details
+- [x] User can edit quizzes
+- [x] User can partially update quizzes
+- [x] User can delete quizzes
+- [x] User can see quizzes they created
 
 ## Question Management
 - [ ] User can create new questions

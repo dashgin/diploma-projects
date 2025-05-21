@@ -41,7 +41,7 @@ const NotFound = () => {
           <Link to="/">
             <Button
               variant="solid"
-              colorScheme="teal"
+              colorPalette="teal"
               mt={4}
               alignSelf="center"
             >

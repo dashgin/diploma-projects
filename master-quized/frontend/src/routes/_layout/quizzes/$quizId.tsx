@@ -16,16 +16,16 @@ import {
 } from "@tanstack/react-router"
 import { FiArrowLeft } from "react-icons/fi"
 
-import { QuestionsService, QuizzesService } from "@/client"
+import { QuizzesService } from "@/client"
 import type { QuizRead } from "@/client"
 import EditQuiz from "@/components/Quizzes/EditQuiz"
+import QuestionsList from "@/components/Quizzes/QuestionsList"
 import { Button } from "@/components/ui/button"
 
 // Interface for loader data
 interface QuizDetailLoaderData {
   quizId: number
   quiz?: QuizRead
-  questions?: any[]
 }
 
 export const Route = createFileRoute("/_layout/quizzes/$quizId")({
@@ -41,7 +41,6 @@ function QuizDetail() {
   const {
     quizId,
     quiz: initialQuiz,
-    questions: initialQuestions,
   } = Route.useLoaderData() as QuizDetailLoaderData
   const navigate = useNavigate({ from: Route.fullPath })
 
@@ -56,18 +55,7 @@ function QuizDetail() {
     initialData: initialQuiz,
   })
 
-  // Fetch quiz questions - initialized with data from the loader
-  const {
-    data: questions,
-    isLoading: isQuestionsLoading,
-    error: questionsError,
-  } = useQuery({
-    queryKey: ["questions", quizId],
-    queryFn: () => QuestionsService.readQuestionsByQuiz({ quizId }),
-    initialData: initialQuestions,
-  })
-
-  if (isQuizLoading || isQuestionsLoading) {
+  if (isQuizLoading) {
     return (
       <Flex justify="center" align="center" height="50vh">
         <Spinner size="xl" />
@@ -142,27 +130,7 @@ function QuizDetail() {
       </Box>
 
       <Box borderWidth="1px" borderRadius="lg" p={6}>
-        <Heading size="md" mb={4}>
-          Questions
-        </Heading>
-        <Box h="1px" bg="gray.200" mb={4} />
-        {questionsError ? (
-          <Text>Error loading questions.</Text>
-        ) : !questions || questions.length === 0 ? (
-          <Text>No questions available for this quiz.</Text>
-        ) : (
-          <Stack gap={4}>
-            {questions.map((question: any, index: number) => (
-              <Box key={question.id}>
-                <Heading size="xs">Question {index + 1}</Heading>
-                <Text pt={2}>{question.text}</Text>
-                {index < questions.length - 1 && (
-                  <Box h="1px" bg="gray.200" my={3} />
-                )}
-              </Box>
-            ))}
-          </Stack>
-        )}
+        <QuestionsList quizId={quiz.id} />
       </Box>
     </Container>
   )
