@@ -123,7 +123,7 @@ export class AreasService {
    * @param data The data for the request.
    * @param data.skip
    * @param data.limit
-   * @returns KnowledgeAreaRead Successful Response
+   * @returns AreasPublic Successful Response
    * @throws ApiError
    */
   public static readAreas(
@@ -150,7 +150,7 @@ export class AssignmentsService {
    * @param data The data for the request.
    * @param data.skip
    * @param data.limit
-   * @returns AssignmentRead Successful Response
+   * @returns AssignmentsPublic Successful Response
    * @throws ApiError
    */
   public static readAssignments(
@@ -220,7 +220,7 @@ export class AssignmentsService {
    * @param data The data for the request.
    * @param data.skip
    * @param data.limit
-   * @returns AssignmentRead Successful Response
+   * @returns AssignmentsPublic Successful Response
    * @throws ApiError
    */
   public static readUserAssignments(
@@ -247,7 +247,7 @@ export class AttemptsService {
    * @param data The data for the request.
    * @param data.skip
    * @param data.limit
-   * @returns AttemptRead Successful Response
+   * @returns AttemptsPublic Successful Response
    * @throws ApiError
    */
   public static readAttempts(
@@ -344,7 +344,7 @@ export class AttemptsService {
    * @param data The data for the request.
    * @param data.skip
    * @param data.limit
-   * @returns AttemptRead Successful Response
+   * @returns AttemptsPublic Successful Response
    * @throws ApiError
    */
   public static readUserAttempts(
@@ -762,7 +762,7 @@ export class OptionsService {
    * @param data.questionId ID of the question to get options for
    * @param data.skip
    * @param data.limit
-   * @returns OptionRead Successful Response
+   * @returns OptionsPublic Successful Response
    * @throws ApiError
    */
   public static readOptionsByQuestion(
@@ -813,7 +813,7 @@ export class QuestionsService {
    * @param data.quizId ID of the quiz to get questions for
    * @param data.skip
    * @param data.limit
-   * @returns QuestionRead Successful Response
+   * @returns QuestionsPublic Successful Response
    * @throws ApiError
    */
   public static readQuestionsByQuiz(
@@ -913,7 +913,7 @@ export class QuizzesService {
    * @param data The data for the request.
    * @param data.skip
    * @param data.limit
-   * @returns QuizRead Successful Response
+   * @returns QuizzesPublic Successful Response
    * @throws ApiError
    */
   public static readQuizzes(
@@ -1032,7 +1032,7 @@ export class QuizzesService {
    * @param data The data for the request.
    * @param data.skip
    * @param data.limit
-   * @returns QuizRead Successful Response
+   * @returns QuizzesPublic Successful Response
    * @throws ApiError
    */
   public static readUserQuizzes(

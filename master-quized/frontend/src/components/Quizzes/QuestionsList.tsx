@@ -2,16 +2,18 @@ import {
   Accordion,
   Box,
   Flex,
-  Heading,
   HStack,
+  Heading,
   Spinner,
-  Stack,
   Text,
 } from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
-import { FiEdit, FiPlus, FiTrash } from "react-icons/fi"
 
-import { QuestionsService, OptionsService, type QuestionRead, type OptionRead } from "@/client"
+import {
+  OptionsService,
+  type QuestionRead,
+  QuestionsService,
+} from "@/client"
 import AddOption from "./AddOption"
 import AddQuestion from "./AddQuestion"
 import DeleteOption from "./DeleteOption"
@@ -23,16 +25,23 @@ interface QuestionsListProps {
   quizId: number
 }
 
+
 const QuestionsList = ({ quizId }: QuestionsListProps) => {
   // Fetch questions
   const {
-    data: questions,
+    data: questionsResponse,
     isLoading: isQuestionsLoading,
     error: questionsError,
   } = useQuery({
     queryKey: ["questions", quizId],
     queryFn: () => QuestionsService.readQuestionsByQuiz({ quizId }),
   })
+
+  // Handle the new pagination format with data and count fields
+  const questionsData = questionsResponse?.data || []
+
+  // Ensure questions is always an array
+  const questions = Array.isArray(questionsData) ? questionsData : []
 
   if (isQuestionsLoading) {
     return (
@@ -74,11 +83,7 @@ const QuestionsList = ({ quizId }: QuestionsListProps) => {
 
       <Accordion.Root defaultValue={["0"]}>
         {questions.map((question: QuestionRead, index: number) => (
-          <QuestionItem 
-            key={question.id} 
-            question={question} 
-            index={index} 
-          />
+          <QuestionItem key={question.id} question={question} index={index} />
         ))}
       </Accordion.Root>
     </Box>
@@ -86,108 +91,99 @@ const QuestionsList = ({ quizId }: QuestionsListProps) => {
 }
 
 // Component for a single question item with options
-const QuestionItem = ({ question, index }: { question: QuestionRead; index: number }) => {
+const QuestionItem = ({
+  question,
+  index,
+}: { question: QuestionRead; index: number }) => {
   // Fetch options if question is multiple choice
-  const {
-    data: options,
-    isLoading: isOptionsLoading,
-  } = useQuery({
+  const { data: optionsResponse, isLoading: isOptionsLoading } = useQuery({
     queryKey: ["options", question.id],
-    queryFn: () => OptionsService.readOptionsByQuestion({ questionId: question.id }),
+    queryFn: () =>
+      OptionsService.readOptionsByQuestion({ questionId: question.id }),
     enabled: question.question_type === "multiple_choice",
   })
+
+  // Handle the new pagination format with data and count fields
+  const optionsData = optionsResponse?.data || []
+
+  // Ensure options is always an array
+  const options = Array.isArray(optionsData) ? optionsData : []
 
   return (
     <Accordion.Item value={index.toString()}>
       <Box borderWidth="1px" mb={3} overflow="hidden" borderRadius="md">
         <Accordion.ItemTrigger p={4}>
-          <Flex justify="space-between" align="center">
+          <Flex justify="space-between" align="center" width="100%">
             <Box>
               <Heading size="sm">Question {index + 1}</Heading>
               <Text fontSize="sm" color="gray.600" mt={1}>
                 {question.question_type === "multiple_choice"
                   ? "Multiple Choice"
                   : question.question_type === "short_answer"
-                  ? "Short Answer"
-                  : "Long Answer"}
+                    ? "Short Answer"
+                    : "Long Answer"}
               </Text>
             </Box>
+            <HStack gap={2}>
+              <EditQuestion question={question} />
+              <DeleteQuestion question={question} />
+            </HStack>
           </Flex>
         </Accordion.ItemTrigger>
-
         <Accordion.ItemContent>
-          <Box px={4} pb={4}>
-            <Box p={3} bg="gray.50" borderRadius="md" mb={3}>
-              <Text>{question.text}</Text>
-            </Box>
-
-            <Flex justify="flex-end" mb={3}>
-              <HStack>
-                <EditQuestion question={question} />
-                <DeleteQuestion question={question} />
-              </HStack>
-            </Flex>
+          <Box p={4} borderTopWidth="1px">
+            <Text fontWeight="bold" mb={2}>
+              Question:
+            </Text>
+            <Text mb={4}>{question.text}</Text>
 
             {question.question_type === "multiple_choice" && (
-              <Box mt={4}>
+              <>
                 <Flex justify="space-between" align="center" mb={2}>
-                  <Heading size="xs">Options</Heading>
+                  <Text fontWeight="bold">Options:</Text>
                   <AddOption questionId={question.id} />
                 </Flex>
-
                 {isOptionsLoading ? (
-                  <Flex justify="center" py={4}>
-                    <Spinner size="sm" />
-                  </Flex>
-                ) : !options || options.length === 0 ? (
-                  <Text fontSize="sm" color="gray.600">
-                    No options added yet
-                  </Text>
+                  <Spinner size="sm" />
                 ) : (
-                  <Stack gap={2} mt={2}>
-                    {options.map((option: OptionRead) => (
-                      <Flex
+                  <Box>
+                    {options.map((option) => (
+                      <Box
                         key={option.id}
                         p={2}
-                        borderWidth="1px"
+                        mb={1}
                         borderRadius="md"
-                        justify="space-between"
-                        align="center"
-                        bg={option.is_correct ? "green.50" : "white"}
-                        borderColor={option.is_correct ? "green.200" : "gray.200"}
+                        borderWidth="1px"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        bg={option.is_correct ? "green.50" : "gray.50"}
                       >
-                        <Text>{option.text}</Text>
-                        <HStack>
+                        <Text>
+                          {option.is_correct && "✓ "}
+                          {option.text}
+                        </Text>
+                        <HStack gap={2}>
                           <EditOption option={option} />
                           <DeleteOption option={option} />
                         </HStack>
-                      </Flex>
+                      </Box>
                     ))}
-                  </Stack>
+                    {options.length === 0 && (
+                      <Text color="gray.500">No options defined</Text>
+                    )}
+                  </Box>
                 )}
-              </Box>
-            )}
-
-            {question.correct_answer && (
-              <Box mt={4}>
-                <Heading size="xs" mb={2}>
-                  Correct Answer
-                </Heading>
-                <Box p={3} bg="green.50" borderRadius="md">
-                  <Text>{question.correct_answer}</Text>
-                </Box>
-              </Box>
+              </>
             )}
 
             {question.model_answer && (
-              <Box mt={4}>
-                <Heading size="xs" mb={2}>
-                  Model Answer
-                </Heading>
-                <Box p={3} bg="blue.50" borderRadius="md">
-                  <Text>{question.model_answer}</Text>
-                </Box>
-              </Box>
+              <>
+                <Text fontWeight="bold" mt={4} mb={2}>
+                  Model Answer:
+                </Text>
+                <Text>{question.model_answer}</Text>
+              </>
             )}
           </Box>
         </Accordion.ItemContent>
@@ -196,4 +192,4 @@ const QuestionItem = ({ question, index }: { question: QuestionRead; index: numb
   )
 }
 
-export default QuestionsList 
+export default QuestionsList

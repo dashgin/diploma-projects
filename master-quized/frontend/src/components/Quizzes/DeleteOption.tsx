@@ -1,8 +1,4 @@
-import {
-  Button,
-  DialogActionTrigger,
-  Text,
-} from "@chakra-ui/react"
+import { Button, DialogActionTrigger, Text } from "@chakra-ui/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { FiTrash } from "react-icons/fi"
@@ -43,7 +39,9 @@ const DeleteOption = ({ option }: DeleteOptionProps) => {
       handleError(err)
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["options", option.question_id] })
+      queryClient.invalidateQueries({
+        queryKey: ["options", option.question_id],
+      })
     },
   })
 
@@ -95,4 +93,4 @@ const DeleteOption = ({ option }: DeleteOptionProps) => {
   )
 }
 
-export default DeleteOption 
+export default DeleteOption

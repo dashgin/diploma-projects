@@ -18,6 +18,7 @@ import { FiArrowLeft } from "react-icons/fi"
 
 import { QuizzesService } from "@/client"
 import type { QuizRead } from "@/client"
+import { CreateAssignment } from "@/components/Assignments"
 import EditQuiz from "@/components/Quizzes/EditQuiz"
 import QuestionsList from "@/components/Quizzes/QuestionsList"
 import { Button } from "@/components/ui/button"
@@ -38,10 +39,8 @@ export const Route = createFileRoute("/_layout/quizzes/$quizId")({
 })
 
 function QuizDetail() {
-  const {
-    quizId,
-    quiz: initialQuiz,
-  } = Route.useLoaderData() as QuizDetailLoaderData
+  const { quizId, quiz: initialQuiz } =
+    Route.useLoaderData() as QuizDetailLoaderData
   const navigate = useNavigate({ from: Route.fullPath })
 
   // Fetch quiz details - initialized with data from the loader
@@ -100,7 +99,10 @@ function QuizDetail() {
       <Box borderWidth="1px" borderRadius="lg" p={6} mb={6}>
         <Flex justify="space-between" align="center" mb={4}>
           <Heading size="md">{quiz.title}</Heading>
-          <EditQuiz quiz={quiz} />
+          <Flex gap={2}>
+            <CreateAssignment quizId={quiz.id} />
+            <EditQuiz quiz={quiz} />
+          </Flex>
         </Flex>
         <Box h="1px" bg="gray.200" my={4} />
         <Stack gap={4}>

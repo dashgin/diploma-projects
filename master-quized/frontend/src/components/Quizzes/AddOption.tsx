@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
-import { type SubmitHandler, useForm } from "react-hook-form"
+import { type SubmitHandler, useForm, Controller } from "react-hook-form"
 import { FiPlus } from "react-icons/fi"
 
 import { type ApiError, type OptionCreate, OptionsService } from "@/client"
@@ -44,6 +44,7 @@ const AddOption = ({ questionId }: AddOptionProps) => {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<OptionCreateForm>({
     mode: "onBlur",
@@ -132,9 +133,18 @@ const AddOption = ({ questionId }: AddOptionProps) => {
                 errorText={errors.is_correct?.message}
                 label="Correct Answer"
               >
-                <Checkbox id="is_correct" {...register("is_correct")}>
-                  This is the correct answer
-                </Checkbox>
+                <Controller
+                  control={control}
+                  name="is_correct"
+                  render={({ field }) => (
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={(val) => field.onChange(val)}
+                    >
+                      This is the correct answer
+                    </Checkbox>
+                  )}
+                />
               </Field>
             </VStack>
           </DialogBody>
@@ -160,4 +170,4 @@ const AddOption = ({ questionId }: AddOptionProps) => {
   )
 }
 
-export default AddOption 
+export default AddOption

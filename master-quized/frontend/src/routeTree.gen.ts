@@ -20,9 +20,11 @@ import { Route as LayoutIndexImport } from './routes/_layout/index'
 import { Route as LayoutSettingsImport } from './routes/_layout/settings'
 import { Route as LayoutKnowledgeAreasImport } from './routes/_layout/knowledge-areas'
 import { Route as LayoutItemsImport } from './routes/_layout/items'
+import { Route as LayoutAssignmentsImport } from './routes/_layout/assignments'
 import { Route as LayoutAdminImport } from './routes/_layout/admin'
 import { Route as LayoutQuizzesIndexImport } from './routes/_layout/quizzes/index'
 import { Route as LayoutQuizzesQuizIdImport } from './routes/_layout/quizzes/$quizId'
+import { Route as LayoutAssignmentsAssignmentIdImport } from './routes/_layout/assignments/$assignmentId'
 
 // Create/Update Routes
 
@@ -71,6 +73,11 @@ const LayoutItemsRoute = LayoutItemsImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
+const LayoutAssignmentsRoute = LayoutAssignmentsImport.update({
+  path: '/assignments',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
 const LayoutAdminRoute = LayoutAdminImport.update({
   path: '/admin',
   getParentRoute: () => LayoutRoute,
@@ -85,6 +92,12 @@ const LayoutQuizzesQuizIdRoute = LayoutQuizzesQuizIdImport.update({
   path: '/quizzes/$quizId',
   getParentRoute: () => LayoutRoute,
 } as any)
+
+const LayoutAssignmentsAssignmentIdRoute =
+  LayoutAssignmentsAssignmentIdImport.update({
+    path: '/$assignmentId',
+    getParentRoute: () => LayoutAssignmentsRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -114,6 +127,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAdminImport
       parentRoute: typeof LayoutImport
     }
+    '/_layout/assignments': {
+      preLoaderRoute: typeof LayoutAssignmentsImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/items': {
       preLoaderRoute: typeof LayoutItemsImport
       parentRoute: typeof LayoutImport
@@ -129,6 +146,10 @@ declare module '@tanstack/react-router' {
     '/_layout/': {
       preLoaderRoute: typeof LayoutIndexImport
       parentRoute: typeof LayoutImport
+    }
+    '/_layout/assignments/$assignmentId': {
+      preLoaderRoute: typeof LayoutAssignmentsAssignmentIdImport
+      parentRoute: typeof LayoutAssignmentsImport
     }
     '/_layout/quizzes/$quizId': {
       preLoaderRoute: typeof LayoutQuizzesQuizIdImport
@@ -146,6 +167,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   LayoutRoute.addChildren([
     LayoutAdminRoute,
+    LayoutAssignmentsRoute.addChildren([LayoutAssignmentsAssignmentIdRoute]),
     LayoutItemsRoute,
     LayoutKnowledgeAreasRoute,
     LayoutSettingsRoute,

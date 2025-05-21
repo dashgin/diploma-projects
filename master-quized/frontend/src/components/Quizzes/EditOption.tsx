@@ -7,10 +7,15 @@ import {
 } from "@chakra-ui/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
-import { type SubmitHandler, useForm } from "react-hook-form"
+import { type SubmitHandler, useForm, Controller } from "react-hook-form"
 import { FiEdit } from "react-icons/fi"
 
-import { type ApiError, type OptionRead, type OptionUpdate, OptionsService } from "@/client"
+import {
+  type ApiError,
+  type OptionRead,
+  type OptionUpdate,
+  OptionsService,
+} from "@/client"
 import useCustomToast from "@/hooks/useCustomToast"
 import { handleError } from "@/utils"
 import { Checkbox } from "../ui/checkbox"
@@ -44,6 +49,7 @@ const EditOption = ({ option }: EditOptionProps) => {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<OptionUpdateForm>({
     mode: "onBlur",
@@ -70,7 +76,9 @@ const EditOption = ({ option }: EditOptionProps) => {
       handleError(err)
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["options", option.question_id] })
+      queryClient.invalidateQueries({
+        queryKey: ["options", option.question_id],
+      })
     },
   })
 
@@ -135,9 +143,18 @@ const EditOption = ({ option }: EditOptionProps) => {
                 errorText={errors.is_correct?.message}
                 label="Correct Answer"
               >
-                <Checkbox id="is_correct" {...register("is_correct")}>
-                  This is the correct answer
-                </Checkbox>
+                <Controller
+                  control={control}
+                  name="is_correct"
+                  render={({ field }) => (
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={(val) => field.onChange(val)}
+                    >
+                      This is the correct answer
+                    </Checkbox>
+                  )}
+                />
               </Field>
             </VStack>
           </DialogBody>
@@ -163,4 +180,4 @@ const EditOption = ({ option }: EditOptionProps) => {
   )
 }
 
-export default EditOption 
+export default EditOption

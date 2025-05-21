@@ -1,19 +1,24 @@
 import {
   Button,
-  createListCollection,
   DialogActionTrigger,
   Input,
   Select,
   Text,
   Textarea,
   VStack,
+  createListCollection,
 } from "@chakra-ui/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { type SubmitHandler, useForm } from "react-hook-form"
 import { FiEdit } from "react-icons/fi"
 
-import { type ApiError, type QuestionRead, type QuestionUpdate, QuestionsService } from "@/client"
+import {
+  type ApiError,
+  type QuestionRead,
+  type QuestionUpdate,
+  QuestionsService,
+} from "@/client"
 import useCustomToast from "@/hooks/useCustomToast"
 import { handleError } from "@/utils"
 import {
@@ -89,7 +94,9 @@ const EditQuestion = ({ question }: EditQuestionProps) => {
       handleError(err)
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["questions", question.quiz_id] })
+      queryClient.invalidateQueries({
+        queryKey: ["questions", question.quiz_id],
+      })
     },
   })
 
@@ -139,8 +146,15 @@ const EditQuestion = ({ question }: EditQuestionProps) => {
                 errorText={errors.question_type?.message}
                 label="Question Type"
               >
-                <Select.Root collection={questionTypeCollection} id="question_type">
-                  <Select.HiddenSelect {...register("question_type", { required: "Question type is required." })} />
+                <Select.Root
+                  collection={questionTypeCollection}
+                  id="question_type"
+                >
+                  <Select.HiddenSelect
+                    {...register("question_type", {
+                      required: "Question type is required.",
+                    })}
+                  />
                   <Select.Control>
                     <Select.Trigger>
                       <Select.ValueText />
@@ -229,4 +243,4 @@ const EditQuestion = ({ question }: EditQuestionProps) => {
   )
 }
 
-export default EditQuestion 
+export default EditQuestion

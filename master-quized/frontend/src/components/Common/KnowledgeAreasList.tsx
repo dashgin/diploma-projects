@@ -9,13 +9,19 @@ interface KnowledgeAreasListProps {
 export function KnowledgeAreasList({
   areas: filteredAreas,
 }: KnowledgeAreasListProps) {
-  const { data: areas } = useQuery({
+  const { data: areasResponse } = useQuery({
     queryKey: ["knowledgeAreas"],
     queryFn: () => AreasService.readAreas(),
   })
 
+  // Handle the new pagination format with data and count fields
+  const areasData = areasResponse?.data || []
+
   // Use filtered areas if provided, otherwise use all areas
-  const displayAreas = filteredAreas || areas || []
+  const displayAreas = filteredAreas || areasData
+
+  // Ensure displayAreas is always an array
+  const areasList = Array.isArray(displayAreas) ? displayAreas : []
 
   return (
     <Container maxW="container.xl" py={8}>
@@ -30,10 +36,10 @@ export function KnowledgeAreasList({
         }}
         gap={6}
       >
-        {displayAreas.length === 0 ? (
+        {areasList.length === 0 ? (
           <Text>No knowledge areas found. Please add some.</Text>
         ) : (
-          displayAreas.map((area) => (
+          areasList.map((area) => (
             <Box
               key={area.id}
               p={4}

@@ -58,8 +58,8 @@ function QuizzesTable() {
       search: (prev: { [key: string]: string }) => ({ ...prev, page }),
     })
 
-  const quizzes = data ?? []
-  const count = data?.length ?? 0
+  const quizzes = data?.data || []
+  const count = data?.count || 0
 
   if (isLoading) {
     return <PendingQuizzes />
@@ -133,6 +133,7 @@ function QuizzesTable() {
           count={count}
           pageSize={PER_PAGE}
           onPageChange={({ page }) => setPage(page)}
+          page={page}
         >
           <Flex>
             <PaginationPrevTrigger />

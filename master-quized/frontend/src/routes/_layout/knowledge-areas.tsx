@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_layout/knowledge-areas")({
 
 function KnowledgeAreasPage() {
   const {
-    data: areas,
+    data: areasResponse,
     isLoading,
     error,
   } = useQuery({
@@ -21,19 +21,23 @@ function KnowledgeAreasPage() {
   })
   const [searchTerm, setSearchTerm] = useState("")
 
+  // Handle the new pagination format with data and count fields
+  const areasData = areasResponse?.data || []
+
+  // Ensure areas is always an array
+  const areas = Array.isArray(areasData) ? areasData : []
+
   const handleSearch = (term: string) => {
     setSearchTerm(term)
   }
 
-  const filteredAreas = !areas
-    ? []
-    : !searchTerm.trim()
-      ? areas
-      : areas.filter(
-          (area) =>
-            area.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            area.description?.toLowerCase().includes(searchTerm.toLowerCase()),
-        )
+  const filteredAreas = !searchTerm.trim()
+    ? areas
+    : areas.filter(
+        (area) =>
+          area.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          area.description?.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
 
   if (isLoading) {
     return (

@@ -1,12 +1,12 @@
 import {
   Button,
-  createListCollection,
   DialogActionTrigger,
   Input,
   Select,
   Text,
   Textarea,
   VStack,
+  createListCollection,
 } from "@chakra-ui/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
@@ -50,7 +50,6 @@ const questionTypeCollection = createListCollection({
   items: QUESTION_TYPES,
 })
 
-
 const AddQuestion = ({ quizId }: AddQuestionProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
@@ -73,7 +72,9 @@ const AddQuestion = ({ quizId }: AddQuestionProps) => {
 
   const mutation = useMutation({
     mutationFn: (data: QuestionCreate) =>
-      QuestionsService.createQuestion({ requestBody: { ...data, quiz_id: quizId } }),
+      QuestionsService.createQuestion({
+        requestBody: { ...data, quiz_id: quizId },
+      }),
     onSuccess: () => {
       showSuccessToast("Question created successfully.")
       reset()
@@ -133,8 +134,15 @@ const AddQuestion = ({ quizId }: AddQuestionProps) => {
                 errorText={errors.question_type?.message}
                 label="Question Type"
               >
-                <Select.Root collection={questionTypeCollection} id="question_type">
-                  <Select.HiddenSelect {...register("question_type", { required: "Question type is required." })} />
+                <Select.Root
+                  collection={questionTypeCollection}
+                  id="question_type"
+                >
+                  <Select.HiddenSelect
+                    {...register("question_type", {
+                      required: "Question type is required.",
+                    })}
+                  />
                   <Select.Control>
                     <Select.Trigger>
                       <Select.ValueText />
@@ -223,4 +231,4 @@ const AddQuestion = ({ quizId }: AddQuestionProps) => {
   )
 }
 
-export default AddQuestion 
+export default AddQuestion

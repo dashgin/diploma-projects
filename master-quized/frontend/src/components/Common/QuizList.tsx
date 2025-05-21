@@ -9,24 +9,30 @@ interface QuizListProps {
 }
 
 export function QuizList({ quizzes: filteredQuizzes }: QuizListProps) {
-  const { data: quizzes } = useQuery({
+  const { data: quizzesResponse } = useQuery({
     queryKey: ["quizzes"],
     queryFn: () => QuizzesService.readQuizzes(),
   })
 
+  // Handle the new pagination format with data and count fields
+  const quizzesData = quizzesResponse?.data || []
+
   // Use filtered quizzes if provided, otherwise use all quizzes
-  const displayQuizzes = filteredQuizzes || quizzes || []
+  const displayQuizzes = filteredQuizzes || quizzesData
+
+  // Ensure displayQuizzes is always an array
+  const quizzesList = Array.isArray(displayQuizzes) ? displayQuizzes : []
 
   return (
     <Box>
       <Heading mb={6} size="lg">
         Available Quizzes
       </Heading>
-      {displayQuizzes.length === 0 ? (
+      {quizzesList.length === 0 ? (
         <Text>No quizzes found.</Text>
       ) : (
         <Stack gap={4}>
-          {displayQuizzes.map((quiz) => (
+          {quizzesList.map((quiz) => (
             <Box
               key={quiz.id}
               p={4}
