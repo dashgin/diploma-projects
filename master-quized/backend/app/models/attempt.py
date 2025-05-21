@@ -81,6 +81,7 @@ class AttemptCreateApiSchema(SQLModel):
 class AttemptUpdate(SQLModel):
     """Schema for student attempt update"""
 
+    started_at: datetime | None = Field(default=None)
     completed_at: datetime | None = Field(default=None)
     score: float | None = Field(default=None)
     is_completed: bool | None = Field(default=None)
@@ -90,6 +91,7 @@ class AttemptRead(AttemptBase):
     """Response schema for student attempts"""
 
     id: int
+    started_at: datetime | None = None
     completed_at: datetime | None = None
     score: float | None = None
 
@@ -105,6 +107,7 @@ class StudentAttempt(TimestampMixin, AttemptBase, table=True):
     )
     student_id: int = Field(foreign_key="auth_user.id", ondelete="CASCADE")
     quiz_id: int = Field(foreign_key="quiz.id", ondelete="CASCADE")
+    started_at: datetime | None = Field(default=None)
     completed_at: datetime | None = Field(default=None)
     score: float | None = Field(default=None)
 
