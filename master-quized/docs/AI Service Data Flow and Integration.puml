@@ -1,0 +1,24 @@
+@startuml "AI Service Data Flow and Integration"
+title AI Service Data Flow and Integration
+!theme bluegray
+actor User
+
+participant "Frontend\n(React/Vue/etc.)" as FE
+participant "Main Backend\n(FastAPI, etc.)" as BE
+participant "AI Service\n(Feedback Generator)" as AI
+
+User -> FE : Interacts with quiz/assignment
+FE -> BE : Submit attempt / Request feedback
+BE -> AI : Send attempt data for feedback
+AI -> BE : Return generated feedback
+BE -> FE : Send feedback to frontend
+FE -> User : Display feedback
+
+note right of AI
+  AI Service may use
+  NLP/ML models to analyze
+  attempt and generate
+  personalized feedback.
+end note
+
+@enduml

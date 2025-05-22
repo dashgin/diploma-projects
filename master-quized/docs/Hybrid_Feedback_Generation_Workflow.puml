@@ -1,0 +1,48 @@
+@startuml Hybrid Feedback Generation Workflow
+!theme bluegray
+
+!define RECTANGLE class
+skinparam rectangle {
+  BackgroundColor #FDF6E3
+  BorderColor #657B83
+}
+skinparam shadowing false
+
+actor "User" as user
+rectangle "Frontend" as frontend {
+  [Quiz Attempt Submission]
+}
+rectangle "AI Service" as ai_service {
+  [Input Preprocessing]
+  [Error Classification]
+  [Feedback Generation]
+  [Feedback Aggregation]
+}
+rectangle "ML Model" as ml_model {
+  [ML-based Feedback]
+}
+rectangle "Rule-based Engine" as rule_engine {
+  [Rule-based Feedback]
+}
+rectangle "Backend" as backend {
+  [Store Feedback]
+  [Return Feedback]
+}
+
+user --> frontend : Submits quiz attempt
+frontend --> ai_service : Sends attempt data
+ai_service --> [Input Preprocessing] : Preprocess input
+[Input Preprocessing] --> [Error Classification] : Classify errors
+[Error Classification] --> ml_model : For ML feedback
+[Error Classification] --> rule_engine : For rule-based feedback
+ml_model --> [ML-based Feedback] : Generate ML feedback
+rule_engine --> [Rule-based Feedback] : Generate rule-based feedback
+[ML-based Feedback] --> [Feedback Generation]
+[Rule-based Feedback] --> [Feedback Generation]
+[Feedback Generation] --> [Feedback Aggregation] : Aggregate feedback
+[Feedback Aggregation] --> backend : Send feedback
+backend --> [Store Feedback] : Store in DB
+backend --> frontend : Return feedback to user
+frontend --> user : Display feedback
+
+@enduml 
