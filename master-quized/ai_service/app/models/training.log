@@ -1,0 +1,689 @@
+2025-05-23 00:23:36,412 - __main__ - INFO - === Starting Error Classifier Training ===
+2025-05-23 00:23:36,412 - app.models.error_classifier.train_classifier - INFO - --- Starting Custom Error Classifier Training ---
+2025-05-23 00:23:36,412 - app.models.error_classifier.train_classifier - INFO - Creating a dummy dataset for demonstration at /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv
+2025-05-23 00:23:36,412 - app.models.error_classifier.train_classifier - WARNING - Warning: NUM_LABELS (6) does not match unique labels in dummy data (5). Adjust NUM_LABELS.
+2025-05-23 00:23:36,414 - app.models.error_classifier.train_classifier - INFO - Dummy dataset created at /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv. Replace with real data for production.
+2025-05-23 00:23:36,414 - app.models.error_classifier.train_classifier - INFO - Loading data from: /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv
+2025-05-23 00:23:36,415 - app.models.error_classifier.train_classifier - INFO - Loaded data with 10 samples.
+2025-05-23 00:23:36,415 - __main__ - ERROR - An error occurred during error classifier training: The test_size = 2 should be greater or equal to the number of classes = 5
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/train_models.py", line 110, in main
+    model_path, _ = train_classifier(**params)
+                    ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/train_classifier.py", line 180, in train
+    tokenized_datasets, tokenizer = load_and_prepare_data(data_file, model_name)
+                                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/train_classifier.py", line 77, in load_and_prepare_data
+    train_texts, eval_texts, train_labels, eval_labels = train_test_split(
+                                                         ~~~~~~~~~~~~~~~~^
+        texts,
+        ^^^^^^
+    ...<3 lines>...
+        stratify=labels if len(set(labels)) > 1 else None,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/sklearn/utils/_param_validation.py", line 216, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 2872, in train_test_split
+    train, test = next(cv.split(X=arrays[0], y=stratify))
+                  ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 1909, in split
+    for train, test in self._iter_indices(X, y, groups):
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 2331, in _iter_indices
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: The test_size = 2 should be greater or equal to the number of classes = 5
+2025-05-23 00:23:36,417 - __main__ - INFO - === Model Training Complete ===
+2025-05-23 00:58:57,837 - __main__ - INFO - === Starting Error Classifier Training ===
+2025-05-23 00:58:57,837 - app.models.error_classifier.train_classifier - INFO - --- Starting Custom Error Classifier Training ---
+2025-05-23 00:58:57,837 - app.models.error_classifier.train_classifier - INFO - Creating a dummy dataset for demonstration at /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv
+2025-05-23 00:58:57,839 - app.models.error_classifier.train_classifier - INFO - Dummy dataset created at /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv with 30 samples. Replace with real data for production.
+2025-05-23 00:58:57,839 - app.models.error_classifier.train_classifier - INFO - Loading data from: /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv
+2025-05-23 00:58:57,839 - app.models.error_classifier.train_classifier - INFO - Loaded data with 30 samples.
+2025-05-23 00:58:57,839 - app.models.error_classifier.train_classifier - INFO - Dataset has 30 samples across 6 classes
+2025-05-23 00:58:57,840 - app.models.error_classifier.train_classifier - INFO - Using stratification: True, test size: 0.20
+2025-05-23 00:58:57,840 - app.models.error_classifier.train_classifier - INFO - Tokenizing texts...
+2025-05-23 00:58:58,281 - __main__ - ERROR - An error occurred during error classifier training: (MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/distilbert-base-uncased/tree/main/additional_chat_templates?recursive=False&expand=False (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))"), '(Request ID: 88416de4-d246-408e-9ba1-310a319bffbe)')
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 1093, in _validate_conn
+    conn.connect()
+    ~~~~~~~~~~~~^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connection.py", line 741, in connect
+    sock_and_verified = _ssl_wrap_socket_and_match_hostname(
+        sock=sock,
+    ...<14 lines>...
+        assert_fingerprint=self.assert_fingerprint,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connection.py", line 920, in _ssl_wrap_socket_and_match_hostname
+    ssl_sock = ssl_wrap_socket(
+        sock=sock,
+    ...<8 lines>...
+        tls_in_tls=tls_in_tls,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/util/ssl_.py", line 480, in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(sock, context, tls_in_tls, server_hostname)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/util/ssl_.py", line 524, in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/dashgin/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "/Users/dashgin/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+urllib3.exceptions.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/adapters.py", line 667, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/util/retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/distilbert-base-uncased/tree/main/additional_chat_templates?recursive=False&expand=False (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/train_models.py", line 110, in main
+    model_path, _ = train_classifier(**params)
+                    ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/train_classifier.py", line 194, in train
+    tokenized_datasets, tokenizer = load_and_prepare_data(data_file, model_name)
+                                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/train_classifier.py", line 101, in load_and_prepare_data
+    tokenizer = DistilBertTokenizerFast.from_pretrained(tokenizer_name)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/transformers/tokenization_utils_base.py", line 1968, in from_pretrained
+    for template in list_repo_templates(
+                    ~~~~~~~~~~~~~~~~~~~^
+        pretrained_model_name_or_path,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        cache_dir=cache_dir,
+        ^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/transformers/utils/hub.py", line 163, in list_repo_templates
+    for entry in list_repo_tree(
+                 ~~~~~~~~~~~~~~^
+        repo_id=repo_id, revision=revision, path_in_repo=CHAT_TEMPLATE_DIR, recursive=False
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/huggingface_hub/hf_api.py", line 3140, in list_repo_tree
+    for path_info in paginate(path=tree_url, headers=headers, params={"recursive": recursive, "expand": expand}):
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_pagination.py", line 36, in paginate
+    r = session.get(path, params=params, headers=headers)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_http.py", line 96, in send
+    return super().send(request, *args, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/adapters.py", line 698, in send
+    raise SSLError(e, request=request)
+requests.exceptions.SSLError: (MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/distilbert-base-uncased/tree/main/additional_chat_templates?recursive=False&expand=False (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))"), '(Request ID: 88416de4-d246-408e-9ba1-310a319bffbe)')
+2025-05-23 00:58:58,293 - __main__ - INFO - === Model Training Complete ===
+2025-05-23 01:05:16,790 - __main__ - INFO - === Starting Error Classifier Training ===
+2025-05-23 01:05:16,790 - app.models.error_classifier.train_classifier - INFO - --- Starting Custom Error Classifier Training ---
+2025-05-23 01:05:16,790 - app.models.error_classifier.train_classifier - INFO - Creating a dummy dataset for demonstration at /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv
+2025-05-23 01:05:16,791 - app.models.error_classifier.train_classifier - INFO - Dummy dataset created at /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv with 30 samples. Replace with real data for production.
+2025-05-23 01:05:16,791 - app.models.error_classifier.train_classifier - INFO - Loading data from: /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv
+2025-05-23 01:05:16,792 - app.models.error_classifier.train_classifier - INFO - Loaded data with 30 samples.
+2025-05-23 01:05:16,792 - app.models.error_classifier.train_classifier - INFO - Dataset has 30 samples across 6 classes
+2025-05-23 01:05:16,792 - app.models.error_classifier.train_classifier - INFO - Using stratification: True, test size: 0.20
+2025-05-23 01:05:16,792 - app.models.error_classifier.train_classifier - INFO - Tokenizing texts...
+2025-05-23 01:05:17,225 - __main__ - ERROR - An error occurred during error classifier training: (MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/distilbert-base-uncased/tree/main/additional_chat_templates?recursive=False&expand=False (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))"), '(Request ID: 1488b5ea-3781-43e1-990f-a45d94f6a88c)')
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 1093, in _validate_conn
+    conn.connect()
+    ~~~~~~~~~~~~^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connection.py", line 741, in connect
+    sock_and_verified = _ssl_wrap_socket_and_match_hostname(
+        sock=sock,
+    ...<14 lines>...
+        assert_fingerprint=self.assert_fingerprint,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connection.py", line 920, in _ssl_wrap_socket_and_match_hostname
+    ssl_sock = ssl_wrap_socket(
+        sock=sock,
+    ...<8 lines>...
+        tls_in_tls=tls_in_tls,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/util/ssl_.py", line 480, in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(sock, context, tls_in_tls, server_hostname)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/util/ssl_.py", line 524, in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/dashgin/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "/Users/dashgin/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+urllib3.exceptions.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/adapters.py", line 667, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/util/retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/distilbert-base-uncased/tree/main/additional_chat_templates?recursive=False&expand=False (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/train_models.py", line 110, in main
+    model_path, _ = train_classifier(**params)
+                    ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/train_classifier.py", line 196, in train
+    tokenized_datasets, tokenizer = load_and_prepare_data(data_file, model_name)
+                                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/train_classifier.py", line 103, in load_and_prepare_data
+    tokenizer = DistilBertTokenizerFast.from_pretrained(tokenizer_name)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/transformers/tokenization_utils_base.py", line 1968, in from_pretrained
+    for template in list_repo_templates(
+                    ~~~~~~~~~~~~~~~~~~~^
+        pretrained_model_name_or_path,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        cache_dir=cache_dir,
+        ^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/transformers/utils/hub.py", line 163, in list_repo_templates
+    for entry in list_repo_tree(
+                 ~~~~~~~~~~~~~~^
+        repo_id=repo_id, revision=revision, path_in_repo=CHAT_TEMPLATE_DIR, recursive=False
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/huggingface_hub/hf_api.py", line 3140, in list_repo_tree
+    for path_info in paginate(path=tree_url, headers=headers, params={"recursive": recursive, "expand": expand}):
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_pagination.py", line 36, in paginate
+    r = session.get(path, params=params, headers=headers)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_http.py", line 96, in send
+    return super().send(request, *args, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/adapters.py", line 698, in send
+    raise SSLError(e, request=request)
+requests.exceptions.SSLError: (MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/distilbert-base-uncased/tree/main/additional_chat_templates?recursive=False&expand=False (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))"), '(Request ID: 1488b5ea-3781-43e1-990f-a45d94f6a88c)')
+2025-05-23 01:05:17,237 - __main__ - INFO - === Model Training Complete ===
+2025-05-23 01:05:37,146 - __main__ - INFO - === Starting Error Classifier Training ===
+2025-05-23 01:05:37,146 - app.models.error_classifier.train_classifier - INFO - --- Starting Custom Error Classifier Training ---
+2025-05-23 01:05:37,146 - app.models.error_classifier.train_classifier - INFO - Creating a dummy dataset for demonstration at /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv
+2025-05-23 01:05:37,147 - app.models.error_classifier.train_classifier - INFO - Dummy dataset created at /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv with 30 samples. Replace with real data for production.
+2025-05-23 01:05:37,147 - app.models.error_classifier.train_classifier - INFO - Loading data from: /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv
+2025-05-23 01:05:37,147 - app.models.error_classifier.train_classifier - INFO - Loaded data with 30 samples.
+2025-05-23 01:05:37,147 - app.models.error_classifier.train_classifier - INFO - Dataset has 30 samples across 6 classes
+2025-05-23 01:05:37,147 - app.models.error_classifier.train_classifier - INFO - Using stratification: True, test size: 0.20
+2025-05-23 01:05:37,148 - app.models.error_classifier.train_classifier - INFO - Tokenizing texts...
+2025-05-23 01:05:55,122 - __main__ - ERROR - An error occurred during error classifier training: (MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/distilbert-base-uncased/tree/main/additional_chat_templates?recursive=False&expand=False (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))"), '(Request ID: e6bae837-4b8a-4e98-a6ca-f8dd139c7528)')
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 1093, in _validate_conn
+    conn.connect()
+    ~~~~~~~~~~~~^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connection.py", line 741, in connect
+    sock_and_verified = _ssl_wrap_socket_and_match_hostname(
+        sock=sock,
+    ...<14 lines>...
+        assert_fingerprint=self.assert_fingerprint,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connection.py", line 920, in _ssl_wrap_socket_and_match_hostname
+    ssl_sock = ssl_wrap_socket(
+        sock=sock,
+    ...<8 lines>...
+        tls_in_tls=tls_in_tls,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/util/ssl_.py", line 480, in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(sock, context, tls_in_tls, server_hostname)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/util/ssl_.py", line 524, in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/dashgin/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "/Users/dashgin/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+urllib3.exceptions.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/adapters.py", line 667, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/util/retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/distilbert-base-uncased/tree/main/additional_chat_templates?recursive=False&expand=False (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/train_models.py", line 110, in main
+    model_path, _ = train_classifier(**params)
+                    ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/train_classifier.py", line 196, in train
+    tokenized_datasets, tokenizer = load_and_prepare_data(data_file, model_name)
+                                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/train_classifier.py", line 103, in load_and_prepare_data
+    tokenizer = DistilBertTokenizerFast.from_pretrained(tokenizer_name)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/transformers/tokenization_utils_base.py", line 1968, in from_pretrained
+    for template in list_repo_templates(
+                    ~~~~~~~~~~~~~~~~~~~^
+        pretrained_model_name_or_path,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        cache_dir=cache_dir,
+        ^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/transformers/utils/hub.py", line 163, in list_repo_templates
+    for entry in list_repo_tree(
+                 ~~~~~~~~~~~~~~^
+        repo_id=repo_id, revision=revision, path_in_repo=CHAT_TEMPLATE_DIR, recursive=False
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/huggingface_hub/hf_api.py", line 3140, in list_repo_tree
+    for path_info in paginate(path=tree_url, headers=headers, params={"recursive": recursive, "expand": expand}):
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_pagination.py", line 36, in paginate
+    r = session.get(path, params=params, headers=headers)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_http.py", line 96, in send
+    return super().send(request, *args, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/adapters.py", line 698, in send
+    raise SSLError(e, request=request)
+requests.exceptions.SSLError: (MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/distilbert-base-uncased/tree/main/additional_chat_templates?recursive=False&expand=False (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))"), '(Request ID: e6bae837-4b8a-4e98-a6ca-f8dd139c7528)')
+2025-05-23 01:05:55,133 - __main__ - INFO - === Model Training Complete ===
+2025-05-23 01:06:01,895 - __main__ - INFO - === Starting Error Classifier Training ===
+2025-05-23 01:06:01,896 - app.models.error_classifier.train_classifier - INFO - --- Starting Custom Error Classifier Training ---
+2025-05-23 01:06:01,896 - app.models.error_classifier.train_classifier - INFO - Creating a dummy dataset for demonstration at /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv
+2025-05-23 01:06:01,896 - app.models.error_classifier.train_classifier - INFO - Dummy dataset created at /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv with 30 samples. Replace with real data for production.
+2025-05-23 01:06:01,897 - app.models.error_classifier.train_classifier - INFO - Loading data from: /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv
+2025-05-23 01:06:01,897 - app.models.error_classifier.train_classifier - INFO - Loaded data with 30 samples.
+2025-05-23 01:06:01,897 - app.models.error_classifier.train_classifier - INFO - Dataset has 30 samples across 6 classes
+2025-05-23 01:06:01,897 - app.models.error_classifier.train_classifier - INFO - Using stratification: True, test size: 0.20
+2025-05-23 01:06:01,898 - app.models.error_classifier.train_classifier - INFO - Tokenizing texts...
+2025-05-23 01:06:02,352 - __main__ - ERROR - An error occurred during error classifier training: (MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/distilbert-base-uncased/tree/main/additional_chat_templates?recursive=False&expand=False (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))"), '(Request ID: 4dc094d2-bd72-4479-bd54-9aa6bcc37ef9)')
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 1093, in _validate_conn
+    conn.connect()
+    ~~~~~~~~~~~~^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connection.py", line 741, in connect
+    sock_and_verified = _ssl_wrap_socket_and_match_hostname(
+        sock=sock,
+    ...<14 lines>...
+        assert_fingerprint=self.assert_fingerprint,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connection.py", line 920, in _ssl_wrap_socket_and_match_hostname
+    ssl_sock = ssl_wrap_socket(
+        sock=sock,
+    ...<8 lines>...
+        tls_in_tls=tls_in_tls,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/util/ssl_.py", line 480, in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(sock, context, tls_in_tls, server_hostname)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/util/ssl_.py", line 524, in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/dashgin/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "/Users/dashgin/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+urllib3.exceptions.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/adapters.py", line 667, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/util/retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/distilbert-base-uncased/tree/main/additional_chat_templates?recursive=False&expand=False (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/train_models.py", line 110, in main
+    model_path, _ = train_classifier(**params)
+                    ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/train_classifier.py", line 196, in train
+    tokenized_datasets, tokenizer = load_and_prepare_data(data_file, model_name)
+                                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/train_classifier.py", line 103, in load_and_prepare_data
+    tokenizer = DistilBertTokenizerFast.from_pretrained(tokenizer_name)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/transformers/tokenization_utils_base.py", line 1968, in from_pretrained
+    for template in list_repo_templates(
+                    ~~~~~~~~~~~~~~~~~~~^
+        pretrained_model_name_or_path,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        cache_dir=cache_dir,
+        ^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/transformers/utils/hub.py", line 163, in list_repo_templates
+    for entry in list_repo_tree(
+                 ~~~~~~~~~~~~~~^
+        repo_id=repo_id, revision=revision, path_in_repo=CHAT_TEMPLATE_DIR, recursive=False
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/huggingface_hub/hf_api.py", line 3140, in list_repo_tree
+    for path_info in paginate(path=tree_url, headers=headers, params={"recursive": recursive, "expand": expand}):
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_pagination.py", line 36, in paginate
+    r = session.get(path, params=params, headers=headers)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_http.py", line 96, in send
+    return super().send(request, *args, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/adapters.py", line 698, in send
+    raise SSLError(e, request=request)
+requests.exceptions.SSLError: (MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/distilbert-base-uncased/tree/main/additional_chat_templates?recursive=False&expand=False (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))"), '(Request ID: 4dc094d2-bd72-4479-bd54-9aa6bcc37ef9)')
+2025-05-23 01:06:02,368 - __main__ - INFO - === Model Training Complete ===
+2025-05-23 01:06:06,795 - __main__ - INFO - === Starting Error Classifier Training ===
+2025-05-23 01:06:06,795 - app.models.error_classifier.train_classifier - INFO - --- Starting Custom Error Classifier Training ---
+2025-05-23 01:06:06,795 - app.models.error_classifier.train_classifier - INFO - Creating a dummy dataset for demonstration at /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv
+2025-05-23 01:06:06,796 - app.models.error_classifier.train_classifier - INFO - Dummy dataset created at /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv with 30 samples. Replace with real data for production.
+2025-05-23 01:06:06,796 - app.models.error_classifier.train_classifier - INFO - Loading data from: /Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/training_data/error_classification_data.csv
+2025-05-23 01:06:06,797 - app.models.error_classifier.train_classifier - INFO - Loaded data with 30 samples.
+2025-05-23 01:06:06,797 - app.models.error_classifier.train_classifier - INFO - Dataset has 30 samples across 6 classes
+2025-05-23 01:06:06,797 - app.models.error_classifier.train_classifier - INFO - Using stratification: True, test size: 0.20
+2025-05-23 01:06:06,798 - app.models.error_classifier.train_classifier - INFO - Tokenizing texts...
+2025-05-23 01:06:07,151 - __main__ - ERROR - An error occurred during error classifier training: (MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/distilbert-base-uncased/tree/main/additional_chat_templates?recursive=False&expand=False (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))"), '(Request ID: 099aaa09-df87-436c-a39e-2c15dc1b9b74)')
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 1093, in _validate_conn
+    conn.connect()
+    ~~~~~~~~~~~~^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connection.py", line 741, in connect
+    sock_and_verified = _ssl_wrap_socket_and_match_hostname(
+        sock=sock,
+    ...<14 lines>...
+        assert_fingerprint=self.assert_fingerprint,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connection.py", line 920, in _ssl_wrap_socket_and_match_hostname
+    ssl_sock = ssl_wrap_socket(
+        sock=sock,
+    ...<8 lines>...
+        tls_in_tls=tls_in_tls,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/util/ssl_.py", line 480, in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(sock, context, tls_in_tls, server_hostname)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/util/ssl_.py", line 524, in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/dashgin/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "/Users/dashgin/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+urllib3.exceptions.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/adapters.py", line 667, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/urllib3/util/retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/distilbert-base-uncased/tree/main/additional_chat_templates?recursive=False&expand=False (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/train_models.py", line 110, in main
+    model_path, _ = train_classifier(**params)
+                    ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/train_classifier.py", line 196, in train
+    tokenized_datasets, tokenizer = load_and_prepare_data(data_file, model_name)
+                                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/app/models/error_classifier/train_classifier.py", line 103, in load_and_prepare_data
+    tokenizer = DistilBertTokenizerFast.from_pretrained(tokenizer_name)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/transformers/tokenization_utils_base.py", line 1968, in from_pretrained
+    for template in list_repo_templates(
+                    ~~~~~~~~~~~~~~~~~~~^
+        pretrained_model_name_or_path,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        cache_dir=cache_dir,
+        ^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/transformers/utils/hub.py", line 163, in list_repo_templates
+    for entry in list_repo_tree(
+                 ~~~~~~~~~~~~~~^
+        repo_id=repo_id, revision=revision, path_in_repo=CHAT_TEMPLATE_DIR, recursive=False
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/huggingface_hub/hf_api.py", line 3140, in list_repo_tree
+    for path_info in paginate(path=tree_url, headers=headers, params={"recursive": recursive, "expand": expand}):
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_pagination.py", line 36, in paginate
+    r = session.get(path, params=params, headers=headers)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_http.py", line 96, in send
+    return super().send(request, *args, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dashgin/Projects/quiz/QuizEd/ai_service/.venv/lib/python3.13/site-packages/requests/adapters.py", line 698, in send
+    raise SSLError(e, request=request)
+requests.exceptions.SSLError: (MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/distilbert-base-uncased/tree/main/additional_chat_templates?recursive=False&expand=False (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))"), '(Request ID: 099aaa09-df87-436c-a39e-2c15dc1b9b74)')
+2025-05-23 01:06:07,167 - __main__ - INFO - === Model Training Complete ===

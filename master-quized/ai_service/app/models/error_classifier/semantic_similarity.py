@@ -3,19 +3,22 @@ Semantic similarity analysis module for comparing text responses.
 Uses pre-trained Sentence-Transformer models for generating embeddings and calculating similarity.
 """
 
-from sentence_transformers import SentenceTransformer, util
 import logging
 from functools import lru_cache
+
+from sentence_transformers import SentenceTransformer, util
 
 # Configure logger
 logger = logging.getLogger(__name__)
 
 # Recommended model for semantic similarity as described in the thesis
-SEMANTIC_SIMILARITY_MODEL_NAME = 'all-MiniLM-L6-v2'
+SEMANTIC_SIMILARITY_MODEL_NAME = "all-MiniLM-L6-v2"
 
 
 @lru_cache(maxsize=128)
-def get_semantic_similarity(text1: str, text2: str, model_name: str = SEMANTIC_SIMILARITY_MODEL_NAME) -> float:
+def get_semantic_similarity(
+    text1: str, text2: str, model_name: str = SEMANTIC_SIMILARITY_MODEL_NAME
+) -> float:
     """
     Computes the semantic similarity between two texts using a pre-trained
     Sentence-Transformer model. Results are cached for better performance.
@@ -61,20 +64,28 @@ def get_semantic_similarity(text1: str, text2: str, model_name: str = SEMANTIC_S
 
 if __name__ == "__main__":
     # Configure logging for standalone testing
-    logging.basicConfig(level=logging.INFO, 
-                      format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
+
     print("--- Semantic Similarity Test ---")
 
     student_answer_example = "Mitochondria are the powerhouses of the cell, responsible for generating most of the cell's supply of ATP through cellular respiration."
     model_answer_example = "The primary function of mitochondria is to generate the majority of the cell's supply of adenosine triphosphate (ATP), used as a source of chemical energy via cellular respiration."
-    
-    similarity_score = get_semantic_similarity(student_answer_example, model_answer_example)
+
+    similarity_score = get_semantic_similarity(
+        student_answer_example, model_answer_example
+    )
     print(f"\nStudent Answer: '{student_answer_example}'")
     print(f"Model Answer:   '{model_answer_example}'")
     print(f"Semantic Similarity Score: {similarity_score:.4f}")
 
     # Different topic example
-    student_answer_different = "The nucleus controls the cell's activities and contains the genetic material."
-    similarity_score_different = get_semantic_similarity(student_answer_different, model_answer_example)
-    print(f"\nDifferent Topic Score: {similarity_score_different:.4f}") 
+    student_answer_different = (
+        "The nucleus controls the cell's activities and contains the genetic material."
+    )
+    similarity_score_different = get_semantic_similarity(
+        student_answer_different, model_answer_example
+    )
+    print(f"\nDifferent Topic Score: {similarity_score_different:.4f}")
