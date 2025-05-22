@@ -1,0 +1,92 @@
+@startuml
+title AI Service API Request/Response Schema
+
+' Request Schema
+package "FeedbackRequest" as RequestPackage {
+    class FeedbackRequest <<JSON>> {
+        + quiz_id: string
+        + question_id: string
+        + student_id: string
+        + student_answer: string
+        + question_text: string
+        + model_answer: string
+        + key_concepts: string[]
+        + context_info?: object
+    }
+}
+
+' Response Schema
+package "FeedbackResponse" as ResponsePackage {
+    class FeedbackResponse <<JSON>> {
+        + status: string
+        + message: string
+        + feedback?: FeedbackResponseData
+    }
+
+    class FeedbackResponseData <<JSON>> {
+        + feedback_text: string
+        + error_identified: boolean
+        + error_type?: string[]
+        + confidence_score?: float
+        + concepts_covered?: string[]
+        + concepts_missed?: string[]
+        + recommended_resources?: RecommendedResource[]
+    }
+
+    class RecommendedResource <<JSON>> {
+        + title: string
+        + url: string
+        + type: string
+    }
+}
+
+' Relationships
+FeedbackRequest --> FeedbackResponse : HTTP POST /feedback/generate
+FeedbackResponse *-- FeedbackResponseData
+FeedbackResponseData *-- RecommendedResource : 0..*
+
+' Add examples
+note right of FeedbackRequest
+  Example:
+  {
+    "quiz_id": "quiz-123",
+    "question_id": "q-456",
+    "student_id": "student-789",
+    "student_answer": "The carbon cycle is the process...",
+    "question_text": "Explain the carbon cycle...",
+    "model_answer": "The carbon cycle is the biogeochemical cycle...",
+    "key_concepts": [
+      "biogeochemical cycle", 
+      "carbon exchange", 
+      "climate regulation", 
+      "ecosystem"
+    ],
+    "context_info": {
+      "topic": "Environmental Science",
+      "difficulty": "medium"
+    }
+  }
+end note
+
+note left of FeedbackResponse
+  Example:
+  {
+    "status": "success",
+    "message": "AI-powered feedback generated.",
+    "feedback": {
+      "feedback_text": "Your answer correctly identifies...",
+      "error_identified": false,
+      "concepts_covered": ["carbon exchange", "ecosystem"],
+      "concepts_missed": ["biogeochemical cycle", "climate regulation"],
+      "recommended_resources": [
+        {
+          "title": "Biogeochemical Cycles Explained",
+          "url": "https://example.com/resources/cycles",
+          "type": "video"
+        }
+      ]
+    }
+  }
+end note
+
+@enduml 
