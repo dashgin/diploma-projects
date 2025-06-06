@@ -13,8 +13,6 @@ import {
   useDisclosure,
   List,
   Card,
-  CardBody,
-  CardHeader,
 } from "@chakra-ui/react"
 import { FeedbackService } from "../../client/sdk.gen"
 import { useQuery } from "@tanstack/react-query"
@@ -23,13 +21,52 @@ import { FiCheckCircle, FiAlertTriangle } from "react-icons/fi"
 
 interface AIFeedbackDisplayProps {
   responseId: number
+  demo?: boolean | string
 }
 
 export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
   responseId,
+  demo = false,
 }) => {
   const { open: isDetailsOpen, onToggle: toggleDetails } = useDisclosure()
   
+  // If demo mode, use hardcoded feedback
+  if (demo === "fail") {
+    const failFeedback: FeedbackRead = {
+      id: 2,
+      response_id: responseId,
+      feedback_text: "Incorrect. Python is a programming language. Please review the definitions of programming and markup languages.",
+      error_type: ["factual", "critical"],
+      confidence_score: 0.95,
+      feedback_content: {
+        concepts_covered: [],
+        concepts_missed: ["Python is a programming language", "Difference between programming and markup languages"],
+      },
+      ai_metadata: null,
+    }
+    return (
+      <AIFeedbackContent feedback={failFeedback} isDetailsOpen={isDetailsOpen} toggleDetails={toggleDetails} />
+    )
+  }
+
+  if (demo) {
+    const dummyFeedback: FeedbackRead = {
+      id: 1,
+      response_id: responseId,
+      feedback_text: "Great attempt! You covered most key concepts, but missed explaining the difference between mitosis and meiosis.",
+      error_type: ["conceptual", "minor"],
+      confidence_score: 0.82,
+      feedback_content: {
+        concepts_covered: ["Cell division", "Chromosome replication"],
+        concepts_missed: ["Difference between mitosis and meiosis"],
+      },
+      ai_metadata: null,
+    }
+    return (
+      <AIFeedbackContent feedback={dummyFeedback} isDetailsOpen={isDetailsOpen} toggleDetails={toggleDetails} />
+    )
+  }
+
   // Fetch feedback for this response
   const {
     data: feedback,
@@ -95,7 +132,7 @@ const AIFeedbackContent: React.FC<AIFeedbackContentProps> = ({
 
   return (
     <Card.Root variant="outline" bg="blue.50" mb={4}>
-      <CardHeader pb={2}>
+      <Card.Header pb={2}>
         <Flex justify="space-between" align="center">
           <Heading size="md">AI Feedback</Heading>
           {feedback.confidence_score && (
@@ -104,9 +141,9 @@ const AIFeedbackContent: React.FC<AIFeedbackContentProps> = ({
             </Badge>
           )}
         </Flex>
-      </CardHeader>
+      </Card.Header>
       
-      <CardBody pt={0}>
+      <Card.Body pt={0}>
         <Text mb={4}>{feedback.feedback_text}</Text>
         
         {feedback.error_type && feedback.error_type.length > 0 && (
@@ -162,30 +199,44 @@ const AIFeedbackContent: React.FC<AIFeedbackContentProps> = ({
                   </List.Root>
                 </Box>
               )}
+              
+              {feedback.ai_metadata?.resources && (
+                <Box mt={3}>
+                  <Heading size="sm" mb={2}>Recommended Resources</Heading>
+                  <List.Root gap="1" variant="plain">
+                    {feedback.ai_metadata.resources.map((resource: any, index: number) => (
+                      <List.Item key={index}>
+                        <Text>• {resource.title}</Text>
+                      </List.Item>
+                    ))}
+                  </List.Root>
+                </Box>
+              )}
             </Box>
           </Collapsible.Content>
         </Collapsible.Root>
-      </CardBody>
+      </Card.Body>
     </Card.Root>
   )
 }
 
-// Helper functions for color coding
 function getConfidenceColor(score: number): string {
   if (score >= 0.8) return "green"
-  if (score >= 0.6) return "blue"
-  if (score >= 0.4) return "yellow"
+  if (score >= 0.6) return "yellow"
   return "red"
 }
 
 function getErrorTypeColor(errorType: string): string {
-  const errorColors: Record<string, string> = {
-    conceptual: "red",
-    procedural: "orange",
-    factual: "yellow",
-    minor: "green",
-    critical: "purple",
+  switch (errorType) {
+    case "critical":
+      return "red"
+    case "factual":
+      return "orange"
+    case "conceptual":
+      return "yellow"
+    case "minor":
+      return "blue"
+    default:
+      return "gray"
   }
-
-  return errorColors[errorType.toLowerCase()] || "gray"
 } 

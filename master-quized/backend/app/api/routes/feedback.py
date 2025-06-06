@@ -203,7 +203,6 @@ async def request_feedback_generation(
     # Add background task to generate feedback
     background_tasks.add_task(
         generate_and_save_feedback,
-        session=session,
         response_id=response_id,
     )
 
@@ -214,50 +213,52 @@ async def request_feedback_generation(
 
 
 async def generate_and_save_feedback(
-    *,
-    session: SessionDep,
     response_id: int,
 ) -> None:
     """
     Background task to generate and save AI feedback.
     """
+    from sqlmodel import Session
+    from app.core.db import engine
+    
     try:
-        # Get the response
-        response = crud.get_response(session=session, response_id=response_id)
-        if not response:
-            return
+        with Session(engine) as session:
+            # Get the response
+            response = crud.get_response(session=session, response_id=response_id)
+            if not response:
+                return
 
-        # Request feedback from AI service
-        ai_interaction_data = await request_ai_feedback(response)
+            # Request feedback from AI service
+            ai_interaction_data = await request_ai_feedback(response)
 
-        # Process the feedback data
-        processed_feedback = await process_ai_feedback(ai_interaction_data)
+            # Process the feedback data
+            processed_feedback = await process_ai_feedback(ai_interaction_data)
 
-        # Create feedback object
-        feedback_in = FeedbackCreate(
-            response_id=response_id,
-            feedback_text=processed_feedback["feedback_text"],
-            error_type=processed_feedback["error_type"],
-            confidence_score=processed_feedback["confidence_score"],
-            feedback_content=processed_feedback["feedback_content"],
-            ai_metadata=processed_feedback["ai_metadata"],
-        )
+            # Create feedback object
+            feedback_in = FeedbackCreate(
+                response_id=response_id,
+                feedback_text=processed_feedback["feedback_text"],
+                error_type=processed_feedback["error_type"],
+                confidence_score=processed_feedback["confidence_score"],
+                feedback_content=processed_feedback["feedback_content"],
+                ai_metadata=processed_feedback["ai_metadata"],
+            )
 
-        # Save feedback to database
-        feedback = crud.create_feedback(session=session, feedback_in=feedback_in)
+            # Save feedback to database
+            feedback = crud.create_feedback(session=session, feedback_in=feedback_in)
 
-        # Save recommended resources if available
-        if processed_feedback["resources"]:
-            for resource_data in processed_feedback["resources"]:
-                resource_in = ResourceCreate(
-                    feedback_id=feedback.id,
-                    title=resource_data["title"],
-                    url=resource_data["url"],
-                    resource_type=resource_data["resource_type"],
-                    relevance_score=resource_data.get("relevance_score"),
-                )
+            # Save recommended resources if available
+            if processed_feedback["resources"]:
+                for resource_data in processed_feedback["resources"]:
+                    resource_in = ResourceCreate(
+                        feedback_id=feedback.id,
+                        title=resource_data["title"],
+                        url=resource_data["url"],
+                        resource_type=resource_data["resource_type"],
+                        relevance_score=resource_data.get("relevance_score"),
+                    )
 
-                crud.create_resource(session=session, resource_in=resource_in)
+                    crud.create_resource(session=session, resource_in=resource_in)
 
     except Exception as e:
         # Log the error but don't raise it (this is a background task)

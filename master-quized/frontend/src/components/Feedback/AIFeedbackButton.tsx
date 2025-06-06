@@ -47,7 +47,7 @@ export const AIFeedbackButton: React.FC<AIFeedbackButtonProps> = ({
   // If we're loading, show a loading state
   if (isLoading) {
     return (
-      <Button size="sm" isLoading colorScheme="blue" variant="outline">
+      <Button size="sm" loading colorScheme="blue" variant="outline">
         Checking feedback status
       </Button>
     )
@@ -56,11 +56,16 @@ export const AIFeedbackButton: React.FC<AIFeedbackButtonProps> = ({
   // If feedback already exists, show that it exists
   if (existingFeedback) {
     return (
-      <Tooltip label="This response already has AI feedback" placement="top">
-        <Button size="sm" colorScheme="green" variant="outline" disabled>
-          AI Feedback Available
-        </Button>
-      </Tooltip>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <Button size="sm" colorScheme="green" variant="outline" disabled>
+            AI Feedback Available
+          </Button>
+        </Tooltip.Trigger>
+        <Tooltip.Content>
+          This response already has AI feedback
+        </Tooltip.Content>
+      </Tooltip.Root>
     )
   }
 
@@ -69,7 +74,7 @@ export const AIFeedbackButton: React.FC<AIFeedbackButtonProps> = ({
     <Button
       size="sm"
       colorScheme="blue"
-      isLoading={isRequesting}
+      loading={isRequesting}
       loadingText="Requesting"
       onClick={() => requestFeedback()}
     >

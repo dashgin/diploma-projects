@@ -3,6 +3,7 @@ Service for integrating with the AI feedback service.
 """
 
 import logging
+from datetime import datetime
 from typing import Any
 
 import httpx
@@ -36,15 +37,23 @@ async def request_ai_feedback(response: StudentResponse) -> dict[str, Any]:
     attempt = response.attempt
     quiz = attempt.quiz
 
+    # Extract key concepts from the question
+    key_concepts = []
+    if question.key_concepts:
+        if isinstance(question.key_concepts, dict):
+            key_concepts = question.key_concepts.get("concepts", [])
+        elif isinstance(question.key_concepts, list):
+            key_concepts = question.key_concepts
+
     # Prepare the request data
     request_data = {
         "quiz_id": str(quiz.id),
         "question_id": str(question.id),
         "student_id": str(attempt.student_id),
-        "student_answer": response.response_text,
+        "student_answer": response.answer_text,  # Use answer_text not response_text
         "question_text": question.text,
         "model_answer": question.model_answer or "",
-        "key_concepts": question.key_concepts or [],
+        "key_concepts": key_concepts,
         "context_info": {
             "topic": quiz.title,
             "difficulty": question.difficulty or "medium",
@@ -65,7 +74,7 @@ async def request_ai_feedback(response: StudentResponse) -> dict[str, Any]:
                 "request": request_data,
                 "response": feedback_data,
                 "http_status": ai_response.status_code,
-                "timestamp": import_datetime().now().isoformat(),
+                "timestamp": datetime.now().isoformat(),
             }
     except httpx.RequestError as e:
         logger.error(f"Error communicating with AI service: {e}")
@@ -79,13 +88,6 @@ async def request_ai_feedback(response: StudentResponse) -> dict[str, Any]:
     except Exception as e:
         logger.error(f"Unexpected error requesting AI feedback: {e}")
         raise Exception("Unexpected error requesting AI feedback")
-
-
-def import_datetime():
-    """Import datetime module to avoid circular imports"""
-    from datetime import datetime
-
-    return datetime
 
 
 async def process_ai_feedback(feedback_data: dict[str, Any]) -> dict[str, Any]:

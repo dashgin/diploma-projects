@@ -210,8 +210,8 @@ function AttemptPage() {
                     </Box>
                   )}
                   
-                  {/* AI Feedback section - only for open-ended questions */}
-                  {responseData?.question?.question_type === "open_ended" && (
+                  {/* AI Feedback section - for text-based questions */}
+                  {(responseData?.question?.question_type === "open_ended" || responseData?.question?.question_type === "text") && (
                     <Box mt={4}>
                       <Flex justifyContent="space-between" alignItems="center" mb={2}>
                         <Text fontWeight="bold" fontSize="sm" color="gray.600">AI Feedback:</Text>
