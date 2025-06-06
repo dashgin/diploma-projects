@@ -1,23 +1,23 @@
 "use client"
 
-import React from "react"
 import {
+  Badge,
   Box,
+  Button,
+  Card,
+  Collapsible,
+  Flex,
+  Heading,
+  List,
   Spinner,
   Text,
-  Flex,
-  Badge,
-  Heading,
-  Collapsible,
-  Button,
   useDisclosure,
-  List,
-  Card,
 } from "@chakra-ui/react"
-import { FeedbackService } from "../../client/sdk.gen"
 import { useQuery } from "@tanstack/react-query"
-import { FeedbackRead } from "../../client/types.gen"
-import { FiCheckCircle, FiAlertTriangle } from "react-icons/fi"
+import type React from "react"
+import { FiAlertTriangle, FiCheckCircle } from "react-icons/fi"
+import { FeedbackService } from "../../client/sdk.gen"
+import type { FeedbackRead } from "../../client/types.gen"
 
 interface AIFeedbackDisplayProps {
   responseId: number
@@ -29,23 +29,31 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
   demo = false,
 }) => {
   const { open: isDetailsOpen, onToggle: toggleDetails } = useDisclosure()
-  
+
   // If demo mode, use hardcoded feedback
   if (demo === "fail") {
     const failFeedback: FeedbackRead = {
       id: 2,
       response_id: responseId,
-      feedback_text: "Incorrect. Python is a programming language. Please review the definitions of programming and markup languages.",
+      feedback_text:
+        "Incorrect. Python is a programming language. Please review the definitions of programming and markup languages.",
       error_type: ["factual", "critical"],
       confidence_score: 0.95,
       feedback_content: {
         concepts_covered: [],
-        concepts_missed: ["Python is a programming language", "Difference between programming and markup languages"],
+        concepts_missed: [
+          "Python is a programming language",
+          "Difference between programming and markup languages",
+        ],
       },
       ai_metadata: null,
     }
     return (
-      <AIFeedbackContent feedback={failFeedback} isDetailsOpen={isDetailsOpen} toggleDetails={toggleDetails} />
+      <AIFeedbackContent
+        feedback={failFeedback}
+        isDetailsOpen={isDetailsOpen}
+        toggleDetails={toggleDetails}
+      />
     )
   }
 
@@ -53,7 +61,8 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
     const dummyFeedback: FeedbackRead = {
       id: 1,
       response_id: responseId,
-      feedback_text: "Great attempt! You covered most key concepts, but missed explaining the difference between mitosis and meiosis.",
+      feedback_text:
+        "Great attempt! You covered most key concepts, but missed explaining the difference between mitosis and meiosis.",
       error_type: ["conceptual", "minor"],
       confidence_score: 0.82,
       feedback_content: {
@@ -63,7 +72,11 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
       ai_metadata: null,
     }
     return (
-      <AIFeedbackContent feedback={dummyFeedback} isDetailsOpen={isDetailsOpen} toggleDetails={toggleDetails} />
+      <AIFeedbackContent
+        feedback={dummyFeedback}
+        isDetailsOpen={isDetailsOpen}
+        toggleDetails={toggleDetails}
+      />
     )
   }
 
@@ -96,7 +109,8 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
         <Flex align="center" gap={2}>
           <FiAlertTriangle color="red" />
           <Text>
-            Error loading feedback: {(error as Error)?.message || "Unknown error"}
+            Error loading feedback:{" "}
+            {(error as Error)?.message || "Unknown error"}
           </Text>
         </Flex>
       </Box>
@@ -107,12 +121,20 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
   if (!feedback) {
     return (
       <Box p={4} borderWidth="1px" borderRadius="md" bg="gray.50">
-        <Text>AI feedback not available yet. It will appear here once generated.</Text>
+        <Text>
+          AI feedback not available yet. It will appear here once generated.
+        </Text>
       </Box>
     )
   }
 
-  return <AIFeedbackContent feedback={feedback} isDetailsOpen={isDetailsOpen} toggleDetails={toggleDetails} />
+  return (
+    <AIFeedbackContent
+      feedback={feedback}
+      isDetailsOpen={isDetailsOpen}
+      toggleDetails={toggleDetails}
+    />
+  )
 }
 
 interface AIFeedbackContentProps {
@@ -142,10 +164,10 @@ const AIFeedbackContent: React.FC<AIFeedbackContentProps> = ({
           )}
         </Flex>
       </Card.Header>
-      
+
       <Card.Body pt={0}>
         <Text mb={4}>{feedback.feedback_text}</Text>
-        
+
         {feedback.error_type && feedback.error_type.length > 0 && (
           <Flex gap={2} mb={3} wrap="wrap">
             <Text fontWeight="bold">Issue types:</Text>
@@ -156,18 +178,18 @@ const AIFeedbackContent: React.FC<AIFeedbackContentProps> = ({
             ))}
           </Flex>
         )}
-        
+
         <Button size="sm" onClick={toggleDetails} variant="outline" mb={3}>
           {isDetailsOpen ? "Hide Details" : "Show Details"}
         </Button>
-        
+
         <Collapsible.Root open={isDetailsOpen}>
           <Collapsible.Content>
             <Box p={3} bg="white" borderRadius="md" mb={3}>
               <Heading size="sm" mb={2}>
                 Key Concepts Analysis
               </Heading>
-              
+
               {conceptsCovered.length > 0 && (
                 <Box mb={3}>
                   <Text fontWeight="bold">Concepts Covered:</Text>
@@ -183,7 +205,7 @@ const AIFeedbackContent: React.FC<AIFeedbackContentProps> = ({
                   </List.Root>
                 </Box>
               )}
-              
+
               {conceptsMissed.length > 0 && (
                 <Box>
                   <Text fontWeight="bold">Concepts Missed:</Text>
@@ -199,16 +221,20 @@ const AIFeedbackContent: React.FC<AIFeedbackContentProps> = ({
                   </List.Root>
                 </Box>
               )}
-              
+
               {feedback.ai_metadata?.resources && (
                 <Box mt={3}>
-                  <Heading size="sm" mb={2}>Recommended Resources</Heading>
+                  <Heading size="sm" mb={2}>
+                    Recommended Resources
+                  </Heading>
                   <List.Root gap="1" variant="plain">
-                    {feedback.ai_metadata.resources.map((resource: any, index: number) => (
-                      <List.Item key={index}>
-                        <Text>• {resource.title}</Text>
-                      </List.Item>
-                    ))}
+                    {feedback.ai_metadata.resources.map(
+                      (resource: any, index: number) => (
+                        <List.Item key={index}>
+                          <Text>• {resource.title}</Text>
+                        </List.Item>
+                      ),
+                    )}
                   </List.Root>
                 </Box>
               )}
@@ -239,4 +265,4 @@ function getErrorTypeColor(errorType: string): string {
     default:
       return "gray"
   }
-} 
+}

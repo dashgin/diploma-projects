@@ -6,73 +6,73 @@ import { request as __request } from "./core/request"
 import type {
   AreasReadAreasData,
   AreasReadAreasResponse,
-  AssignmentsReadAssignmentsData,
-  AssignmentsReadAssignmentsResponse,
   AssignmentsCreateAssignmentData,
   AssignmentsCreateAssignmentResponse,
   AssignmentsReadAssignmentData,
   AssignmentsReadAssignmentResponse,
+  AssignmentsReadAssignmentsData,
+  AssignmentsReadAssignmentsResponse,
   AssignmentsReadUserAssignmentsData,
   AssignmentsReadUserAssignmentsResponse,
-  AttemptsReadAttemptsData,
-  AttemptsReadAttemptsResponse,
+  AttemptsCompleteAttemptData,
+  AttemptsCompleteAttemptResponse,
   AttemptsCreateAttemptData,
   AttemptsCreateAttemptResponse,
   AttemptsReadAttemptData,
   AttemptsReadAttemptResponse,
-  AttemptsCompleteAttemptData,
-  AttemptsCompleteAttemptResponse,
+  AttemptsReadAttemptsData,
+  AttemptsReadAttemptsResponse,
   AttemptsReadUserAttemptsData,
   AttemptsReadUserAttemptsResponse,
   FeedbackCreateFeedbackData,
   FeedbackCreateFeedbackResponse,
-  FeedbackReadFeedbackData,
-  FeedbackReadFeedbackResponse,
   FeedbackReadFeedbackByResponseData,
   FeedbackReadFeedbackByResponseResponse,
+  FeedbackReadFeedbackData,
+  FeedbackReadFeedbackResponse,
   FeedbackRequestFeedbackGenerationData,
   FeedbackRequestFeedbackGenerationResponse,
   LoginLoginAccessTokenData,
   LoginLoginAccessTokenResponse,
-  LoginTestTokenResponse,
   LoginRecoverPasswordData,
+  LoginRecoverPasswordHtmlContentData,
+  LoginRecoverPasswordHtmlContentResponse,
   LoginRecoverPasswordResponse,
   LoginResetPasswordData,
   LoginResetPasswordResponse,
-  LoginRecoverPasswordHtmlContentData,
-  LoginRecoverPasswordHtmlContentResponse,
+  LoginTestTokenResponse,
   OptionsCreateOptionData,
   OptionsCreateOptionResponse,
-  OptionsReadOptionData,
-  OptionsReadOptionResponse,
-  OptionsPartiallyUpdateOptionData,
-  OptionsPartiallyUpdateOptionResponse,
   OptionsDeleteOptionData,
   OptionsDeleteOptionResponse,
+  OptionsPartiallyUpdateOptionData,
+  OptionsPartiallyUpdateOptionResponse,
+  OptionsReadOptionData,
+  OptionsReadOptionResponse,
   OptionsReadOptionsByQuestionData,
   OptionsReadOptionsByQuestionResponse,
   QuestionsCreateQuestionData,
   QuestionsCreateQuestionResponse,
-  QuestionsReadQuestionsByQuizData,
-  QuestionsReadQuestionsByQuizResponse,
-  QuestionsReadQuestionData,
-  QuestionsReadQuestionResponse,
-  QuestionsPartiallyUpdateQuestionData,
-  QuestionsPartiallyUpdateQuestionResponse,
   QuestionsDeleteQuestionData,
   QuestionsDeleteQuestionResponse,
-  QuizzesReadQuizzesData,
-  QuizzesReadQuizzesResponse,
+  QuestionsPartiallyUpdateQuestionData,
+  QuestionsPartiallyUpdateQuestionResponse,
+  QuestionsReadQuestionData,
+  QuestionsReadQuestionResponse,
+  QuestionsReadQuestionsByQuizData,
+  QuestionsReadQuestionsByQuizResponse,
   QuizzesCreateQuizData,
   QuizzesCreateQuizResponse,
-  QuizzesReadQuizData,
-  QuizzesReadQuizResponse,
-  QuizzesUpdateQuizData,
-  QuizzesUpdateQuizResponse,
   QuizzesDeleteQuizData,
   QuizzesDeleteQuizResponse,
+  QuizzesReadQuizData,
+  QuizzesReadQuizResponse,
+  QuizzesReadQuizzesData,
+  QuizzesReadQuizzesResponse,
   QuizzesReadUserQuizzesData,
   QuizzesReadUserQuizzesResponse,
+  QuizzesUpdateQuizData,
+  QuizzesUpdateQuizResponse,
   RecommendationsCreateRecommendationData,
   RecommendationsCreateRecommendationResponse,
   RecommendationsReadRecommendationData,
@@ -85,27 +85,27 @@ import type {
   ResponsesReadResponseResponse,
   ResponsesReadResponsesByAttemptData,
   ResponsesReadResponsesByAttemptResponse,
-  UsersReadUsersData,
-  UsersReadUsersResponse,
   UsersCreateUserData,
   UsersCreateUserResponse,
-  UsersReadUserMeResponse,
+  UsersDeleteUserData,
   UsersDeleteUserMeResponse,
-  UsersUpdateUserMeData,
-  UsersUpdateUserMeResponse,
-  UsersUpdatePasswordMeData,
-  UsersUpdatePasswordMeResponse,
-  UsersRegisterUserData,
-  UsersRegisterUserResponse,
+  UsersDeleteUserResponse,
   UsersReadUserByIdData,
   UsersReadUserByIdResponse,
+  UsersReadUserMeResponse,
+  UsersReadUsersData,
+  UsersReadUsersResponse,
+  UsersRegisterUserData,
+  UsersRegisterUserResponse,
+  UsersUpdatePasswordMeData,
+  UsersUpdatePasswordMeResponse,
   UsersUpdateUserData,
+  UsersUpdateUserMeData,
+  UsersUpdateUserMeResponse,
   UsersUpdateUserResponse,
-  UsersDeleteUserData,
-  UsersDeleteUserResponse,
+  UtilsHealthCheckResponse,
   UtilsTestEmailData,
   UtilsTestEmailResponse,
-  UtilsHealthCheckResponse,
 } from "./types.gen"
 
 export class AreasService {
@@ -403,15 +403,15 @@ export class FeedbackService {
   }
 
   /**
- * Request Feedback Generation
- * Request AI-generated feedback for a student response.
- *
- * This is an asynchronous operation. The feedback will be generated in the background.
- * @param data The data for the request.
- * @param data.responseId
- * @returns unknown Successful Response
- * @throws ApiError
- */
+   * Request Feedback Generation
+   * Request AI-generated feedback for a student response.
+   *
+   * This is an asynchronous operation. The feedback will be generated in the background.
+   * @param data The data for the request.
+   * @param data.responseId
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
   public static requestFeedbackGeneration(
     data: FeedbackRequestFeedbackGenerationData,
   ): CancelablePromise<FeedbackRequestFeedbackGenerationResponse> {
@@ -449,8 +449,6 @@ export class FeedbackService {
       },
     })
   }
-
-
 }
 
 export class LoginService {

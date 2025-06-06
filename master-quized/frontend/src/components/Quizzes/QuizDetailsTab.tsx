@@ -1,5 +1,5 @@
-import { Box, Heading, Stack, Text } from "@chakra-ui/react"
 import type { QuizRead } from "@/client"
+import { Box, Heading, Stack, Text } from "@chakra-ui/react"
 
 interface QuizDetailsTabProps {
   quiz: QuizRead
@@ -56,4 +56,4 @@ const QuizDetailsTab = ({ quiz }: QuizDetailsTabProps) => {
   )
 }
 
-export default QuizDetailsTab 
+export default QuizDetailsTab

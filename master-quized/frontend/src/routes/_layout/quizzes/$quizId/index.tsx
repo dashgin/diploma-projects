@@ -1,19 +1,8 @@
-import {
-  Box,
-  Container,
-  Flex,
-  Heading,
-  Spinner,
-  Tabs,
-} from "@chakra-ui/react"
+import { Box, Container, Flex, Heading, Spinner, Tabs } from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
-import {
-  Link,
-  MatchRoute,
-  createFileRoute,
-} from "@tanstack/react-router"
-import { LuInfo, LuList, LuClock } from "react-icons/lu"
+import { Link, MatchRoute, createFileRoute } from "@tanstack/react-router"
 import { FiArrowLeft } from "react-icons/fi"
+import { LuClock, LuInfo, LuList } from "react-icons/lu"
 
 import { QuizzesService } from "@/client"
 import type { QuizRead } from "@/client"

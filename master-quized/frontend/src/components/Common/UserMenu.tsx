@@ -19,9 +19,9 @@ const UserMenu = () => {
       <Flex>
         <MenuRoot>
           <MenuTrigger asChild p={2}>
-            <Button 
-              data-testid="user-menu" 
-              variant="solid" 
+            <Button
+              data-testid="user-menu"
+              variant="solid"
               borderRadius="full"
               width="40px"
               height="40px"

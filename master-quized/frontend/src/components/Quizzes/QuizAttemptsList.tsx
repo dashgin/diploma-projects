@@ -1,11 +1,4 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  Spinner,
-  Text,
-  Table,
-} from "@chakra-ui/react"
+import { Box, Flex, Heading, Spinner, Table, Text } from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
 import { Link } from "@tanstack/react-router"
 
@@ -32,8 +25,8 @@ const QuizAttemptsList = ({ quizId }: QuizAttemptsListProps) => {
   const allAttempts = attemptsResponse?.data || []
 
   // Filter attempts by quiz ID
-  const attempts = Array.isArray(allAttempts) 
-    ? allAttempts.filter(attempt => attempt.quiz_id === quizId) 
+  const attempts = Array.isArray(allAttempts)
+    ? allAttempts.filter((attempt) => attempt.quiz_id === quizId)
     : []
 
   if (isLoading) {
@@ -84,9 +77,17 @@ const QuizAttemptsList = ({ quizId }: QuizAttemptsListProps) => {
               <Table.Cell>{attempt.id}</Table.Cell>
               <Table.Cell>{attempt.student?.email || "Unknown"}</Table.Cell>
               <Table.Cell>{formatDate(attempt.started_at)}</Table.Cell>
-              <Table.Cell>{attempt.completed_at ? formatDate(attempt.completed_at) : "Not completed"}</Table.Cell>
-              <Table.Cell>{attempt.score !== null ? `${attempt.score}%` : "Not scored"}</Table.Cell>
-              <Table.Cell>{attempt.is_completed ? "Completed" : "In Progress"}</Table.Cell>
+              <Table.Cell>
+                {attempt.completed_at
+                  ? formatDate(attempt.completed_at)
+                  : "Not completed"}
+              </Table.Cell>
+              <Table.Cell>
+                {attempt.score !== null ? `${attempt.score}%` : "Not scored"}
+              </Table.Cell>
+              <Table.Cell>
+                {attempt.is_completed ? "Completed" : "In Progress"}
+              </Table.Cell>
               <Table.Cell>
                 <Link to={`/attempts/${attempt.id}`}>
                   <Button size="sm" variant="outline">
@@ -102,4 +103,4 @@ const QuizAttemptsList = ({ quizId }: QuizAttemptsListProps) => {
   )
 }
 
-export default QuizAttemptsList 
+export default QuizAttemptsList

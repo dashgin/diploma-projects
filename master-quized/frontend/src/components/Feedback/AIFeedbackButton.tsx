@@ -1,7 +1,8 @@
-import React, { useState } from "react"
 import { Button, Tooltip } from "@chakra-ui/react"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import type React from "react"
+import { useState } from "react"
 import { FeedbackService } from "../../client/sdk.gen"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import useCustomToast from "../../hooks/useCustomToast"
 
 interface AIFeedbackButtonProps {
@@ -18,8 +19,7 @@ export const AIFeedbackButton: React.FC<AIFeedbackButtonProps> = ({
   // Check if feedback already exists
   const { data: existingFeedback, isLoading } = useQuery({
     queryKey: ["feedback", "response", responseId],
-    queryFn: () =>
-      FeedbackService.readFeedbackByResponse({ responseId }),
+    queryFn: () => FeedbackService.readFeedbackByResponse({ responseId }),
     retry: false,
   })
 
@@ -33,7 +33,9 @@ export const AIFeedbackButton: React.FC<AIFeedbackButtonProps> = ({
       showSuccessToast("The feedback is being generated in the background.")
       // Invalidate query to trigger a refetch after 2 seconds
       setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ["feedback", "response", responseId] })
+        queryClient.invalidateQueries({
+          queryKey: ["feedback", "response", responseId],
+        })
       }, 2000)
     },
     onError: (error: any) => {
@@ -62,9 +64,7 @@ export const AIFeedbackButton: React.FC<AIFeedbackButtonProps> = ({
             AI Feedback Available
           </Button>
         </Tooltip.Trigger>
-        <Tooltip.Content>
-          This response already has AI feedback
-        </Tooltip.Content>
+        <Tooltip.Content>This response already has AI feedback</Tooltip.Content>
       </Tooltip.Root>
     )
   }
@@ -81,4 +81,4 @@ export const AIFeedbackButton: React.FC<AIFeedbackButtonProps> = ({
       Generate AI Feedback
     </Button>
   )
-} 
+}
