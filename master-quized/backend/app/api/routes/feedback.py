@@ -2,7 +2,7 @@ from fastapi import APIRouter, BackgroundTasks, HTTPException, Query, status
 
 from app import crud
 from app.api.deps import CurrentUser, SessionDep
-from app.models import FeedbackCreate, FeedbackRead, LearningResource, ResourceCreate
+from app.models import FeedbackCreate, FeedbackRead, ResourceCreate
 from app.services.ai_feedback import process_ai_feedback, request_ai_feedback
 
 router = APIRouter(prefix="/feedback", tags=["feedback"])
@@ -145,7 +145,9 @@ def read_feedback_by_response(
     return feedback
 
 
-@router.post("/request/{response_id}", response_model=dict, status_code=status.HTTP_202_ACCEPTED)
+@router.post(
+    "/request/{response_id}", response_model=dict, status_code=status.HTTP_202_ACCEPTED
+)
 async def request_feedback_generation(
     *,
     session: SessionDep,
@@ -155,7 +157,7 @@ async def request_feedback_generation(
 ) -> dict:
     """
     Request AI-generated feedback for a student response.
-    
+
     This is an asynchronous operation. The feedback will be generated in the background.
     """
     # Check if response exists
@@ -197,14 +199,14 @@ async def request_feedback_generation(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not enough permissions",
         )
-    
+
     # Add background task to generate feedback
     background_tasks.add_task(
         generate_and_save_feedback,
         session=session,
         response_id=response_id,
     )
-    
+
     return {
         "message": "Feedback generation requested. It will be processed in the background.",
         "response_id": response_id,
@@ -224,13 +226,13 @@ async def generate_and_save_feedback(
         response = crud.get_response(session=session, response_id=response_id)
         if not response:
             return
-        
+
         # Request feedback from AI service
         ai_interaction_data = await request_ai_feedback(response)
-        
+
         # Process the feedback data
         processed_feedback = await process_ai_feedback(ai_interaction_data)
-        
+
         # Create feedback object
         feedback_in = FeedbackCreate(
             response_id=response_id,
@@ -240,10 +242,10 @@ async def generate_and_save_feedback(
             feedback_content=processed_feedback["feedback_content"],
             ai_metadata=processed_feedback["ai_metadata"],
         )
-        
+
         # Save feedback to database
         feedback = crud.create_feedback(session=session, feedback_in=feedback_in)
-        
+
         # Save recommended resources if available
         if processed_feedback["resources"]:
             for resource_data in processed_feedback["resources"]:
@@ -254,11 +256,12 @@ async def generate_and_save_feedback(
                     resource_type=resource_data["resource_type"],
                     relevance_score=resource_data.get("relevance_score"),
                 )
-                
+
                 crud.create_resource(session=session, resource_in=resource_in)
-                
+
     except Exception as e:
         # Log the error but don't raise it (this is a background task)
         import logging
+
         logger = logging.getLogger(__name__)
         logger.error(f"Error generating AI feedback for response {response_id}: {e}")

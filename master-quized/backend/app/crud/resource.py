@@ -22,4 +22,4 @@ def get_resources_by_feedback(
         session.query(LearningResource)
         .filter(LearningResource.feedback_id == feedback_id)
         .all()
-    ) 
+    )
