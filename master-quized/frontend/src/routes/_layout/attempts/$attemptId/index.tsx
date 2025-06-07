@@ -101,9 +101,9 @@ function AttemptPage() {
 
     // Create a map of responses by question ID for easier lookup
     const responsesByQuestionId: Record<number, any> = {}
-    responseDetails.forEach((response) => {
+    for (const response of responseDetails) {
       responsesByQuestionId[response.question.id] = response
-    })
+    }
 
     return (
       <Container maxW="container.lg" py={8}>

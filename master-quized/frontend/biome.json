@@ -7,6 +7,9 @@
     "ignore": [
       "node_modules",
       "src/routeTree.gen.ts",
+      "src/client/sdk.gen.ts",
+      "src/client/core/request.ts",
+      "src/client/core/CancelablePromise.ts",
       "playwright.config.ts",
       "playwright-report"
     ]

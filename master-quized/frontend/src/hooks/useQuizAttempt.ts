@@ -117,7 +117,7 @@ export function useQuizAttempt(attemptId: number | string) {
       console.log("Attempt responses data:", attemptResponsesData)
 
       const savedResponses: Record<number, string> = {}
-      attemptResponsesData.responses.forEach((responseItem) => {
+      for (const responseItem of attemptResponsesData.responses) {
         const questionId = responseItem.question.id
 
         if (
@@ -144,7 +144,7 @@ export function useQuizAttempt(attemptId: number | string) {
             responseItem.answer.answer,
           )
         }
-      })
+      }
 
       console.log("Saved responses:", savedResponses)
       setResponses(savedResponses)
