@@ -107,165 +107,583 @@ function AttemptPage() {
 
     return (
       <Container maxW="container.lg" py={8}>
-        <Box mb={6}>
-          <Flex justifyContent="space-between" alignItems="center">
-            <Heading size="lg">Quiz Results</Heading>
+        <Box mb={8}>
+          <Flex justifyContent="space-between" alignItems="center" mb={4}>
+            <Box>
+              <Heading size="xl" color="gray.800" mb={2}>
+                📊 Quiz Results
+              </Heading>
+              <Text color="gray.600" fontSize="lg">
+                Review your performance and learn from the feedback
+              </Text>
+            </Box>
             <Button
               onClick={() => navigate({ to: `/quizzes/${attempt.quiz_id}` })}
               variant="outline"
+              colorScheme="blue"
+              size="lg"
             >
-              Return to Quiz
+              ← Return to Quiz
             </Button>
           </Flex>
 
           <Grid
-            templateColumns={{ base: "1fr", md: "repeat(4, 1fr)" }}
-            gap={4}
+            templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
+            gap={6}
             mt={6}
           >
-            <Card.Root>
-              <Card.Body>
-                <Text fontWeight="bold">Score</Text>
+            <Card.Root variant="elevated">
+              <Card.Body textAlign="center" p={6}>
+                <Text fontWeight="bold" fontSize="lg" color="gray.700" mb={2}>
+                  Final Score
+                </Text>
                 <Text
-                  fontSize="3xl"
+                  fontSize="4xl"
+                  fontWeight="bold"
                   color={
-                    (attemptSummary?.score ?? 0) >= 70 ? "green.500" : "red.500"
+                    (attemptSummary?.score ?? 0) >= 70 ? "green.600" : "red.600"
                   }
                 >
                   {attemptSummary?.score !== undefined
                     ? `${Math.round(attemptSummary.score)}%`
                     : "Not scored"}
                 </Text>
+                <Badge 
+                  colorScheme={(attemptSummary?.score ?? 0) >= 70 ? "green" : "red"}
+                  variant="outline"
+                  mt={2}
+                >
+                  {(attemptSummary?.score ?? 0) >= 70 ? "PASSED" : "NEEDS IMPROVEMENT"}
+                </Badge>
               </Card.Body>
             </Card.Root>
 
-            <Card.Root>
-              <Card.Body>
-                <Text fontWeight="bold">Started</Text>
-                <Text>{formatDate(attempt.started_at)}</Text>
+            <Card.Root variant="elevated">
+              <Card.Body textAlign="center" p={6}>
+                <Text fontWeight="bold" fontSize="lg" color="gray.700" mb={2}>
+                  Started
+                </Text>
+                <Text fontSize="lg" fontWeight="medium" color="gray.600">
+                  {formatDate(attempt.started_at)}
+                </Text>
               </Card.Body>
             </Card.Root>
 
-            <Card.Root>
-              <Card.Body>
-                <Text fontWeight="bold">Completed</Text>
-                <Text>{formatDate(attempt.completed_at)}</Text>
-              </Card.Body>
-            </Card.Root>
-
-            <Card.Root>
-              <Card.Body>
-                <Text fontWeight="bold">Questions</Text>
-                <Text fontSize="xl">
-                  {attemptSummary?.correct_answers || 0} / {attemptSummary?.total_questions || 0}
+            <Card.Root variant="elevated">
+              <Card.Body textAlign="center" p={6}>
+                <Text fontWeight="bold" fontSize="lg" color="gray.700" mb={2}>
+                  Completed
+                </Text>
+                <Text fontSize="lg" fontWeight="medium" color="gray.600">
+                  {formatDate(attempt.completed_at)}
                 </Text>
               </Card.Body>
             </Card.Root>
           </Grid>
+
+                     <Card.Root mt={6} variant="elevated">
+             <Card.Body p={6}>
+               <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={6}>
+                 <Box textAlign="center">
+                   <Text fontWeight="bold" fontSize="lg" color="gray.700" mb={2}>
+                     Total Questions
+                   </Text>
+                   <Text fontSize="3xl" fontWeight="bold" color="gray.600">
+                     {attemptSummary?.total_questions || 0}
+                   </Text>
+                 </Box>
+                 <Box textAlign="center">
+                   <Text fontWeight="bold" fontSize="lg" color="gray.700" mb={2}>
+                     Correct Answers
+                   </Text>
+                   <Text fontSize="3xl" fontWeight="bold" color="gray.600">
+                     {attemptSummary?.correct_answers || 0}
+                   </Text>
+                 </Box>
+               </Grid>
+             </Card.Body>
+           </Card.Root>
         </Box>
 
         <Separator my={6} />
 
         <Box>
-          <Heading size="md" mb={6}>
-            Question Results
-          </Heading>
+          <Box mb={8} textAlign="center">
+            <Heading size="lg" color="gray.800" mb={2}>
+              📝 Detailed Question Review
+            </Heading>
+            <Text color="gray.600" fontSize="md" mb={4}>
+              Analyze each question, your answers, and explanations
+            </Text>
+            <Flex justify="center" align="center" gap={4}>
+              <Text fontSize="sm" color="gray.500">
+                {attemptSummary?.correct_answers || 0} of {attemptSummary?.total_questions || 0} correct
+              </Text>
+              <Progress.Root
+                size="sm"
+                colorScheme="green"
+                borderRadius="full"
+                value={attemptSummary?.total_questions ? ((attemptSummary?.correct_answers || 0) / attemptSummary.total_questions) * 100 : 0}
+                w="200px"
+              >
+                <Progress.Track>
+                  <Progress.Range />
+                </Progress.Track>
+              </Progress.Root>
+            </Flex>
+          </Box>
 
           {questions?.data.map((question, index) => {
             const responseData = responsesByQuestionId[question.id]
             const isCorrect = responseData?.answer?.is_correct
 
             return (
-              <Card.Root key={question.id} mb={4} variant="outline">
-                <Card.Header>
+              <Card.Root key={question.id} mb={6} variant="elevated" shadow="sm">
+                <Card.Header 
+                  bg={isCorrect === true ? "green.50" : isCorrect === false ? "red.50" : "gray.50"}
+                  borderBottom="1px solid"
+                  borderBottomColor={isCorrect === true ? "green.200" : isCorrect === false ? "red.200" : "gray.200"}
+                  p={4}
+                >
                   <Flex justify="space-between" align="center">
-                    <Text fontWeight="bold">Question {index + 1}</Text>
-                    {isCorrect !== undefined && (
-                      <Badge colorScheme={isCorrect ? "green" : "red"}>
-                        {isCorrect ? "Correct" : "Incorrect"}
-                      </Badge>
-                    )}
+                    <HStack spacing={3}>
+                      <Box 
+                        bg={isCorrect === true ? "green.500" : isCorrect === false ? "red.500" : "blue.500"}
+                        color="white" 
+                        borderRadius="md" 
+                        w="32px" 
+                        h="32px" 
+                        display="flex" 
+                        alignItems="center" 
+                        justifyContent="center"
+                        fontSize="sm"
+                        fontWeight="bold"
+                      >
+                        {index + 1}
+                      </Box>
+                      <Box>
+                        <Text fontWeight="bold" fontSize="lg" color="gray.800">
+                          Question {index + 1}
+                        </Text>
+                      </Box>
+                      <HStack spacing={2}>
+                        <Badge 
+                          size="sm"
+                          colorScheme={isCorrect === true ? "green" : isCorrect === false ? "red" : "gray"}
+                          variant="solid"
+                        >
+                          {isCorrect === true ? "✓ Correct" : isCorrect === false ? "✗ Incorrect" : "Not Scored"}
+                        </Badge>
+                        <Badge 
+                          variant="outline" 
+                          colorScheme="blue"
+                          size="sm"
+                        >
+                          {responseData?.question?.question_type?.replace('_', ' ').toUpperCase() || 'TEXT'}
+                        </Badge>
+                      </HStack>
+                    </HStack>
+                    
+                    <HStack spacing={3}>
+                      <Text fontSize="xs" color="gray.500">
+                        {index + 1} of {questions?.data.length || 0}
+                      </Text>
+                      <Box 
+                        bg={isCorrect === true ? "green.500" : isCorrect === false ? "red.500" : "gray.400"}
+                        color="white"
+                        borderRadius="md"
+                        px={2}
+                        py={1}
+                        fontSize="xs"
+                        fontWeight="bold"
+                      >
+                        {isCorrect === true ? "1/1" : isCorrect === false ? "0/1" : "?/1"}
+                      </Box>
+                    </HStack>
                   </Flex>
                 </Card.Header>
-                <Card.Body>
-                  <Text mb={4}>{question.text}</Text>
+                <Card.Body p={6}>
+                                     {/* Question Text */}
+                   <Box mb={6} p={5} bg="blue.50" borderRadius="lg" border="1px solid" borderColor="blue.200">
+                     <Flex align="flex-start" gap={3}>
+                       <Box 
+                         bg="blue.500" 
+                         color="white" 
+                         borderRadius="md" 
+                         px={2} 
+                         py={1}
+                         fontSize="xs"
+                         fontWeight="bold"
+                         flexShrink={0}
+                       >
+                         Q
+                       </Box>
+                       <Text fontSize="lg" lineHeight="1.7" fontWeight="medium" color="gray.800">
+                         {question.text}
+                       </Text>
+                     </Flex>
+                   </Box>
 
-                  <Box mb={4}>
-                    <Text fontWeight="bold" fontSize="sm" color="gray.600">
-                      Your Answer:
-                    </Text>
-                    {responseData?.answer?.type === "multiple_choice" &&
-                    typeof responseData.answer.answer === "object" ? (
-                      <Text>
-                        {responseData.answer.answer?.text || "Not answered"}
-                      </Text>
-                    ) : (
-                      <Text>
-                        {responseData?.answer?.answer || "Not answered"}
-                      </Text>
-                    )}
-                  </Box>
+                  {/* Answer Section */}
+                  <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={6}>
+                                         {/* Your Answer */}
+                     <Box>
+                       <Flex align="center" gap={2} mb={3}>
+                         <Box 
+                           bg={isCorrect === true ? "green.500" : isCorrect === false ? "red.500" : "gray.400"} 
+                           color="white" 
+                           borderRadius="full" 
+                           w="20px" 
+                           h="20px" 
+                           display="flex" 
+                           alignItems="center" 
+                           justifyContent="center"
+                           fontSize="xs"
+                           fontWeight="bold"
+                         >
+                           {isCorrect === true ? "✓" : isCorrect === false ? "✗" : "?"}
+                         </Box>
+                         <Text fontWeight="bold" fontSize="md" color="gray.700">
+                           Your Answer
+                         </Text>
+                       </Flex>
+                       <Box 
+                         p={4} 
+                         bg={isCorrect === true ? "green.50" : isCorrect === false ? "red.50" : "gray.50"} 
+                         borderRadius="lg"
+                         border="2px solid"
+                         borderColor={isCorrect === true ? "green.200" : isCorrect === false ? "red.200" : "gray.200"}
+                       >
+                         {(() => {
+                           // Handle multiple choice questions
+                           if (responseData?.question?.question_type === "multiple_choice" || 
+                               responseData?.question?.question_type === "multiple_answer") {
+                             
+                             // Handle multiple answers (array of selections)
+                             if (Array.isArray(responseData.answer?.answer)) {
+                               const selectedOptions = responseData.answer.answer
+                                 .map((answerId: any) => {
+                                   return responseData.question.options?.find((opt: any) => 
+                                     opt.id.toString() === answerId.toString()
+                                   );
+                                 })
+                                 .filter(Boolean);
+                               
+                               if (selectedOptions.length > 0) {
+                                 return (
+                                   <Stack gap={2}>
+                                     {selectedOptions.map((option: any, idx: number) => {
+                                       const optionIndex = responseData.question.options.findIndex((opt: any) => opt.id === option.id);
+                                       return (
+                                         <Flex key={option.id} align="center" gap={3}>
+                                           <Box 
+                                             bg={option.is_correct ? "green.500" : "red.500"} 
+                                             color="white" 
+                                             borderRadius="full" 
+                                             w="24px" 
+                                             h="24px" 
+                                             display="flex" 
+                                             alignItems="center" 
+                                             justifyContent="center"
+                                             fontSize="xs"
+                                             fontWeight="bold"
+                                             flexShrink={0}
+                                           >
+                                             {String.fromCharCode(65 + optionIndex)}
+                                           </Box>
+                                           <Text 
+                                             fontSize="md" 
+                                             fontWeight="semibold"
+                                             color={option.is_correct ? "green.800" : "red.800"}
+                                           >
+                                             {option.text}
+                                           </Text>
+                                           <Badge 
+                                             size="sm" 
+                                             colorScheme={option.is_correct ? "green" : "red"}
+                                             variant="solid"
+                                           >
+                                             {option.is_correct ? "✓" : "✗"}
+                                           </Badge>
+                                         </Flex>
+                                       );
+                                     })}
+                                   </Stack>
+                                 );
+                               }
+                             }
+                             
+                             // Handle single answer with object format
+                             if (typeof responseData.answer?.answer === "object" && responseData.answer.answer?.text) {
+                               const optionIndex = responseData.question.options?.findIndex((opt: any) => 
+                                 opt.id === responseData.answer.answer?.option_id
+                               );
+                               return (
+                                 <Flex align="center" gap={3}>
+                                   <Box 
+                                     bg={isCorrect === true ? "green.500" : "red.500"} 
+                                     color="white" 
+                                     borderRadius="full" 
+                                     w="24px" 
+                                     h="24px" 
+                                     display="flex" 
+                                     alignItems="center" 
+                                     justifyContent="center"
+                                     fontSize="xs"
+                                     fontWeight="bold"
+                                     flexShrink={0}
+                                   >
+                                     {optionIndex !== -1 ? String.fromCharCode(65 + optionIndex) : "?"}
+                                   </Box>
+                                   <Text 
+                                     fontSize="md" 
+                                     fontWeight="semibold"
+                                     color={isCorrect === true ? "green.800" : isCorrect === false ? "red.800" : "gray.700"}
+                                   >
+                                     {responseData.answer.answer.text}
+                                   </Text>
+                                 </Flex>
+                               );
+                             }
+                             
+                             // Handle single answer with option ID
+                             if (responseData.answer?.answer && responseData.question?.options) {
+                               const selectedOption = responseData.question.options.find((opt: any) => 
+                                 opt.id.toString() === responseData.answer.answer.toString()
+                               );
+                               if (selectedOption) {
+                                 const optionIndex = responseData.question.options.findIndex((opt: any) => opt.id === selectedOption.id);
+                                 return (
+                                   <Flex align="center" gap={3}>
+                                     <Box 
+                                       bg={isCorrect === true ? "green.500" : "red.500"} 
+                                       color="white" 
+                                       borderRadius="full" 
+                                       w="24px" 
+                                       h="24px" 
+                                       display="flex" 
+                                       alignItems="center" 
+                                       justifyContent="center"
+                                       fontSize="xs"
+                                       fontWeight="bold"
+                                       flexShrink={0}
+                                     >
+                                       {String.fromCharCode(65 + optionIndex)}
+                                     </Box>
+                                     <Text 
+                                       fontSize="md" 
+                                       fontWeight="semibold"
+                                       color={isCorrect === true ? "green.800" : isCorrect === false ? "red.800" : "gray.700"}
+                                     >
+                                       {selectedOption.text}
+                                     </Text>
+                                   </Flex>
+                                 );
+                               }
+                             }
+                           }
+                           
+                           // For non-multiple choice or fallback
+                           return (
+                             <Text 
+                               fontSize="md" 
+                               fontWeight="semibold"
+                               color={isCorrect === true ? "green.800" : isCorrect === false ? "red.800" : "gray.700"}
+                             >
+                               {responseData?.answer?.answer || "Not answered"}
+                             </Text>
+                           );
+                         })()}
+                       </Box>
+                     </Box>
 
-                  {/* Display all options for multiple choice questions */}
-                  {responseData?.question?.question_type === "multiple_choice" &&
-                    responseData.question.options && (
-                      <Box mt={4}>
-                        <Text fontWeight="bold" fontSize="sm" color="gray.600">
-                          All Options:
-                        </Text>
-                        {responseData.question.options.map(
-                          (option: any, idx: number) => (
-                            <Flex key={idx} gap={2} mt={1}>
-                              <Badge
-                                colorScheme={
-                                  option.is_correct
-                                    ? "green"
-                                    : typeof responseData.answer.answer === "object" &&
-                                        responseData.answer.answer?.option_id === option.id
-                                      ? "blue"
-                                      : "gray"
-                                }
-                              >
-                                {option.is_correct
-                                  ? "✓"
-                                  : typeof responseData.answer.answer === "object" &&
-                                      responseData.answer.answer?.option_id === option.id
-                                    ? "•"
-                                    : ""}
-                              </Badge>
-                              <Text>{option.text}</Text>
-                            </Flex>
-                          ),
-                        )}
-                      </Box>
-                    )}
+                                         {/* All Options for Multiple Choice */}
+                     {responseData?.question?.question_type === "multiple_choice" &&
+                       responseData.question.options && (
+                         <Box>
+                           <Flex align="center" gap={2} mb={3}>
+                             <Box 
+                               bg="gray.500" 
+                               color="white" 
+                               borderRadius="full" 
+                               w="20px" 
+                               h="20px" 
+                               display="flex" 
+                               alignItems="center" 
+                               justifyContent="center"
+                               fontSize="xs"
+                               fontWeight="bold"
+                             >
+                               📝
+                             </Box>
+                             <Text fontWeight="bold" fontSize="md" color="gray.700">
+                               All Options
+                             </Text>
+                           </Flex>
+                          <Stack gap={2}>
+                            {responseData.question.options.map(
+                              (option: any, idx: number) => {
+                                                                 // Check if this option is the user's answer
+                                 const isUserAnswer = (() => {
+                                   // Handle multiple answers (array)
+                                   if (Array.isArray(responseData.answer?.answer)) {
+                                     return responseData.answer.answer.some((answerId: any) => 
+                                       answerId.toString() === option.id.toString()
+                                     );
+                                   }
+                                   // Handle single answer with object format
+                                   if (typeof responseData.answer?.answer === "object") {
+                                     return responseData.answer.answer?.option_id === option.id;
+                                   }
+                                   // Handle case where answer is stored as option ID
+                                   return responseData.answer?.answer?.toString() === option.id.toString();
+                                 })();
+                                const isCorrectOption = option.is_correct;
+                                
+                                                                 return (
+                                   <Flex 
+                                     key={idx} 
+                                     align="center" 
+                                     gap={3} 
+                                     p={3}
+                                     bg={isCorrectOption ? "green.50" : isUserAnswer ? "red.50" : "white"}
+                                     borderRadius="md"
+                                     border="2px solid"
+                                     borderColor={isCorrectOption ? "green.300" : isUserAnswer ? "red.300" : "gray.200"}
+                                   >
+                                     <Box minW="32px" textAlign="center">
+                                       {isCorrectOption && (
+                                         <Box 
+                                           bg="green.500" 
+                                           color="white" 
+                                           borderRadius="full" 
+                                           w="24px" 
+                                           h="24px" 
+                                           display="flex" 
+                                           alignItems="center" 
+                                           justifyContent="center"
+                                           fontSize="sm"
+                                           fontWeight="bold"
+                                         >
+                                           ✓
+                                         </Box>
+                                       )}
+                                       {isUserAnswer && !isCorrectOption && (
+                                         <Box 
+                                           bg="red.500" 
+                                           color="white" 
+                                           borderRadius="full" 
+                                           w="24px" 
+                                           h="24px" 
+                                           display="flex" 
+                                           alignItems="center" 
+                                           justifyContent="center"
+                                           fontSize="sm"
+                                           fontWeight="bold"
+                                         >
+                                           ✗
+                                         </Box>
+                                       )}
+                                       {!isCorrectOption && !isUserAnswer && (
+                                         <Box 
+                                           bg="gray.300" 
+                                           borderRadius="full" 
+                                           w="24px" 
+                                           h="24px" 
+                                           display="flex" 
+                                           alignItems="center" 
+                                           justifyContent="center"
+                                           fontSize="sm"
+                                           color="gray.600"
+                                         >
+                                           {String.fromCharCode(65 + idx)}
+                                         </Box>
+                                       )}
+                                     </Box>
+                                     <Text 
+                                       fontSize="md" 
+                                       fontWeight={isCorrectOption || isUserAnswer ? "semibold" : "normal"}
+                                       flex="1"
+                                       color={isCorrectOption ? "green.800" : isUserAnswer ? "red.800" : "gray.700"}
+                                     >
+                                       {option.text}
+                                     </Text>
+                                     {isCorrectOption && (
+                                       <Badge colorScheme="green" variant="solid" size="sm">
+                                         CORRECT
+                                       </Badge>
+                                     )}
+                                     {isUserAnswer && !isCorrectOption && (
+                                       <Badge colorScheme="red" variant="solid" size="sm">
+                                         YOUR ANSWER
+                                       </Badge>
+                                     )}
+                                   </Flex>
+                                 )
+                              },
+                            )}
+                          </Stack>
+                        </Box>
+                      )}
+                  </Grid>
 
-                  {responseData?.explanation && (
-                    <Box mt={4} p={3} bg="gray.50" borderRadius="md">
-                      <Text fontWeight="bold" fontSize="sm">
-                        Explanation:
-                      </Text>
-                      <Text>{responseData.explanation}</Text>
-                    </Box>
-                  )}
+                                     {/* Explanation */}
+                   {responseData?.explanation && (
+                     <Box mt={6} p={4} bg="blue.50" borderRadius="lg" border="1px solid" borderColor="blue.200">
+                       <Flex align="center" gap={2} mb={3}>
+                         <Box 
+                           bg="blue.500" 
+                           color="white" 
+                           borderRadius="full" 
+                           w="24px" 
+                           h="24px" 
+                           display="flex" 
+                           alignItems="center" 
+                           justifyContent="center"
+                           fontSize="sm"
+                         >
+                           💡
+                         </Box>
+                         <Text fontWeight="bold" fontSize="md" color="blue.800">
+                           Explanation
+                         </Text>
+                       </Flex>
+                       <Text color="blue.700" lineHeight="1.7" fontSize="md">{responseData.explanation}</Text>
+                     </Box>
+                   )}
 
-                  {/* AI Feedback section - for text-based questions */}
-                  {(responseData?.question?.question_type === "open_ended" ||
-                    responseData?.question?.question_type === "text") && (
-                    <Box mt={4}>
-                      <Flex
-                        justifyContent="space-between"
-                        alignItems="center"
-                        mb={2}
-                      >
-                        <Text fontWeight="bold" fontSize="sm" color="gray.600">
-                          AI Feedback:
-                        </Text>
-                        <AIFeedbackButton responseId={responseData.id} />
-                      </Flex>
-                      <AIFeedbackDisplay responseId={responseData.id} />
-                    </Box>
-                  )}
+                                     {/* AI Feedback section - for text-based questions */}
+                   {(responseData?.question?.question_type === "open_ended" ||
+                     responseData?.question?.question_type === "text") && (
+                     <Box mt={6} p={4} bg="purple.50" borderRadius="lg" border="1px solid" borderColor="purple.200">
+                       <Flex
+                         justifyContent="space-between"
+                         alignItems="center"
+                         mb={3}
+                       >
+                         <Flex align="center" gap={2}>
+                           <Box 
+                             bg="purple.500" 
+                             color="white" 
+                             borderRadius="full" 
+                             w="24px" 
+                             h="24px" 
+                             display="flex" 
+                             alignItems="center" 
+                             justifyContent="center"
+                             fontSize="sm"
+                           >
+                             🤖
+                           </Box>
+                           <Text fontWeight="bold" fontSize="md" color="purple.800">
+                             AI Feedback
+                           </Text>
+                         </Flex>
+                         <AIFeedbackButton responseId={responseData.id} />
+                       </Flex>
+                       <AIFeedbackDisplay responseId={responseData.id} />
+                     </Box>
+                   )}
                 </Card.Body>
               </Card.Root>
             )
