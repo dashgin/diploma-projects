@@ -109,7 +109,7 @@ function AttemptPage() {
       <Container maxW="container.lg" py={8}>
         <Box mb={6}>
           <Flex justifyContent="space-between" alignItems="center">
-            <Heading size="lg">Attempt Results</Heading>
+            <Heading size="lg">Quiz Results</Heading>
             <Button
               onClick={() => navigate({ to: `/quizzes/${attempt.quiz_id}` })}
               variant="outline"
@@ -119,7 +119,7 @@ function AttemptPage() {
           </Flex>
 
           <Grid
-            templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
+            templateColumns={{ base: "1fr", md: "repeat(4, 1fr)" }}
             gap={4}
             mt={6}
           >
@@ -152,22 +152,16 @@ function AttemptPage() {
                 <Text>{formatDate(attempt.completed_at)}</Text>
               </Card.Body>
             </Card.Root>
-          </Grid>
 
-          <Card.Root mt={6}>
-            <Card.Body>
-              <Flex gap={6} wrap="wrap">
-                <Box>
-                  <Text fontWeight="bold">Total Questions</Text>
-                  <Text>{attemptSummary?.total_questions || 0}</Text>
-                </Box>
-                <Box>
-                  <Text fontWeight="bold">Correct Answers</Text>
-                  <Text>{attemptSummary?.correct_answers || 0}</Text>
-                </Box>
-              </Flex>
-            </Card.Body>
-          </Card.Root>
+            <Card.Root>
+              <Card.Body>
+                <Text fontWeight="bold">Questions</Text>
+                <Text fontSize="xl">
+                  {attemptSummary?.correct_answers || 0} / {attemptSummary?.total_questions || 0}
+                </Text>
+              </Card.Body>
+            </Card.Root>
+          </Grid>
         </Box>
 
         <Separator my={6} />
@@ -182,7 +176,7 @@ function AttemptPage() {
             const isCorrect = responseData?.answer?.is_correct
 
             return (
-              <Card.Root key={question.id} mb={6} variant="outline">
+              <Card.Root key={question.id} mb={4} variant="outline">
                 <Card.Header>
                   <Flex justify="space-between" align="center">
                     <Text fontWeight="bold">Question {index + 1}</Text>
@@ -213,8 +207,7 @@ function AttemptPage() {
                   </Box>
 
                   {/* Display all options for multiple choice questions */}
-                  {responseData?.question?.question_type ===
-                    "multiple_choice" &&
+                  {responseData?.question?.question_type === "multiple_choice" &&
                     responseData.question.options && (
                       <Box mt={4}>
                         <Text fontWeight="bold" fontSize="sm" color="gray.600">
