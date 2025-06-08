@@ -49,6 +49,8 @@ app = FastAPI(
     description="Provides AI-powered feedback for open-ended quiz responses.",
     version="1.0.0",
     lifespan=lifespan,  # Register the lifespan context manager
+    docs_url="/ai-api/docs",
+    redoc_url="/ai-api/redoc",
 )
 
 # Configure CORS
@@ -73,7 +75,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 
 @app.post(
-    "/feedback/generate",
+    "/ai-api/feedback/generate",
     response_model=FeedbackResponse,
     status_code=status.HTTP_200_OK,
 )
@@ -176,7 +178,7 @@ async def generate_feedback(request: FeedbackRequest):
         )
 
 
-@app.get("/health", response_model=dict[str, str])
+@app.get("/ai-api/health", response_model=dict[str, str])
 async def health_check():
     """
     Checks the health of the AI Feedback Service.

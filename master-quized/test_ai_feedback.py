@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.13"
+# dependencies = [
+#     "requests",
+# ]
+# ///
 """
 AI Feedback System Test Script
 
@@ -27,8 +33,8 @@ from dataclasses import dataclass
 @dataclass
 class TestConfig:
     """Configuration for test environment"""
-    backend_url: str = "http://localhost:8000"
-    ai_service_url: str = "http://localhost:8001"
+    backend_url: str = "https://quized.dashgin.com"
+    ai_service_url: str = "https://quized.dashgin.com/"
     # Replace with your actual token
     access_token: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDk5MjUwNTksInN1YiI6IjcifQ.5jGJ0tExl74ET_n3N2wqWhRy4h9WVyYDCuPqI4DFqqY"
     
@@ -67,7 +73,7 @@ class AIFeedbackTester:
         
         # Test AI service
         try:
-            response = requests.get(f"{self.config.ai_service_url}/health")
+            response = requests.get(f"{self.config.ai_service_url}/ai-api/health")
             ai_healthy = response.status_code == 200
             print(f"  AI Service: {'✅ Healthy' if ai_healthy else '❌ Unhealthy'}")
         except Exception as e:
@@ -211,7 +217,7 @@ class AIFeedbackTester:
             )
             
             if response.status_code == 202:
-                print(f"  ✅ AI feedback generation requested")
+                print("  ✅ AI feedback generation requested")
                 return True
             else:
                 print(f"  ❌ Failed to request feedback: {response.text}")
@@ -236,7 +242,7 @@ class AIFeedbackTester:
                 if response.status_code == 200:
                     feedback_data = response.json()
                     if feedback_data:  # Not null
-                        print(f"  ✅ Feedback found!")
+                        print("  ✅ Feedback found!")
                         print(f"  📊 Confidence: {feedback_data.get('confidence_score', 0):.2%}")
                         print(f"  🏷️ Error types: {feedback_data.get('error_type', [])}")
                         return feedback_data
@@ -253,7 +259,7 @@ class AIFeedbackTester:
     
     def test_ai_service_direct(self, response_id: int = 28) -> bool:
         """Test AI service directly with sample data"""
-        print(f"🔬 Testing AI service directly...")
+        print("🔬 Testing AI service directly...")
         
         test_data = {
             "quiz_id": "2",
@@ -271,7 +277,7 @@ class AIFeedbackTester:
         
         try:
             response = requests.post(
-                f"{self.config.ai_service_url}/feedback/generate",
+                f"{self.config.ai_service_url}/ai-api/feedback/generate",
                 headers={"Content-Type": "application/json"},
                 data=json.dumps(test_data)
             )
@@ -381,7 +387,7 @@ class AIFeedbackTester:
         responses_data = self.get_attempt_responses(attempt_id)
         if responses_data:
             print("✅ Full test suite completed successfully!")
-            print(f"\n📋 Test Results Summary:")
+            print("\n📋 Test Results Summary:")
             print(f"  Question ID: {question_id}")
             print(f"  Attempt ID: {attempt_id}")
             print(f"  Response ID: {response_id}")
