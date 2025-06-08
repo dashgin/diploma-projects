@@ -11,6 +11,9 @@ if TYPE_CHECKING:
     from .quiz import QuestionOption, Quiz, QuizQuestion
     from .user import User
 
+# Import UserPublic for the AttemptRead model
+from .user import UserPublic
+
 
 class AssignmentBase(SQLModel):
     """Base model for quiz assignment schema"""
@@ -36,7 +39,7 @@ class AssignmentRead(AssignmentBase):
 class QuizAssignment(TimestampMixin, AssignmentBase, table=True):
     """Assignment of a quiz to a student"""
 
-    __tablename__ = "quiz_assignment"
+    __tablename__ = "quiz_assignment"  # type: ignore
 
     id: int = Field(default=None, primary_key=True)
     quiz_id: int = Field(foreign_key="quiz.id", ondelete="CASCADE")
@@ -94,12 +97,13 @@ class AttemptRead(AttemptBase):
     started_at: datetime | None = None
     completed_at: datetime | None = None
     score: float | None = None
+    student: UserPublic
 
 
 class StudentAttempt(TimestampMixin, AttemptBase, table=True):
     """Record of a student attempting a quiz"""
 
-    __tablename__ = "student_attempt"
+    __tablename__ = "student_attempt"  # type: ignore
 
     id: int = Field(default=None, primary_key=True)
     assignment_id: int | None = Field(
@@ -198,7 +202,7 @@ class AttemptResponsesDetailed(SQLModel):
 class StudentResponse(TimestampMixin, ResponseBase, table=True):
     """Student's answer to a question in a quiz attempt"""
 
-    __tablename__ = "student_response"
+    __tablename__ = "student_response"  # type: ignore
 
     id: int = Field(default=None, primary_key=True)
     attempt_id: int = Field(foreign_key="student_attempt.id", ondelete="CASCADE")

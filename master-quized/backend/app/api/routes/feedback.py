@@ -219,8 +219,9 @@ async def generate_and_save_feedback(
     Background task to generate and save AI feedback.
     """
     from sqlmodel import Session
+
     from app.core.db import engine
-    
+
     try:
         with Session(engine) as session:
             # Get the response
