@@ -10,11 +10,18 @@ from typing import Any
 
 import torch
 
+# Configure logger
+logger = logging.getLogger(__name__)
+
+
 # For sentence embeddings and semantic similarity
 try:
     from sentence_transformers import SentenceTransformer
     from sentence_transformers import util as st_util
 except ImportError:
+    logger.warning(
+        "SentenceTransformer library not available. Semantic similarity will be disabled."
+    )
     SentenceTransformer = None
     st_util = None
 
@@ -22,6 +29,9 @@ except ImportError:
 try:
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
 except ImportError:
+    logger.warning(
+        "Transformers library not available. Error classification will be disabled."
+    )
     AutoTokenizer = None
     AutoModelForSequenceClassification = None
 
