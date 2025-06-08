@@ -60,10 +60,10 @@ export const AIFeedbackButton: React.FC<AIFeedbackButtonProps> = ({
     return (
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
-          <Button 
-            size="sm" 
-            colorScheme="green" 
-            variant="solid" 
+          <Button
+            size="sm"
+            colorScheme="green"
+            variant="solid"
             disabled
             shadow="sm"
           >
@@ -85,10 +85,10 @@ export const AIFeedbackButton: React.FC<AIFeedbackButtonProps> = ({
       loadingText="Generating..."
       onClick={() => requestFeedback()}
       shadow="sm"
-      _hover={{ 
+      _hover={{
         bg: "purple.600",
         transform: "translateY(-1px)",
-        shadow: "md"
+        shadow: "md",
       }}
     >
       🤖 Generate AI Feedback

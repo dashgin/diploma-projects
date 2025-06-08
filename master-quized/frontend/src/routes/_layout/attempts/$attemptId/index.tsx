@@ -746,7 +746,8 @@ function AttemptPage() {
                     {(responseData?.question?.question_type === "open_ended" ||
                       responseData?.question?.question_type === "text" ||
                       responseData?.question?.question_type === "essay" ||
-                      responseData?.question?.question_type === "short_answer") &&
+                      responseData?.question?.question_type ===
+                        "short_answer") &&
                       responseData?.question?.model_answer && (
                         <Box
                           p={4}
@@ -770,7 +771,11 @@ function AttemptPage() {
                             >
                               ✨
                             </Box>
-                            <Text fontWeight="bold" fontSize="md" color="green.800">
+                            <Text
+                              fontWeight="bold"
+                              fontSize="md"
+                              color="green.800"
+                            >
                               Model Answer
                             </Text>
                           </Flex>
@@ -816,7 +821,11 @@ function AttemptPage() {
                           >
                             💡
                           </Box>
-                          <Text fontWeight="bold" fontSize="md" color="blue.800">
+                          <Text
+                            fontWeight="bold"
+                            fontSize="md"
+                            color="blue.800"
+                          >
                             Explanation
                           </Text>
                         </Flex>
@@ -830,7 +839,8 @@ function AttemptPage() {
                     {(responseData?.question?.question_type === "open_ended" ||
                       responseData?.question?.question_type === "text" ||
                       responseData?.question?.question_type === "essay" ||
-                      responseData?.question?.question_type === "short_answer") && (
+                      responseData?.question?.question_type ===
+                        "short_answer") && (
                       <Box
                         p={4}
                         bg="gradient-to-r"
@@ -873,7 +883,8 @@ function AttemptPage() {
                     )}
 
                     {/* AI Feedback for Multiple Choice with detailed explanations */}
-                    {responseData?.question?.question_type === "multiple_choice" &&
+                    {responseData?.question?.question_type ===
+                      "multiple_choice" &&
                       isCorrect === false && (
                         <Box
                           p={4}
@@ -912,13 +923,30 @@ function AttemptPage() {
                             border="1px solid"
                             borderColor="orange.200"
                           >
-                            <Text color="orange.800" lineHeight="1.6" fontSize="sm">
-                              <Text as="span" fontWeight="bold">Study Tip:</Text> You selected an incorrect option. 
-                              Review the key concepts and consider why the correct answer is more appropriate.
+                            <Text
+                              color="orange.800"
+                              lineHeight="1.6"
+                              fontSize="sm"
+                            >
+                              <Text as="span" fontWeight="bold">
+                                Study Tip:
+                              </Text>{" "}
+                              You selected an incorrect option. Review the key
+                              concepts and consider why the correct answer is
+                              more appropriate.
                             </Text>
                             {responseData?.explanation && (
-                              <Box mt={2} p={2} bg="orange.50" borderRadius="sm">
-                                <Text fontSize="xs" fontStyle="italic" color="orange.700">
+                              <Box
+                                mt={2}
+                                p={2}
+                                bg="orange.50"
+                                borderRadius="sm"
+                              >
+                                <Text
+                                  fontSize="xs"
+                                  fontStyle="italic"
+                                  color="orange.700"
+                                >
                                   💡 {responseData.explanation}
                                 </Text>
                               </Box>

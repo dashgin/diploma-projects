@@ -169,12 +169,15 @@ const AIFeedbackContent: React.FC<AIFeedbackContentProps> = ({
             📝 Analysis Results
           </Text>
           {feedback.confidence_score && (
-            <Badge colorScheme={getConfidenceColor(feedback.confidence_score)} variant="solid">
+            <Badge
+              colorScheme={getConfidenceColor(feedback.confidence_score)}
+              variant="solid"
+            >
               {(feedback.confidence_score * 100).toFixed(0)}% Confidence
             </Badge>
           )}
         </Flex>
-        
+
         <Text color="gray.700" lineHeight="1.7" fontSize="md" mb={4}>
           {feedback.feedback_text}
         </Text>
@@ -186,8 +189,8 @@ const AIFeedbackContent: React.FC<AIFeedbackContentProps> = ({
             </Text>
             <Flex gap={2} wrap="wrap">
               {feedback.error_type.map((type, index) => (
-                <Badge 
-                  key={index} 
+                <Badge
+                  key={index}
                   colorScheme={getErrorTypeColor(type)}
                   variant="outline"
                   fontSize="xs"
@@ -203,14 +206,16 @@ const AIFeedbackContent: React.FC<AIFeedbackContentProps> = ({
       {/* Detailed Analysis - Expandable */}
       {(conceptsCovered.length > 0 || conceptsMissed.length > 0) && (
         <Box>
-          <Button 
-            size="sm" 
-            onClick={toggleDetails} 
-            variant="outline" 
+          <Button
+            size="sm"
+            onClick={toggleDetails}
+            variant="outline"
             colorScheme="purple"
             mb={3}
           >
-            {isDetailsOpen ? "Hide Detailed Analysis ▲" : "Show Detailed Analysis ▼"}
+            {isDetailsOpen
+              ? "Hide Detailed Analysis ▲"
+              : "Show Detailed Analysis ▼"}
           </Button>
 
           <Collapsible.Root open={isDetailsOpen}>
@@ -330,10 +335,9 @@ const AIFeedbackContent: React.FC<AIFeedbackContentProps> = ({
                     💡 Study Tips
                   </Text>
                   <Text fontSize="sm" color="blue.700">
-                    {conceptsMissed.length > 0 
+                    {conceptsMissed.length > 0
                       ? "Focus on reviewing the concepts listed above. Try to understand the underlying principles and practice with similar questions."
-                      : "Great work! Continue practicing to reinforce your understanding of these concepts."
-                    }
+                      : "Great work! Continue practicing to reinforce your understanding of these concepts."}
                   </Text>
                 </Box>
 
