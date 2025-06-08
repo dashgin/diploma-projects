@@ -265,7 +265,7 @@ function AttemptPage() {
             const isCorrect = responseData?.answer?.is_correct
 
             return (
-              <Card.Root key={question.id} mb={4} variant="outline">
+              <Card.Root key={question.id} mb={3} variant="outline">
                 <Card.Header
                   p={4}
                   borderBottom="1px solid"
@@ -332,8 +332,8 @@ function AttemptPage() {
                     </Flex>
                   </Flex>
                 </Card.Header>
-                <Card.Body p={4}>
-                  <Box mb={4}>
+                <Card.Body p={3}>
+                  <Box mb={3}>
                     <Text fontSize="md" lineHeight="1.6" color="gray.800">
                       {question.text}
                     </Text>
@@ -740,250 +740,193 @@ function AttemptPage() {
                       )}
                   </Grid>
 
-                  {/* Model Answer for open-ended questions */}
-                  {(responseData?.question?.question_type === "open_ended" ||
-                    responseData?.question?.question_type === "text" ||
-                    responseData?.question?.question_type === "essay" ||
-                    responseData?.question?.question_type === "short_answer") &&
-                    responseData?.question?.model_answer && (
-                      <Box
-                        mt={6}
-                        p={5}
-                        bg="gradient-to-r"
-                        bgGradient="linear(to-r, green.50, teal.50)"
-                        borderRadius="xl"
-                        border="2px solid"
-                        borderColor="green.200"
-                        shadow="sm"
-                      >
-                        <Flex align="center" gap={3} mb={4}>
-                          <Box
-                            bg="gradient-to-r"
-                            bgGradient="linear(to-r, green.500, teal.500)"
-                            color="white"
-                            borderRadius="full"
-                            w="32px"
-                            h="32px"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            fontSize="lg"
-                            shadow="md"
-                          >
-                            ✨
-                          </Box>
-                          <Box>
-                            <Text
-                              fontWeight="bold"
-                              fontSize="lg"
-                              color="green.800"
-                            >
-                              Model Answer
-                            </Text>
-                            <Text fontSize="sm" color="green.600">
-                              Compare your response with this ideal answer
-                            </Text>
-                          </Box>
-                        </Flex>
+                  {/* Learning Resources - Compact Layout */}
+                  <Stack align="stretch" gap={3} mt={4}>
+                    {/* Model Answer for open-ended questions */}
+                    {(responseData?.question?.question_type === "open_ended" ||
+                      responseData?.question?.question_type === "text" ||
+                      responseData?.question?.question_type === "essay" ||
+                      responseData?.question?.question_type === "short_answer") &&
+                      responseData?.question?.model_answer && (
                         <Box
                           p={4}
-                          bg="white"
+                          bg="gradient-to-r"
+                          bgGradient="linear(to-r, green.50, teal.50)"
                           borderRadius="lg"
                           border="1px solid"
                           borderColor="green.200"
-                          position="relative"
                         >
+                          <Flex align="center" gap={2} mb={3}>
+                            <Box
+                              bg="green.500"
+                              color="white"
+                              borderRadius="full"
+                              w="24px"
+                              h="24px"
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center"
+                              fontSize="sm"
+                            >
+                              ✨
+                            </Box>
+                            <Text fontWeight="bold" fontSize="md" color="green.800">
+                              Model Answer
+                            </Text>
+                          </Flex>
                           <Box
-                            position="absolute"
-                            top={2}
-                            right={2}
-                            bg="green.100"
-                            color="green.700"
-                            fontSize="xs"
-                            fontWeight="bold"
-                            px={2}
-                            py={1}
-                            borderRadius="full"
+                            p={3}
+                            bg="white"
+                            borderRadius="md"
+                            border="1px solid"
+                            borderColor="green.200"
                           >
-                            IDEAL ANSWER
+                            <Text
+                              color="green.800"
+                              lineHeight="1.6"
+                              fontSize="sm"
+                              fontWeight="medium"
+                            >
+                              {responseData.question.model_answer}
+                            </Text>
                           </Box>
-                          <Text
-                            color="green.800"
-                            lineHeight="1.7"
-                            fontSize="md"
-                            fontWeight="medium"
-                            mt={2}
-                            pt={2}
-                          >
-                            {responseData.question.model_answer}
-                          </Text>
                         </Box>
-                      </Box>
-                    )}
+                      )}
 
-                  {/* Explanation */}
-                  {responseData?.explanation && (
-                    <Box
-                      mt={6}
-                      p={4}
-                      bg="blue.50"
-                      borderRadius="lg"
-                      border="1px solid"
-                      borderColor="blue.200"
-                    >
-                      <Flex align="center" gap={2} mb={3}>
-                        <Box
-                          bg="blue.500"
-                          color="white"
-                          borderRadius="full"
-                          w="24px"
-                          h="24px"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                          fontSize="sm"
-                        >
-                          💡
-                        </Box>
-                        <Text fontWeight="bold" fontSize="md" color="blue.800">
-                          Explanation
-                        </Text>
-                      </Flex>
-                      <Text color="blue.700" lineHeight="1.7" fontSize="md">
-                        {responseData.explanation}
-                      </Text>
-                    </Box>
-                  )}
-
-                  {/* AI Feedback section - for text-based and subjective questions */}
-                  {(responseData?.question?.question_type === "open_ended" ||
-                    responseData?.question?.question_type === "text" ||
-                    responseData?.question?.question_type === "essay" ||
-                    responseData?.question?.question_type === "short_answer") && (
-                    <Box
-                      mt={6}
-                      p={5}
-                      bg="gradient-to-r"
-                      bgGradient="linear(to-r, purple.50, blue.50)"
-                      borderRadius="xl"
-                      border="2px solid"
-                      borderColor="purple.200"
-                      shadow="sm"
-                    >
-                      <Flex
-                        justifyContent="space-between"
-                        alignItems="center"
-                        mb={4}
+                    {/* Explanation */}
+                    {responseData?.explanation && (
+                      <Box
+                        p={4}
+                        bg="blue.50"
+                        borderRadius="lg"
+                        border="1px solid"
+                        borderColor="blue.200"
                       >
-                        <Flex align="center" gap={3}>
+                        <Flex align="center" gap={2} mb={3}>
                           <Box
-                            bg="gradient-to-r"
-                            bgGradient="linear(to-r, purple.500, blue.500)"
+                            bg="blue.500"
                             color="white"
                             borderRadius="full"
-                            w="32px"
-                            h="32px"
+                            w="24px"
+                            h="24px"
                             display="flex"
                             alignItems="center"
                             justifyContent="center"
-                            fontSize="lg"
-                            shadow="md"
+                            fontSize="sm"
                           >
-                            🤖
+                            💡
                           </Box>
-                          <Box>
-                            <Text
-                              fontWeight="bold"
-                              fontSize="lg"
-                              color="purple.800"
-                            >
-                              AI-Powered Feedback
-                            </Text>
-                            <Text fontSize="sm" color="purple.600">
-                              Personalized analysis of your response
-                            </Text>
-                          </Box>
+                          <Text fontWeight="bold" fontSize="md" color="blue.800">
+                            Explanation
+                          </Text>
                         </Flex>
-                        <AIFeedbackButton responseId={responseData.id} />
-                      </Flex>
-                      <AIFeedbackDisplay responseId={responseData.id} />
-                    </Box>
-                  )}
+                        <Text color="blue.700" lineHeight="1.6" fontSize="sm">
+                          {responseData.explanation}
+                        </Text>
+                      </Box>
+                    )}
 
-                  {/* AI Feedback for Multiple Choice with detailed explanations */}
-                  {responseData?.question?.question_type === "multiple_choice" &&
-                    isCorrect === false && (
+                    {/* AI Feedback section - for text-based and subjective questions */}
+                    {(responseData?.question?.question_type === "open_ended" ||
+                      responseData?.question?.question_type === "text" ||
+                      responseData?.question?.question_type === "essay" ||
+                      responseData?.question?.question_type === "short_answer") && (
                       <Box
-                        mt={6}
-                        p={5}
+                        p={4}
                         bg="gradient-to-r"
-                        bgGradient="linear(to-r, orange.50, red.50)"
-                        borderRadius="xl"
-                        border="2px solid"
-                        borderColor="orange.200"
-                        shadow="sm"
+                        bgGradient="linear(to-r, purple.50, blue.50)"
+                        borderRadius="lg"
+                        border="1px solid"
+                        borderColor="purple.200"
                       >
                         <Flex
                           justifyContent="space-between"
                           alignItems="center"
-                          mb={4}
+                          mb={3}
                         >
-                          <Flex align="center" gap={3}>
+                          <Flex align="center" gap={2}>
                             <Box
-                              bg="gradient-to-r"
-                              bgGradient="linear(to-r, orange.500, red.500)"
+                              bg="purple.500"
                               color="white"
                               borderRadius="full"
-                              w="32px"
-                              h="32px"
+                              w="24px"
+                              h="24px"
                               display="flex"
                               alignItems="center"
                               justifyContent="center"
-                              fontSize="lg"
-                              shadow="md"
+                              fontSize="sm"
                             >
-                              💡
+                              🤖
                             </Box>
-                            <Box>
-                              <Text
-                                fontWeight="bold"
-                                fontSize="lg"
-                                color="orange.800"
-                              >
-                                Smart Learning Insights
-                              </Text>
-                              <Text fontSize="sm" color="orange.600">
-                                Understanding your misconceptions
-                              </Text>
-                            </Box>
+                            <Text
+                              fontWeight="bold"
+                              fontSize="md"
+                              color="purple.800"
+                            >
+                              AI Feedback
+                            </Text>
                           </Flex>
-                          <Badge colorScheme="orange" variant="solid">
-                            Needs Review
-                          </Badge>
+                          <AIFeedbackButton responseId={responseData.id} />
                         </Flex>
+                        <AIFeedbackDisplay responseId={responseData.id} />
+                      </Box>
+                    )}
+
+                    {/* AI Feedback for Multiple Choice with detailed explanations */}
+                    {responseData?.question?.question_type === "multiple_choice" &&
+                      isCorrect === false && (
                         <Box
                           p={4}
-                          bg="white"
+                          bg="gradient-to-r"
+                          bgGradient="linear(to-r, orange.50, red.50)"
                           borderRadius="lg"
                           border="1px solid"
                           borderColor="orange.200"
                         >
-                          <Text color="orange.800" lineHeight="1.7" fontSize="md">
-                            📚 <Text as="span" fontWeight="bold">Study Suggestion:</Text> You selected an incorrect option. 
-                            Review the key concepts related to this topic and consider why the correct answer 
-                            is more appropriate. Focus on understanding the fundamental principles rather than 
-                            memorizing specific facts.
-                          </Text>
-                          {responseData?.explanation && (
-                            <Box mt={3} p={3} bg="orange.50" borderRadius="md">
-                              <Text fontSize="sm" fontStyle="italic" color="orange.700">
-                                💡 Hint: {responseData.explanation}
-                              </Text>
+                          <Flex align="center" gap={2} mb={3}>
+                            <Box
+                              bg="orange.500"
+                              color="white"
+                              borderRadius="full"
+                              w="24px"
+                              h="24px"
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center"
+                              fontSize="sm"
+                            >
+                              💡
                             </Box>
-                          )}
+                            <Text
+                              fontWeight="bold"
+                              fontSize="md"
+                              color="orange.800"
+                            >
+                              Learning Insights
+                            </Text>
+                          </Flex>
+                          <Box
+                            p={3}
+                            bg="white"
+                            borderRadius="md"
+                            border="1px solid"
+                            borderColor="orange.200"
+                          >
+                            <Text color="orange.800" lineHeight="1.6" fontSize="sm">
+                              <Text as="span" fontWeight="bold">Study Tip:</Text> You selected an incorrect option. 
+                              Review the key concepts and consider why the correct answer is more appropriate.
+                            </Text>
+                            {responseData?.explanation && (
+                              <Box mt={2} p={2} bg="orange.50" borderRadius="sm">
+                                <Text fontSize="xs" fontStyle="italic" color="orange.700">
+                                  💡 {responseData.explanation}
+                                </Text>
+                              </Box>
+                            )}
+                          </Box>
                         </Box>
-                      </Box>
-                    )}
+                      )}
+                  </Stack>
                 </Card.Body>
               </Card.Root>
             )
