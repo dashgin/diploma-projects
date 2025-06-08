@@ -228,8 +228,8 @@ function Dashboard() {
                   DEMO
                 </Badge>
               </HStack>
-              <Button as={Link} to="/attempts/8" size="sm" colorScheme="blue">
-                View Full Example
+              <Button as={Link} to="/assignments" size="sm" colorScheme="blue">
+                Try It Yourself
               </Button>
             </Flex>
           </Card.Header>
