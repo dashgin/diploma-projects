@@ -51,6 +51,7 @@ app = FastAPI(
     lifespan=lifespan,  # Register the lifespan context manager
     docs_url="/ai-api/docs",
     redoc_url="/ai-api/redoc",
+    openapi_url="/ai-api/openapi.json",
 )
 
 # Configure CORS
