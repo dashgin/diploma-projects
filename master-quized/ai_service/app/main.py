@@ -5,7 +5,7 @@ Main FastAPI application for the AI Feedback Service.
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -66,7 +66,7 @@ app.add_middleware(
 
 # Global exception handler
 @app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
+async def global_exception_handler(exc: Exception):
     """Global exception handler for the application."""
     logger.error(f"Unhandled exception: {exc}", exc_info=True)
     return JSONResponse(

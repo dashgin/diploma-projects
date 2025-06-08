@@ -126,12 +126,12 @@ export function useQuizAttempt(attemptId: number | string) {
         ) {
           // For multiple-choice, use the option_id as the value
           savedResponses[questionId] =
-            responseItem.answer.answer.option_id?.toString() || ""
+            responseItem.answer.answer?.option_id?.toString() || ""
           console.log(
             "Setting multiple choice response for question:",
             questionId,
             "to option:",
-            responseItem.answer.answer.option_id,
+            responseItem.answer.answer?.option_id,
           )
         } else {
           // For short-answer, use the answer text

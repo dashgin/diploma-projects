@@ -88,7 +88,7 @@ def apply_rules(
 
         # Rule 3: Direct Match to Model Answer (or very close)
         try:
-            similarity_threshold = 0.95  # Could be configurable
+            # similarity_threshold = 0.95  # Could be configurable
             if (
                 student_answer_preprocessed == model_answer_preprocessed
                 and len(model_answer_preprocessed) > 5

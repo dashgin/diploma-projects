@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
 import { createFileRoute, useNavigate } from "@tanstack/react-router"
-import { OptionsService, ResponsesService } from "../../../../client/sdk.gen"
+import { OptionsService } from "../../../../client/sdk.gen"
 import {
   AIFeedbackButton,
   AIFeedbackDisplay,
@@ -203,7 +203,7 @@ function AttemptPage() {
                     {responseData?.answer?.type === "multiple_choice" &&
                     typeof responseData.answer.answer === "object" ? (
                       <Text>
-                        {responseData.answer.answer.text || "Not answered"}
+                        {responseData.answer.answer?.text || "Not answered"}
                       </Text>
                     ) : (
                       <Text>
@@ -227,16 +227,16 @@ function AttemptPage() {
                                 colorScheme={
                                   option.is_correct
                                     ? "green"
-                                    : responseData.answer.answer.option_id ===
-                                        option.id
+                                    : typeof responseData.answer.answer === "object" &&
+                                        responseData.answer.answer?.option_id === option.id
                                       ? "blue"
                                       : "gray"
                                 }
                               >
                                 {option.is_correct
                                   ? "✓"
-                                  : responseData.answer.answer.option_id ===
-                                      option.id
+                                  : typeof responseData.answer.answer === "object" &&
+                                      responseData.answer.answer?.option_id === option.id
                                     ? "•"
                                     : ""}
                               </Badge>
@@ -291,6 +291,33 @@ function AttemptPage() {
   const progress = totalQuestions
     ? ((currentQuestionIndex + 1) / totalQuestions) * 100
     : 0
+
+  // If no questions are available, show an error state
+  if (!isLoading && (!questions?.data || questions.data.length === 0)) {
+    return (
+      <Container maxW="container.lg" py={8}>
+        <Box textAlign="center">
+          <Heading size="lg" mb={4}>No Questions Available</Heading>
+          <Text mb={4}>This quiz doesn't have any questions yet.</Text>
+          <Button
+            onClick={() => navigate({ to: `/quizzes/${attempt?.quiz_id}` })}
+            variant="outline"
+          >
+            Return to Quiz
+          </Button>
+        </Box>
+      </Container>
+    )
+  }
+
+  // If current question is not available, reset to first question
+  if (!isLoading && currentQuestion === undefined && totalQuestions > 0) {
+    return (
+      <Center height="50vh">
+        <Spinner size="xl" />
+      </Center>
+    )
+  }
 
   return (
     <Container maxW="container.xl" py={4}>

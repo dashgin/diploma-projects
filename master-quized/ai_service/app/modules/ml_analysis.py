@@ -36,9 +36,8 @@ except ImportError:
     AutoModelForSequenceClassification = None
 
 # Local modules
-from app.core.config import settings
-
-from . import preprocessing
+from app.core.config import settings  # noqa: E402
+from app.modules import preprocessing  # noqa: E402
 
 # Configure logger
 logger = logging.getLogger(__name__)
@@ -173,7 +172,7 @@ def analyze_response(
     student_answer_preprocessed: str,
     model_answer_preprocessed: str,
     key_concepts: list[str],
-    context_info: dict[str, str] | None = None,
+    # context_info: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """
     Performs deep NLP/ML analysis on the student's response.

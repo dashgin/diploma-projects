@@ -14,8 +14,10 @@ BASE_DIR = Path(__file__).parent.parent.parent
 sys.path.append(str(BASE_DIR))
 
 # Import the training module
-from app.core.config import settings  # Import settings for configuration values
-from app.models.error_classifier.train_classifier import train as train_classifier
+from app.core.config import settings  # noqa: E402
+from app.models.error_classifier.train_classifier import (  # noqa: E402
+    train as train_classifier,
+)
 
 # Configure logger
 logging.basicConfig(
