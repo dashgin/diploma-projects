@@ -14,8 +14,7 @@ from app.models import StudentResponse
 
 logger = logging.getLogger(__name__)
 
-AI_SERVICE_URL = settings.AI_SERVICE_URL
-FEEDBACK_ENDPOINT = f"{AI_SERVICE_URL}/feedback/generate"
+FEEDBACK_ENDPOINT = f"{settings.AI_SERVICE_URL}/ai-api/feedback/generate"
 TIMEOUT = 30.0  # seconds
 
 

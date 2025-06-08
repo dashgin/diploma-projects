@@ -161,6 +161,7 @@ class QuestionData(SQLModel):
     id: int
     text: str
     question_type: str
+    model_answer: str | None = None
     options: list[OptionData] | None = None
 
 

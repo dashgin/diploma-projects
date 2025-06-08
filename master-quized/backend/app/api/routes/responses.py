@@ -221,6 +221,7 @@ def read_responses_by_attempt(
             id=question.id,
             text=question.text,
             question_type=question.question_type,
+            model_answer=question.model_answer if attempt.is_completed else None,
             options=(
                 all_options if question.question_type == "multiple_choice" else None
             ),

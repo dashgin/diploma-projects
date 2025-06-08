@@ -740,6 +740,87 @@ function AttemptPage() {
                       )}
                   </Grid>
 
+                  {/* Model Answer for open-ended questions */}
+                  {(responseData?.question?.question_type === "open_ended" ||
+                    responseData?.question?.question_type === "text" ||
+                    responseData?.question?.question_type === "essay" ||
+                    responseData?.question?.question_type === "short_answer") &&
+                    responseData?.question?.model_answer && (
+                      <Box
+                        mt={6}
+                        p={5}
+                        bg="gradient-to-r"
+                        bgGradient="linear(to-r, green.50, teal.50)"
+                        borderRadius="xl"
+                        border="2px solid"
+                        borderColor="green.200"
+                        shadow="sm"
+                      >
+                        <Flex align="center" gap={3} mb={4}>
+                          <Box
+                            bg="gradient-to-r"
+                            bgGradient="linear(to-r, green.500, teal.500)"
+                            color="white"
+                            borderRadius="full"
+                            w="32px"
+                            h="32px"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            fontSize="lg"
+                            shadow="md"
+                          >
+                            ✨
+                          </Box>
+                          <Box>
+                            <Text
+                              fontWeight="bold"
+                              fontSize="lg"
+                              color="green.800"
+                            >
+                              Model Answer
+                            </Text>
+                            <Text fontSize="sm" color="green.600">
+                              Compare your response with this ideal answer
+                            </Text>
+                          </Box>
+                        </Flex>
+                        <Box
+                          p={4}
+                          bg="white"
+                          borderRadius="lg"
+                          border="1px solid"
+                          borderColor="green.200"
+                          position="relative"
+                        >
+                          <Box
+                            position="absolute"
+                            top={2}
+                            right={2}
+                            bg="green.100"
+                            color="green.700"
+                            fontSize="xs"
+                            fontWeight="bold"
+                            px={2}
+                            py={1}
+                            borderRadius="full"
+                          >
+                            IDEAL ANSWER
+                          </Box>
+                          <Text
+                            color="green.800"
+                            lineHeight="1.7"
+                            fontSize="md"
+                            fontWeight="medium"
+                            mt={2}
+                            pt={2}
+                          >
+                            {responseData.question.model_answer}
+                          </Text>
+                        </Box>
+                      </Box>
+                    )}
+
                   {/* Explanation */}
                   {responseData?.explanation && (
                     <Box
@@ -774,49 +855,135 @@ function AttemptPage() {
                     </Box>
                   )}
 
-                  {/* AI Feedback section - for text-based questions */}
+                  {/* AI Feedback section - for text-based and subjective questions */}
                   {(responseData?.question?.question_type === "open_ended" ||
-                    responseData?.question?.question_type === "text") && (
+                    responseData?.question?.question_type === "text" ||
+                    responseData?.question?.question_type === "essay" ||
+                    responseData?.question?.question_type === "short_answer") && (
                     <Box
                       mt={6}
-                      p={4}
-                      bg="purple.50"
-                      borderRadius="lg"
-                      border="1px solid"
+                      p={5}
+                      bg="gradient-to-r"
+                      bgGradient="linear(to-r, purple.50, blue.50)"
+                      borderRadius="xl"
+                      border="2px solid"
                       borderColor="purple.200"
+                      shadow="sm"
                     >
                       <Flex
                         justifyContent="space-between"
                         alignItems="center"
-                        mb={3}
+                        mb={4}
                       >
-                        <Flex align="center" gap={2}>
+                        <Flex align="center" gap={3}>
                           <Box
-                            bg="purple.500"
+                            bg="gradient-to-r"
+                            bgGradient="linear(to-r, purple.500, blue.500)"
                             color="white"
                             borderRadius="full"
-                            w="24px"
-                            h="24px"
+                            w="32px"
+                            h="32px"
                             display="flex"
                             alignItems="center"
                             justifyContent="center"
-                            fontSize="sm"
+                            fontSize="lg"
+                            shadow="md"
                           >
                             🤖
                           </Box>
-                          <Text
-                            fontWeight="bold"
-                            fontSize="md"
-                            color="purple.800"
-                          >
-                            AI Feedback
-                          </Text>
+                          <Box>
+                            <Text
+                              fontWeight="bold"
+                              fontSize="lg"
+                              color="purple.800"
+                            >
+                              AI-Powered Feedback
+                            </Text>
+                            <Text fontSize="sm" color="purple.600">
+                              Personalized analysis of your response
+                            </Text>
+                          </Box>
                         </Flex>
                         <AIFeedbackButton responseId={responseData.id} />
                       </Flex>
                       <AIFeedbackDisplay responseId={responseData.id} />
                     </Box>
                   )}
+
+                  {/* AI Feedback for Multiple Choice with detailed explanations */}
+                  {responseData?.question?.question_type === "multiple_choice" &&
+                    isCorrect === false && (
+                      <Box
+                        mt={6}
+                        p={5}
+                        bg="gradient-to-r"
+                        bgGradient="linear(to-r, orange.50, red.50)"
+                        borderRadius="xl"
+                        border="2px solid"
+                        borderColor="orange.200"
+                        shadow="sm"
+                      >
+                        <Flex
+                          justifyContent="space-between"
+                          alignItems="center"
+                          mb={4}
+                        >
+                          <Flex align="center" gap={3}>
+                            <Box
+                              bg="gradient-to-r"
+                              bgGradient="linear(to-r, orange.500, red.500)"
+                              color="white"
+                              borderRadius="full"
+                              w="32px"
+                              h="32px"
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center"
+                              fontSize="lg"
+                              shadow="md"
+                            >
+                              💡
+                            </Box>
+                            <Box>
+                              <Text
+                                fontWeight="bold"
+                                fontSize="lg"
+                                color="orange.800"
+                              >
+                                Smart Learning Insights
+                              </Text>
+                              <Text fontSize="sm" color="orange.600">
+                                Understanding your misconceptions
+                              </Text>
+                            </Box>
+                          </Flex>
+                          <Badge colorScheme="orange" variant="solid">
+                            Needs Review
+                          </Badge>
+                        </Flex>
+                        <Box
+                          p={4}
+                          bg="white"
+                          borderRadius="lg"
+                          border="1px solid"
+                          borderColor="orange.200"
+                        >
+                          <Text color="orange.800" lineHeight="1.7" fontSize="md">
+                            📚 <Text as="span" fontWeight="bold">Study Suggestion:</Text> You selected an incorrect option. 
+                            Review the key concepts related to this topic and consider why the correct answer 
+                            is more appropriate. Focus on understanding the fundamental principles rather than 
+                            memorizing specific facts.
+                          </Text>
+                          {responseData?.explanation && (
+                            <Box mt={3} p={3} bg="orange.50" borderRadius="md">
+                              <Text fontSize="sm" fontStyle="italic" color="orange.700">
+                                💡 Hint: {responseData.explanation}
+                              </Text>
+                            </Box>
+                          )}
+                        </Box>
+                      </Box>
+                    )}
                 </Card.Body>
               </Card.Root>
             )

@@ -60,8 +60,14 @@ export const AIFeedbackButton: React.FC<AIFeedbackButtonProps> = ({
     return (
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
-          <Button size="sm" colorScheme="green" variant="outline" disabled>
-            AI Feedback Available
+          <Button 
+            size="sm" 
+            colorScheme="green" 
+            variant="solid" 
+            disabled
+            shadow="sm"
+          >
+            ✓ Feedback Ready
           </Button>
         </Tooltip.Trigger>
         <Tooltip.Content>This response already has AI feedback</Tooltip.Content>
@@ -73,12 +79,19 @@ export const AIFeedbackButton: React.FC<AIFeedbackButtonProps> = ({
   return (
     <Button
       size="sm"
-      colorScheme="blue"
+      colorScheme="purple"
+      variant="solid"
       loading={isRequesting}
-      loadingText="Requesting"
+      loadingText="Generating..."
       onClick={() => requestFeedback()}
+      shadow="sm"
+      _hover={{ 
+        bg: "purple.600",
+        transform: "translateY(-1px)",
+        shadow: "md"
+      }}
     >
-      Generate AI Feedback
+      🤖 Generate AI Feedback
     </Button>
   )
 }

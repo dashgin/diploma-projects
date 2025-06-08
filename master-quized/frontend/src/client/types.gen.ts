@@ -250,6 +250,7 @@ export type QuestionData = {
   id: number
   text: string
   question_type: string
+  model_answer?: string | null
   options?: Array<OptionData> | null
 }
 

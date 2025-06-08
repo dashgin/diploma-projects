@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlmodel import Session, select
 
 from app.models import QuestionCreate, QuestionUpdate, QuizQuestion
@@ -12,9 +13,12 @@ def create_question(*, session: Session, question_in: QuestionCreate) -> QuizQue
     return question
 
 
-def get_question(*, session: Session, question_id: int) -> QuizQuestion | None:
+def get_question(*, session: Session, question_id: int) -> QuizQuestion:
     """Get a specific question by ID"""
-    return session.get(QuizQuestion, question_id)
+    question = session.get(QuizQuestion, question_id)
+    if not question:
+        raise HTTPException(status_code=404, detail="Question not found")
+    return question
 
 
 def update_question(

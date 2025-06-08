@@ -153,96 +153,212 @@ const AIFeedbackContent: React.FC<AIFeedbackContentProps> = ({
   const conceptsMissed = (content.concepts_missed as string[]) || []
 
   return (
-    <Card.Root variant="outline" bg="blue.50" mb={4}>
-      <Card.Header pb={2}>
-        <Flex justify="space-between" align="center">
-          <Heading size="md">AI Feedback</Heading>
+    <Box>
+      {/* Main Feedback */}
+      <Box
+        p={4}
+        bg="white"
+        borderRadius="lg"
+        border="1px solid"
+        borderColor="purple.200"
+        mb={4}
+        shadow="sm"
+      >
+        <Flex justify="space-between" align="center" mb={3}>
+          <Text fontWeight="bold" fontSize="md" color="purple.800">
+            📝 Analysis Results
+          </Text>
           {feedback.confidence_score && (
-            <Badge colorScheme={getConfidenceColor(feedback.confidence_score)}>
-              Confidence: {(feedback.confidence_score * 100).toFixed(0)}%
+            <Badge colorScheme={getConfidenceColor(feedback.confidence_score)} variant="solid">
+              {(feedback.confidence_score * 100).toFixed(0)}% Confidence
             </Badge>
           )}
         </Flex>
-      </Card.Header>
-
-      <Card.Body pt={0}>
-        <Text mb={4}>{feedback.feedback_text}</Text>
+        
+        <Text color="gray.700" lineHeight="1.7" fontSize="md" mb={4}>
+          {feedback.feedback_text}
+        </Text>
 
         {feedback.error_type && feedback.error_type.length > 0 && (
-          <Flex gap={2} mb={3} wrap="wrap">
-            <Text fontWeight="bold">Issue types:</Text>
-            {feedback.error_type.map((type, index) => (
-              <Badge key={index} colorScheme={getErrorTypeColor(type)}>
-                {type}
-              </Badge>
-            ))}
-          </Flex>
+          <Box>
+            <Text fontWeight="bold" fontSize="sm" color="gray.600" mb={2}>
+              Focus Areas:
+            </Text>
+            <Flex gap={2} wrap="wrap">
+              {feedback.error_type.map((type, index) => (
+                <Badge 
+                  key={index} 
+                  colorScheme={getErrorTypeColor(type)}
+                  variant="outline"
+                  fontSize="xs"
+                >
+                  {type.charAt(0).toUpperCase() + type.slice(1)}
+                </Badge>
+              ))}
+            </Flex>
+          </Box>
         )}
+      </Box>
 
-        <Button size="sm" onClick={toggleDetails} variant="outline" mb={3}>
-          {isDetailsOpen ? "Hide Details" : "Show Details"}
-        </Button>
+      {/* Detailed Analysis - Expandable */}
+      {(conceptsCovered.length > 0 || conceptsMissed.length > 0) && (
+        <Box>
+          <Button 
+            size="sm" 
+            onClick={toggleDetails} 
+            variant="outline" 
+            colorScheme="purple"
+            mb={3}
+          >
+            {isDetailsOpen ? "Hide Detailed Analysis ▲" : "Show Detailed Analysis ▼"}
+          </Button>
 
-        <Collapsible.Root open={isDetailsOpen}>
-          <Collapsible.Content>
-            <Box p={3} bg="white" borderRadius="md" mb={3}>
-              <Heading size="sm" mb={2}>
-                Key Concepts Analysis
-              </Heading>
+          <Collapsible.Root open={isDetailsOpen}>
+            <Collapsible.Content>
+              <Box
+                p={4}
+                bg="white"
+                borderRadius="lg"
+                border="1px solid"
+                borderColor="purple.200"
+                shadow="sm"
+              >
+                <Heading size="sm" mb={4} color="purple.800">
+                  🎯 Detailed Concept Analysis
+                </Heading>
 
-              {conceptsCovered.length > 0 && (
-                <Box mb={3}>
-                  <Text fontWeight="bold">Concepts Covered:</Text>
-                  <List.Root gap="1" variant="plain" align="center">
-                    {conceptsCovered.map((concept: string, index: number) => (
-                      <List.Item key={index}>
-                        <List.Indicator asChild color="green.500">
-                          <FiCheckCircle />
-                        </List.Indicator>
-                        <Text>{concept}</Text>
-                      </List.Item>
-                    ))}
-                  </List.Root>
-                </Box>
-              )}
-
-              {conceptsMissed.length > 0 && (
-                <Box>
-                  <Text fontWeight="bold">Concepts Missed:</Text>
-                  <List.Root gap="1" variant="plain" align="center">
-                    {conceptsMissed.map((concept: string, index: number) => (
-                      <List.Item key={index}>
-                        <List.Indicator asChild color="orange.500">
-                          <FiAlertTriangle />
-                        </List.Indicator>
-                        <Text>{concept}</Text>
-                      </List.Item>
-                    ))}
-                  </List.Root>
-                </Box>
-              )}
-
-              {feedback.ai_metadata?.resources && (
-                <Box mt={3}>
-                  <Heading size="sm" mb={2}>
-                    Recommended Resources
-                  </Heading>
-                  <List.Root gap="1" variant="plain">
-                    {feedback.ai_metadata.resources.map(
-                      (resource: any, index: number) => (
+                {conceptsCovered.length > 0 && (
+                  <Box mb={4}>
+                    <Flex align="center" gap={2} mb={3}>
+                      <Box
+                        bg="green.500"
+                        color="white"
+                        borderRadius="full"
+                        w="20px"
+                        h="20px"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        fontSize="xs"
+                      >
+                        ✓
+                      </Box>
+                      <Text fontWeight="bold" color="green.700">
+                        Concepts You Understood Well
+                      </Text>
+                    </Flex>
+                    <List.Root gap="2" variant="plain">
+                      {conceptsCovered.map((concept: string, index: number) => (
                         <List.Item key={index}>
-                          <Text>• {resource.title}</Text>
+                          <Box
+                            p={2}
+                            bg="green.50"
+                            borderRadius="md"
+                            border="1px solid"
+                            borderColor="green.200"
+                          >
+                            <Flex align="center" gap={2}>
+                              <List.Indicator asChild color="green.500">
+                                <FiCheckCircle />
+                              </List.Indicator>
+                              <Text fontSize="sm" color="green.800">
+                                {concept}
+                              </Text>
+                            </Flex>
+                          </Box>
                         </List.Item>
-                      ),
-                    )}
-                  </List.Root>
+                      ))}
+                    </List.Root>
+                  </Box>
+                )}
+
+                {conceptsMissed.length > 0 && (
+                  <Box>
+                    <Flex align="center" gap={2} mb={3}>
+                      <Box
+                        bg="orange.500"
+                        color="white"
+                        borderRadius="full"
+                        w="20px"
+                        h="20px"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        fontSize="xs"
+                      >
+                        !
+                      </Box>
+                      <Text fontWeight="bold" color="orange.700">
+                        Areas for Improvement
+                      </Text>
+                    </Flex>
+                    <List.Root gap="2" variant="plain">
+                      {conceptsMissed.map((concept: string, index: number) => (
+                        <List.Item key={index}>
+                          <Box
+                            p={2}
+                            bg="orange.50"
+                            borderRadius="md"
+                            border="1px solid"
+                            borderColor="orange.200"
+                          >
+                            <Flex align="center" gap={2}>
+                              <List.Indicator asChild color="orange.500">
+                                <FiAlertTriangle />
+                              </List.Indicator>
+                              <Text fontSize="sm" color="orange.800">
+                                {concept}
+                              </Text>
+                            </Flex>
+                          </Box>
+                        </List.Item>
+                      ))}
+                    </List.Root>
+                  </Box>
+                )}
+
+                {/* Study Tips */}
+                <Box
+                  mt={4}
+                  p={3}
+                  bg="blue.50"
+                  borderRadius="md"
+                  border="1px solid"
+                  borderColor="blue.200"
+                >
+                  <Text fontWeight="bold" fontSize="sm" color="blue.800" mb={2}>
+                    💡 Study Tips
+                  </Text>
+                  <Text fontSize="sm" color="blue.700">
+                    {conceptsMissed.length > 0 
+                      ? "Focus on reviewing the concepts listed above. Try to understand the underlying principles and practice with similar questions."
+                      : "Great work! Continue practicing to reinforce your understanding of these concepts."
+                    }
+                  </Text>
                 </Box>
-              )}
-            </Box>
-          </Collapsible.Content>
-        </Collapsible.Root>
-      </Card.Body>
-    </Card.Root>
+
+                {feedback.ai_metadata?.resources && (
+                  <Box mt={4}>
+                    <Heading size="sm" mb={2} color="blue.800">
+                      📚 Recommended Resources
+                    </Heading>
+                    <List.Root gap="1" variant="plain">
+                      {feedback.ai_metadata.resources.map(
+                        (resource: any, index: number) => (
+                          <List.Item key={index}>
+                            <Text fontSize="sm">• {resource.title}</Text>
+                          </List.Item>
+                        ),
+                      )}
+                    </List.Root>
+                  </Box>
+                )}
+              </Box>
+            </Collapsible.Content>
+          </Collapsible.Root>
+        </Box>
+      )}
+    </Box>
   )
 }
 

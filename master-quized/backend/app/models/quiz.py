@@ -27,7 +27,7 @@ class KnowledgeAreaRead(KnowledgeAreaBase):
 class KnowledgeArea(TimestampMixin, KnowledgeAreaBase, table=True):
     """Subject/topic category for quizzes and questions"""
 
-    __tablename__ = "knowledge_area"
+    __tablename__ = "knowledge_area"  # type: ignore
 
     id: int = Field(default=None, primary_key=True)
 
@@ -71,7 +71,7 @@ class QuizRead(QuizBase):
 class Quiz(TimestampMixin, QuizBase, table=True):
     """Quiz containing multiple questions"""
 
-    __tablename__ = "quiz"
+    __tablename__ = "quiz"  # type: ignore
 
     id: int = Field(default=None, primary_key=True)
     creator_id: int = Field(foreign_key="auth_user.id", ondelete="CASCADE")
@@ -138,7 +138,7 @@ class QuestionRead(QuestionBase):
 class QuizQuestion(TimestampMixin, QuestionBase, table=True):
     """Individual question within a quiz"""
 
-    __tablename__ = "quiz_question"
+    __tablename__ = "quiz_question"  # type: ignore
 
     id: int = Field(default=None, primary_key=True)
     quiz_id: int = Field(foreign_key="quiz.id", ondelete="CASCADE")
@@ -193,7 +193,7 @@ class OptionRead(OptionBase):
 class QuestionOption(OptionBase, table=True):
     """Option for multiple-choice questions"""
 
-    __tablename__ = "question_option"
+    __tablename__ = "question_option"  # type: ignore
 
     id: int = Field(default=None, primary_key=True)
     question_id: int = Field(foreign_key="quiz_question.id", ondelete="CASCADE")
