@@ -36,8 +36,20 @@ class TestConfig:
     backend_url: str = "https://quized.dashgin.com"
     ai_service_url: str = "https://quized.dashgin.com/"
     # Replace with your actual token
-    access_token: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDk5MjUwNTksInN1YiI6IjcifQ.5jGJ0tExl74ET_n3N2wqWhRy4h9WVyYDCuPqI4DFqqY"
-    
+    _access_token: str = ""
+
+    @property
+    def access_token(self) -> str:
+        if not self._access_token:
+            print("🔒 Getting access token...")
+            username="admin@example.com"
+            password="admin123"
+            response = requests.post(f"{self.backend_url}/api/v1/login/access-token", json={"username": username, "password": password})
+            self._access_token = response.json()["access_token"]
+            print("🔒 Access token obtained")
+        return self._access_token
+
+
     @property
     def headers(self) -> Dict[str, str]:
         return {
