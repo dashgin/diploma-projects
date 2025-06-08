@@ -116,7 +116,7 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({
       <Dialog.Positioner>
         <Dialog.Content size="lg">
           <Dialog.Header>Add Learning Resource</Dialog.Header>
-          <Dialog.CloseButton />
+          <Dialog.CloseTrigger />
 
           <Dialog.Body>
             <Box as="form" id="resource-form" onSubmit={handleSubmit(onSubmit)}>
@@ -214,7 +214,7 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({
                     mt={2}
                   >
                     <Slider.Track>
-                      <Slider.FilledTrack />
+                      <Slider.Range />
                     </Slider.Track>
                     <Tooltip.Root open={showTooltip}>
                       <Tooltip.Trigger asChild>
