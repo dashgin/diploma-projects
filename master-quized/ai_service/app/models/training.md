@@ -2,9 +2,9 @@
 
 This guide provides step-by-step instructions and Python scripts for:
 1.  Performing semantic similarity analysis using a pre-trained Sentence-Transformer model.
-2.  Fine-tuning a DistilBERT model for custom error classification on your dataset.
+2.  Fine-tuning a DistilBERT model for custom error classification on dataset.
 
-This corresponds to the model training activities described in Chapter II (Section 2.4.2) of your thesis: "Online Quiz Application with AI Feedback."
+This corresponds to the model training activities described in Chapter II (Section 2.4.2) of thesis: "Online Quiz Application with AI Feedback."
 
 ## 1. Prerequisites
 
@@ -97,7 +97,7 @@ text,label
     * Split it into training and evaluation sets.
     * Load the pre-trained DistilBERT model and tokenizer.
     * Fine-tune the model on your training data.
-    * Evaluate the model on the evaluation set at the end of each epoch (if `evaluation_strategy="epoch"`).
+    * Evaluate the model on the evaluation set at the end of each epoch (if `eval_strategy="epoch"`).
     * Print classification reports (precision, recall, F1-score) for the evaluation set.
     * Save the best performing model and the tokenizer to the directory specified in `TrainingArguments` (e.g., `./results_error_classifier/fine_tuned_distilbert_error_classifier`).
 
@@ -328,7 +328,7 @@ def main():
         weight_decay=WEIGHT_DECAY,
         logging_dir=LOGGING_DIR,
         logging_steps=max(1, int(len(tokenized_datasets['train']) / PER_DEVICE_TRAIN_BATCH_SIZE / 10)), # Log 10 times per epoch
-        evaluation_strategy="epoch",
+        eval_strategy="epoch",
         save_strategy="epoch",
         load_best_model_at_end=True,
         metric_for_best_model="f1_macro", # Ensure this matches a key in compute_metrics output

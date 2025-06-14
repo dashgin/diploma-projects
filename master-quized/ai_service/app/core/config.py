@@ -29,7 +29,7 @@ class Settings(BaseSettings):
 
     # Model paths
     ERROR_CLASSIFIER_MODEL_PATH: str = Field(
-        default="app/models/error_classifier",
+        default="app/models/error_classifier/outputs/fine_tuned_distilbert_error_classifier",
         description="Path to the error classifier model",
     )
 
