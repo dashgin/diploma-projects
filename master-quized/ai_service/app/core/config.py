@@ -29,8 +29,18 @@ class Settings(BaseSettings):
 
     # Model paths
     ERROR_CLASSIFIER_MODEL_PATH: str = Field(
-        default="app/models/error_classifier/outputs/fine_tuned_distilbert_error_classifier",
+        default="app/models/error_classifier",
         description="Path to the error classifier model",
+    )
+    
+    # Training configuration
+    TRAINING_OUTPUT_DIR: str = Field(
+        default="app/models/error_classifier",
+        description="Directory to save trained models",
+    )
+    TRAINING_CONFIG_PATH: str = Field(
+        default="training_config.json",
+        description="Path to training configuration file",
     )
 
     # Model configurations

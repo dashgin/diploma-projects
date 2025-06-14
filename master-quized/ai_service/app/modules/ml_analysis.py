@@ -47,14 +47,13 @@ semantic_similarity_model: Any | None = None
 error_classifier_tokenizer: Any | None = None
 error_classifier_model: Any | None = None
 
-# Error classification labels
+# Error classification labels (updated to match training schema)
 ERROR_LABELS = {
     0: "no_error",
     1: "factual_inaccuracy",
     2: "conceptual_misunderstanding",
     3: "incomplete_explanation",
-    4: "logical_fallacy",
-    5: "irrelevant_content",
+    4: "irrelevant_content",
 }
 
 

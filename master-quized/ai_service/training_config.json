@@ -1,0 +1,9 @@
+{
+  "model_checkpoint": "bert-base-multilingual-uncased",
+  "batch_size": 16,
+  "learning_rate": 2e-5,
+  "num_epochs": 3,
+  "max_length": 128,
+  "weight_decay": 0.01,
+  "description": "Default training configuration based on the fine-tuning notebook. Modify as needed for your specific requirements."
+} 
