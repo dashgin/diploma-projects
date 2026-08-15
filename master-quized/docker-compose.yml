@@ -1,0 +1,50 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/utils/health-check/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    env_file:
+      - .env
+    command: ['fastapi', 'run', '--workers', '1', 'app/main.py']
+
+  ai_service:
+    build:
+      context: ./ai_service
+    ports:
+      - "9000:9000"
+    environment:
+      PROJECT_NAME: "AI Feedback Service"
+      ERROR_CLASSIFIER_MODEL_PATH: /app/app/models/error_classifier
+      LOG_LEVEL: INFO
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    volumes:
+      - ai_models:/app/app/models
+    env_file:
+      - .env
+    command: ['fastapi', 'run', '--port', '9000', '--workers', '1', 'app/main.py']
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        - VITE_API_URL=${VITE_API_URL}
+        - NODE_ENV=production
+    ports:
+      - "3000:80"
+    env_file:
+      - .env
+
+volumes:
+  ai_models:

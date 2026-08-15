@@ -1,0 +1,33 @@
+@startuml
+title Semantic Similarity Process for Student Answers
+
+start
+
+:Student Answer;
+:Reference Answer;
+
+partition "Preprocessing" {
+  :Tokenization;
+  :Stopword Removal;
+  :Lemmatization/Stemming;
+}
+
+partition "Embedding" {
+  :Convert to Vectors (e.g., BERT, SBERT);
+}
+
+partition "Similarity Calculation" {
+  :Calculate Cosine Similarity;
+}
+
+:Similarity Score;
+
+if (Is Score Above Threshold?) then (Yes)
+  :Mark as Similar/Correct;
+else (No)
+  :Mark as Not Similar/Incorrect;
+endif
+
+stop
+
+@enduml

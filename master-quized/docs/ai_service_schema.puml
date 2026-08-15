@@ -1,0 +1,60 @@
+@startuml High-Level System Architecture
+
+skinparam defaultFontName Arial
+skinparam backgroundcolor #F5F5F5
+skinparam shadowing false
+
+skinparam component {
+  BackgroundColor #FFFFFF
+  BorderColor #333333
+  ArrowColor #666666
+  FontSize 14
+}
+
+actor User as user #darkblue
+
+package "Client-Side" << Client >> {
+  component "React Frontend" as frontend #42A5F5 {
+    [React]
+  }
+}
+
+package "Server-Side" << Main >> {
+  component "Main FastAPI Backend" as backend #66BB6A {
+    [FastAPI]
+  }
+  database "PostgreSQL" as db #7E57C2 {
+    [PostgreSQL]
+  }
+}
+
+package "AI Processing" << AI >> {
+  component "AI Feedback Service" as ai_service #FFA726 {
+    [FastAPI]
+  }
+}
+
+' Connections
+user --> frontend : "Interacts with"
+frontend -> backend : "HTTP REST API\n(quiz data, submissions)"
+backend --> db : "SQLModel/SQLAlchemy\n(read/write data)"
+backend -> ai_service : "HTTP REST API\n(student response)"
+ai_service --> backend : "JSON\n(AI feedback)"
+
+' Annotations
+note right of backend
+  **Main Responsibilities:**
+  - User authentication
+  - Data management
+  - Data persistence
+  - API orchestration
+end note
+
+note right of ai_service
+  **AI Capabilities:**
+  - NLP processing
+  - Feedback generation
+  - Model serving
+end note
+
+@enduml

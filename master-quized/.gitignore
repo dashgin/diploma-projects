@@ -1,0 +1,12 @@
+.vscode
+frontend/node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+frontend/.env
+backend/.env
+backend/.venv/
+.cursor
+.pytest_cache/
+.ruff_cache/

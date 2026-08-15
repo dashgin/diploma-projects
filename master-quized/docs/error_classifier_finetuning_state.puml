@@ -1,0 +1,19 @@
+@startuml Fine-tuning and Error Classification Process
+
+[*] --> Idle
+Idle --> LoadSemanticModel : Start (App Startup)
+LoadSemanticModel --> LoadErrorClassifier : Semantic Model Loaded
+LoadErrorClassifier --> PreprocessInput : Error Classifier Loaded / Fallback
+LoadErrorClassifier --> ErrorState : Model Load Failed
+PreprocessInput --> AnalyzeResponse : Input Preprocessed
+AnalyzeResponse --> ClassifyErrors : Begin Analysis
+ClassifyErrors --> IdentifyConcepts : Errors Classified
+IdentifyConcepts --> IdentifySkillGaps : Concepts Identified
+IdentifySkillGaps --> OutputResults : Skill Gaps Identified
+OutputResults --> [*] : Results Output
+
+' Error/Retry states
+LoadErrorClassifier --> Idle : Retry on Failure
+ErrorState --> Idle : Manual Intervention / Retry
+
+@enduml 

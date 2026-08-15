@@ -1,0 +1,58 @@
+# Implementation Checklist for QuizEd Frontend
+
+## Knowledge Areas
+- [x] User can see all knowledge areas
+- [x] User can search and filter knowledge areas
+
+## Quiz Management
+- [x] User can view all accessible quizzes 
+- [x] User can create new quizzes
+- [x] User can view quiz details
+- [x] User can edit quizzes
+- [x] User can partially update quizzes
+- [x] User can delete quizzes
+- [x] User can see quizzes they created
+
+## Question Management
+- [x] User can create new questions
+- [x] User can view question details
+- [x] User can edit questions
+- [x] User can partially update questions
+- [x] User can delete questions
+- [x] User can see questions for a specific quiz
+
+## Options Management
+- [x] User can create new options for multiple-choice questions
+- [x] User can view option details
+- [x] User can edit options
+- [x] User can partially update options
+- [x] User can delete options
+- [x] User can see options for a specific question
+
+## Assignments
+- [x] User can view quiz assignments
+- [x] User can create new assignments
+- [x] User can view assignment details
+- [x] User can see their assigned quizzes
+
+## Quiz Attempts
+- [x] User can view all quiz attempts
+- [x] User can start new quiz attempts
+- [x] User can view attempt details
+- [x] User can submit completed attempts
+- [x] User can see their quiz attempt history
+
+## Responses
+- [x] User can submit answers to questions
+- [x] User can view their response details
+- [x] User can see all responses for an attempt
+
+## Feedback
+- [x] User can provide feedback
+- [x] User can view specific feedback
+- [x] User can see feedback for their responses
+
+## Resource Recommendations
+- [x] User can create resource recommendations
+- [x] User can view recommendation details
+- [x] User can see recommendations for specific feedback
