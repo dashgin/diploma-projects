@@ -1,0 +1,93 @@
+from django.urls import path
+
+from unilab.users_metadata.views import (
+    CertificationDetail,
+    CertificationList,
+    EducationDataDetail,
+    EducationDataList,
+    ExperienceDataDetail,
+    ExperienceDataList,
+    ExternalProfileDetail,
+    ExternalProfileList,
+    SkillDataDetail,
+    SkillDataList,
+    UniversityCourseDetail,
+    UniversityCourseList,
+    UserDataDetail,
+    UserDataList,
+)
+
+app_name = "users_metadata"
+
+urlpatterns = [
+    path(
+        "user-data",
+        UserDataList.as_view(),
+        name="userdata-list",
+    ),
+    path(
+        "user-data/<int:pk>",
+        UserDataDetail.as_view(),
+        name="userdata-detail",
+    ),
+    path(
+        "education-data",
+        EducationDataList.as_view(),
+        name="educationdata-list",
+    ),
+    path(
+        "education-data/<int:pk>",
+        EducationDataDetail.as_view(),
+        name="educationdata-detail",
+    ),
+    path(
+        "experience-data",
+        ExperienceDataList.as_view(),
+        name="experiencedata-list",
+    ),
+    path(
+        "experience-data/<int:pk>",
+        ExperienceDataDetail.as_view(),
+        name="experiencedata-detail",
+    ),
+    path(
+        "skill-data",
+        SkillDataList.as_view(),
+        name="skilldata-list",
+    ),
+    path(
+        "skill-data/<int:pk>",
+        SkillDataDetail.as_view(),
+        name="skilldata-detail",
+    ),
+    path(
+        "external-profiles",
+        ExternalProfileList.as_view(),
+        name="externalprofile-list",
+    ),
+    path(
+        "external-profiles/<int:pk>",
+        ExternalProfileDetail.as_view(),
+        name="externalprofile-detail",
+    ),
+    path(
+        "certifications",
+        CertificationList.as_view(),
+        name="certification-list",
+    ),
+    path(
+        "certifications/<int:pk>",
+        CertificationDetail.as_view(),
+        name="certification-detail",
+    ),
+    path(
+        "university-courses",
+        UniversityCourseList.as_view(),
+        name="universitycourse-list",
+    ),
+    path(
+        "university-courses/<int:pk>",
+        UniversityCourseDetail.as_view(),
+        name="universitycourse-detail",
+    ),
+]
